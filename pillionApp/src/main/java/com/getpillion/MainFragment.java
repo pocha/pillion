@@ -19,7 +19,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import com.appcovery.android.appcoveryapp.R;
+import com.getpillion.R;
 import com.getpillion.common.Constant;
 import com.getpillion.common.Helper;
 import com.facebook.Request;

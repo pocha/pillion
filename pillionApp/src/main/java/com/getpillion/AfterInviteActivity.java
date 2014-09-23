@@ -6,14 +6,13 @@ import android.view.View;
 import android.widget.Toast;
 
 import com.actionbarsherlock.app.SherlockFragmentActivity;
-import com.appcovery.android.appcoveryapp.R;
-import com.getpillion.common.Constant;
 import com.bugsense.trace.BugSenseHandler;
 import com.facebook.FacebookException;
 import com.facebook.FacebookOperationCanceledException;
 import com.facebook.Session;
 import com.facebook.widget.WebDialog;
 import com.facebook.widget.WebDialog.OnCompleteListener;
+import com.getpillion.common.Constant;
 import com.jeremyfeinstein.slidingmenu.lib.SlidingMenu;
 
 public class AfterInviteActivity extends SherlockFragmentActivity {

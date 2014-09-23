@@ -1,21 +1,5 @@
 package com.getpillion;
 
-import java.io.File;
-import java.io.FileOutputStream;
-import java.security.MessageDigest;
-import java.security.NoSuchAlgorithmException;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-
-import org.apache.http.NameValuePair;
-import org.apache.http.message.BasicNameValuePair;
-import org.json.JSONArray;
-import org.json.JSONObject;
-import org.lucasr.smoothie.AsyncListView;
-import org.lucasr.smoothie.ItemManager;
-
-import uk.co.senab.bitmapcache.BitmapLruCache;
 import android.app.AlarmManager;
 import android.app.AlertDialog;
 import android.app.PendingIntent;
@@ -42,21 +26,37 @@ import android.widget.Toast;
 import com.actionbarsherlock.app.SherlockFragmentActivity;
 import com.actionbarsherlock.view.Menu;
 import com.actionbarsherlock.view.MenuItem;
-import com.appcovery.android.appcoveryapp.R;
-import com.getpillion.common.ConnectionDetector;
-import com.getpillion.common.Constant;
-import com.getpillion.common.Helper;
-import com.getpillion.smoothie.ImageLoader;
 import com.bugsense.trace.BugSenseHandler;
 import com.facebook.FacebookException;
 import com.facebook.FacebookOperationCanceledException;
 import com.facebook.Session;
 import com.facebook.widget.WebDialog;
 import com.facebook.widget.WebDialog.OnCompleteListener;
+import com.getpillion.common.ConnectionDetector;
+import com.getpillion.common.Constant;
+import com.getpillion.common.Helper;
+import com.getpillion.smoothie.ImageLoader;
 import com.google.ads.AdView;
 import com.google.analytics.tracking.android.EasyTracker;
 import com.google.android.gcm.GCMRegistrar;
 import com.jeremyfeinstein.slidingmenu.lib.SlidingMenu;
+
+import org.apache.http.NameValuePair;
+import org.apache.http.message.BasicNameValuePair;
+import org.json.JSONArray;
+import org.json.JSONObject;
+import org.lucasr.smoothie.AsyncListView;
+import org.lucasr.smoothie.ItemManager;
+
+import java.io.File;
+import java.io.FileOutputStream;
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+
+import uk.co.senab.bitmapcache.BitmapLruCache;
 
 public class HomeActivity extends SherlockFragmentActivity {
 

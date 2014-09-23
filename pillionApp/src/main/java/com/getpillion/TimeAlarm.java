@@ -30,7 +30,7 @@ import android.os.Message;
 import android.preference.PreferenceManager;
 import android.widget.Toast;
 
-import com.appcovery.android.appcoveryapp.R;
+import com.getpillion.R;
 import com.getpillion.common.Constant;
 import com.getpillion.common.Helper;
 

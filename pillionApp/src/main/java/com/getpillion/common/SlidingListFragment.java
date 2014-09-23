@@ -17,7 +17,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.getpillion.HomeActivity;
-import com.appcovery.android.appcoveryapp.R;
+import com.getpillion.R;
 import com.getpillion.SettingActivity;
 
 public class SlidingListFragment extends ListFragment {

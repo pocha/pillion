@@ -4,7 +4,7 @@ import android.os.Bundle;
 import android.webkit.WebView;
 
 import com.actionbarsherlock.app.SherlockFragmentActivity;
-import com.appcovery.android.appcoveryapp.R;
+import com.getpillion.R;
 import com.getpillion.common.Constant;
 import com.bugsense.trace.BugSenseHandler;
 import com.jeremyfeinstein.slidingmenu.lib.SlidingMenu;

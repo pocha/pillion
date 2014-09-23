@@ -1,13 +1,5 @@
 package com.getpillion;
 
-import java.io.InputStream;
-import java.util.ArrayList;
-
-import org.apache.http.NameValuePair;
-import org.apache.http.message.BasicNameValuePair;
-
-import uk.co.senab.bitmapcache.CacheableImageView;
-
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.graphics.Bitmap;
@@ -23,10 +15,17 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
-import com.appcovery.android.appcoveryapp.R;
 import com.getpillion.common.Constant;
 import com.getpillion.common.Helper;
 import com.getpillion.common.Session;
+
+import org.apache.http.NameValuePair;
+import org.apache.http.message.BasicNameValuePair;
+
+import java.io.InputStream;
+import java.util.ArrayList;
+
+import uk.co.senab.bitmapcache.CacheableImageView;
 
 public class FeedAdapter extends ArrayAdapter<String> {
 	private final Context context;

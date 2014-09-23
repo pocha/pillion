@@ -1,19 +1,18 @@
 package com.getpillion;
 
-import static com.getpillion.gcm.CommonUtilities.SENDER_ID;
-import static com.getpillion.gcm.CommonUtilities.displayMessage;
+import android.content.Context;
+import android.content.Intent;
+import android.util.Log;
+
+import com.getpillion.gcm.ServerUtilities;
+import com.google.android.gcm.GCMBaseIntentService;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Locale;
 
-import android.content.Context;
-import android.content.Intent;
-import android.util.Log;
-
-import com.appcovery.android.appcoveryapp.R;
-import com.getpillion.gcm.ServerUtilities;
-import com.google.android.gcm.GCMBaseIntentService;
+import static com.getpillion.gcm.CommonUtilities.SENDER_ID;
+import static com.getpillion.gcm.CommonUtilities.displayMessage;
 
 public class GCMIntentService extends GCMBaseIntentService {
 

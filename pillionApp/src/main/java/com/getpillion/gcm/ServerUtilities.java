@@ -1,8 +1,11 @@
 package com.getpillion.gcm;
 
 
-import static com.getpillion.gcm.CommonUtilities.SERVER_URL;
-import static com.getpillion.gcm.CommonUtilities.TAG;
+import android.content.Context;
+import android.util.Log;
+
+import com.getpillion.R;
+import com.google.android.gcm.GCMRegistrar;
 
 import java.io.IOException;
 import java.io.OutputStream;
@@ -15,11 +18,8 @@ import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Random;
 
-import com.appcovery.android.appcoveryapp.R;
-import android.content.Context;
-import android.util.Log;
-
-import com.google.android.gcm.GCMRegistrar;
+import static com.getpillion.gcm.CommonUtilities.SERVER_URL;
+import static com.getpillion.gcm.CommonUtilities.TAG;
  
 public final class ServerUtilities {
     private static final int MAX_ATTEMPTS = 5;

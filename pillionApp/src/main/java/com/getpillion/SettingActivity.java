@@ -8,7 +8,7 @@ import android.preference.PreferenceManager;
 
 import com.actionbarsherlock.app.SherlockPreferenceActivity;
 import com.actionbarsherlock.view.MenuItem;
-import com.appcovery.android.appcoveryapp.R;
+import com.getpillion.R;
 import com.getpillion.common.Constant;
 import com.bugsense.trace.BugSenseHandler;
 import com.jeremyfeinstein.slidingmenu.lib.SlidingMenu;
