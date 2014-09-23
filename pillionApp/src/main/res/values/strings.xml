@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <string name="app_name">AppCovery</string>
+    <string name="get_started">AppCovery helps you see Apps your friends are using. To get started, log in using your Facebook account</string>
+    <string name="get_started1">We absolutely DO NOT SPAM anyone. We do not email/post/sms your friend on your behalf.</string>
+    <string name="get_started2">Invitation Sent. Now sit back and relax - We will inform you as soon as someone joins so that you can see their apps.</string>
+    <string name="get_started3">We absolutely DO NOT SPAM anyone.</string>
+    <string name="no_friend">Find more friends by sharing AppCovery in your Facebook Wall. Your friends will see AppCovery in your wall and install it. Once they install, they will appear in your friend list. Click on the button below to continue.</string>
+    <string name="no_friend_desc">Once you have few friends, we will notify you and you will be start exploring apps with friends.</string>
+    <string name="few_friends">To see more apps, get more friends. Simply click on the Invite Friends menu item to send app invitation.</string>
+    <string name="title_activity_main">MainActivity</string>
+    <string name="action_settings">Settings</string>
+    <string name="hello_world">Hello world!</string>
+    <string name="app_id">126796814195465</string>
+    <string name="send_request">Send Request</string>
+    <string name="title_activity_home">HomeActivity</string>
+    <string name="gcm_registered">From GCM: device successfully registered!</string>
+    <string name="gcm_unregistered">From GCM: device successfully unregistered!</string>
+    <string name="gcm_message">From GCM: you got message!</string>
+    <string name="gcm_error">From GCM: error (%1$s).</string>
+    <string name="gcm_recoverable_error">From GCM: recoverable error (%1$s).</string>
+    <string name="gcm_deleted">From GCM: server deleted %1$d pending messages!</string>
+    <string name="server_registering">Trying (attempt %1$d/%2$d) to register device on Demo Server.</string>
+    <string name="server_registered">From Demo Server: successfully added device!</string>
+    <string name="server_unregistered">From Demo Server: successfully removed device!</string>
+    <string name="server_register_error">Could not register device on Demo Server after %1$d attempts.</string>
+    <string name="server_unregister_error">Could not unregister device on Demo Server (%1$s).</string>
+    <string name="options_register">Register</string>
+    <string name="options_unregister">Unregister</string>
+    <string name="options_clear">Clear</string>
+    <string name="options_exit">Exit</string>
+    <string name="title_activity_invite_friend">InviteFriendActivity</string>
+
+    <string name="network_error">Please check your Internet Setting</string>
+    <string name="request_cancelled">Request Cancelled</string>
+    <string name="invitation_sent">Invitation Sent. We will notify you once someone joins.</string>
+</resources>

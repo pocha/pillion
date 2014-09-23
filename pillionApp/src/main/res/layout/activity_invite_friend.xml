@@ -1,0 +1,101 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android" 
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    android:orientation="vertical" >
+    
+    <LinearLayout
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:background="#efefef"
+        android:orientation="vertical"
+        android:paddingBottom="20dp"
+        android:paddingLeft="30dp"
+        android:paddingRight="20dp"
+        android:paddingTop="20dp" >
+    
+        <TextView
+            android:id="@+id/profile_name"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:gravity="left"
+            android:lines="2"
+            android:paddingBottom="5dp"
+            android:paddingLeft="5dp"
+            android:text="You can invite ALL your friends to AppCovery by posting on your wall."
+            android:textSize="16sp" />
+        
+        <Button
+            android:id="@+id/button2"
+            style="@style/ButtonText"
+            android:layout_width="200dp"
+            android:layout_marginLeft="5dp"
+            android:background="@drawable/btn_blue"
+            android:paddingLeft="30dp"
+            android:paddingTop="15dp"
+            android:onClick="publishNewsFeed"
+            android:text="Post on Wall" >
+
+		</Button>
+        
+
+                <TextView
+                    android:id="@+id/profile_name2"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_horizontal"
+                    android:layout_marginBottom="20dp"
+                    android:layout_marginTop="20dp"
+                    android:gravity="center"
+                    android:lines="1"
+                    android:padding="5dp"
+                    android:text="-OR-"
+                    android:textSize="20sp"
+                    android:textStyle="bold" 
+                    />
+        
+        <TextView
+            android:id="@+id/profile_name"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:gravity="left"
+            android:lines="2"
+            android:paddingBottom="5dp"
+            android:paddingLeft="5dp"
+            android:text="Invite your friends individually by sending them a short message."
+            android:textSize="16sp" />
+        
+        <Button
+            android:id="@+id/button2"
+            style="@style/ButtonText"
+            android:layout_width="200dp"
+            android:layout_marginLeft="5dp"
+            android:background="@drawable/btn_blue"
+            android:paddingLeft="30dp"
+            android:paddingTop="15dp"
+            android:onClick="sendRequestDialog"
+            android:text="Message Friends" >
+
+</Button>
+
+</LinearLayout>
+
+        <TextView
+            android:id="@+id/profile_name2"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:gravity="left"
+            android:lines="4"
+            android:paddingLeft="35dp"
+            android:paddingRight="20dp"
+            android:text="When any of your friends install AppCovery, we will automatically fetch their Apps for you."
+            android:textSize="16sp"
+            android:textStyle="normal" />
+    
+</LinearLayout>
+    
+    
+    

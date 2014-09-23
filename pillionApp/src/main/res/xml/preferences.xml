@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
+    
+    
+    
+    <CheckBoxPreference
+        android:key="pref_notification"
+        android:title="New App Notification"
+        android:summary="Get notified when your friends install new App"
+        android:defaultValue="true" />
+    
+    
+    
+    <CheckBoxPreference
+        android:key="share_apps"
+        android:title="Automatic App Sharing"
+        android:summary="As soon as we detect new App in your phone, we will share it with your friends. If you uncheck this option, we will show you the list of new Apps to share."
+        android:defaultValue="true" />
+    
+    
+    
+    
+</PreferenceScreen>

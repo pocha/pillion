@@ -1,0 +1,90 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    package="com.getpillion"
+    android:versionCode="16"
+    android:versionName="2.2" >
+
+    <uses-sdk
+        android:minSdkVersion="8"
+        android:targetSdkVersion="19" />
+
+
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED"/>
+    <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+    
+    <application
+        android:allowBackup="true"
+        android:icon="@drawable/ic_launcher"
+        android:label="@string/app_name"
+        android:theme="@style/Theme.Sherlock.Light" >
+        <activity
+            android:name="com.getpillion.MainActivity"
+            android:label="AppCovery"
+            android:screenOrientation="portrait" >
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+
+        <meta-data
+            android:name="com.facebook.sdk.ApplicationId"
+            android:value="@string/app_id" />
+
+        <activity
+            android:name="com.facebook.LoginActivity"
+            android:label="@string/app_name"
+            android:screenOrientation="portrait" >
+        </activity>
+        
+        
+        <activity
+            android:name="com.getpillion.Like"
+            android:label="Like AppCovery"
+            android:screenOrientation="portrait" >
+        </activity>
+        
+        <activity
+            android:name="com.getpillion.HomeActivity"
+            android:label="@string/title_activity_home"
+            android:logo="@drawable/list"
+            android:screenOrientation="portrait" >
+        </activity>
+        
+         
+
+        <receiver android:name="com.getpillion.BootAlarm" >
+			<intent-filter>
+		        <action android:name="android.intent.action.BOOT_COMPLETED"/>
+		    </intent-filter>
+        </receiver>    
+        
+        <receiver android:name="com.getpillion.TimeAlarm" ></receiver>
+        
+        <activity
+            android:name="com.getpillion.InviteFriendActivity"
+            android:screenOrientation="portrait"
+            android:logo="@drawable/list"
+            android:label="@string/title_activity_invite_friend" >
+        </activity>
+        <activity
+            android:name="com.getpillion.AfterInviteActivity"
+            android:screenOrientation="portrait"
+            android:logo="@drawable/list"
+            android:label="@string/title_activity_invite_friend" >
+        </activity>
+        
+        
+        <activity
+            android:name="com.getpillion.SettingActivity"
+            android:label="Setting"
+            android:logo="@drawable/back"
+            android:screenOrientation="portrait" >
+        </activity>
+        
+    </application>
+
+</manifest>

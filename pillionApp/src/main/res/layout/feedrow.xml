@@ -1,0 +1,229 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="fill_parent"
+    android:layout_height="wrap_content"
+    android:orientation="horizontal"
+     >
+    
+    
+    
+    
+    <FrameLayout 
+        	 android:layout_width="58dp"
+             android:layout_height="58dp" >
+
+    <uk.co.senab.bitmapcache.CacheableImageView android:id="@+id/appIcon"
+                                                android:layout_width="56dp"
+                                                android:layout_height="56dp"
+                                                android:layout_gravity="center_vertical"
+                                                android:scaleType="fitXY" />
+    
+    
+	<ImageView android:id="@+id/appIconLocal"
+	    android:visibility="gone"
+                                                android:layout_width="56dp"
+                                                android:layout_height="56dp"
+                                                android:layout_gravity="center_vertical"
+                                                android:scaleType="fitXY" />
+    
+
+</FrameLayout>  
+    
+    
+    <LinearLayout
+        android:layout_width="0dp"
+        android:layout_weight="1"
+        android:padding="8dp"
+        android:background="#f9f9f9"
+        android:layout_height="60dp"
+        android:gravity="left"
+        android:orientation="vertical" >
+        
+        
+        <TextView
+	        android:id="@+id/appName"
+	        android:layout_width="wrap_content"
+	        android:layout_height="wrap_content"
+	        android:text="App Description"
+	        android:textColor="#333333"
+	        android:lines="1"
+	        android:textSize="16sp" >
+	    </TextView>
+	    
+        <TextView
+	        android:id="@+id/appDeveloper"
+	        android:layout_width="wrap_content"
+	        android:layout_height="wrap_content"
+	        android:lines="1"
+	        android:text="..."
+	        android:textColor="#999999"
+	        android:textSize="13sp" >
+	    </TextView>
+	    
+        
+	    
+        
+    </LinearLayout>
+    
+    
+    <LinearLayout
+        android:id="@+id/total_friends_div"
+        android:layout_width="60dp"
+        android:padding="4dp"
+        android:background="#eeeeee"
+        android:layout_height="60dp"
+        android:gravity="center_vertical"
+        android:layout_gravity="center_vertical"
+        android:visibility="gone"
+        android:orientation="vertical" >
+        
+        
+        <TextView
+	        android:id="@+id/total_friends"
+	        android:layout_width="match_parent"
+	        android:layout_height="wrap_content"
+	        android:layout_gravity="center"
+	        android:gravity="center"
+	        android:text="5"
+	        android:textColor="#333333"
+	        android:textSize="22sp" >
+	    </TextView>
+	    
+        <TextView
+	        android:id="@+id/who_all"
+	        android:layout_width="wrap_content"
+	        android:layout_height="wrap_content"
+	        android:layout_gravity="center"
+	        android:gravity="center"
+	        android:text="Friends"
+	        android:textColor="#999999"
+	        android:textSize="10sp" >
+	    </TextView>
+        
+    </LinearLayout>
+   
+    
+    
+    <LinearLayout
+        android:id="@+id/action_div"
+        android:layout_width="65dp"
+        android:padding="4dp"
+        android:background="#f9f9f9"
+        android:layout_height="60dp"
+        android:gravity="center_vertical"
+        android:layout_gravity="center_vertical"
+        android:orientation="vertical" >
+        
+        
+        <ImageView android:id="@+id/installIcon"
+            android:src="@drawable/installed"
+            android:layout_width="20dp"
+            android:layout_height="20dp"
+            android:layout_gravity="center"
+            android:scaleType="fitXY" />
+        
+        <ImageView android:id="@+id/googlePlayIcon"
+            android:src="@drawable/google_play"
+            android:layout_width="20dp"
+            android:layout_height="20dp"
+            android:layout_gravity="center"
+            android:scaleType="fitXY" />
+        
+        <TextView
+	        android:id="@+id/installText"
+	        android:layout_width="wrap_content"
+	        android:layout_height="wrap_content"
+	        android:layout_gravity="center"
+	        android:text="Installed"
+	        android:textColor="#999999"
+	        android:textSize="13sp" >
+	    </TextView>
+	    
+        
+        
+    </LinearLayout>
+    
+    
+    
+    
+    <LinearLayout
+        android:id="@+id/friend_new_app"
+        android:layout_width="85dp"
+        android:padding="4dp"
+        android:background="#f9f9f9"
+        android:layout_height="60dp"
+        android:gravity="center_vertical"
+        android:layout_gravity="center_vertical"
+        android:visibility="gone"
+        android:orientation="vertical" >
+        
+        
+        <TextView
+	        android:id="@+id/total_new"
+	        android:layout_width="match_parent"
+	        android:layout_height="wrap_content"
+	        android:layout_gravity="center"
+	        android:gravity="center"
+	        android:text=""
+	        android:textColor="#990000"
+	        android:textSize="18sp" >
+	    </TextView>
+	    
+        <TextView
+	        android:layout_width="match_parent"
+	        android:layout_height="wrap_content"
+	        android:layout_gravity="center"
+	        android:gravity="center"
+	        android:text="New Apps"
+	        android:textColor="#999999"
+	        android:textSize="12sp" >
+	    </TextView>
+        
+    </LinearLayout>
+    
+    
+    
+    <LinearLayout
+        android:id="@+id/share_checkbox_div"
+        android:layout_width="65dp"
+        android:padding="4dp"
+        android:background="#ffffff"
+        android:layout_height="60dp"
+        android:gravity="center_vertical"
+        android:visibility="gone"
+        android:layout_gravity="center_vertical"
+        android:orientation="vertical" >
+        
+        <CheckBox
+        android:id="@+id/share_checkbox"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text=""
+        android:checked="true" />
+        
+    </LinearLayout>    
+    
+    
+    
+    <LinearLayout
+        android:id="@+id/right_arrow_div"
+        android:layout_width="30dp"
+        android:padding="4dp"
+        android:background="#ffffff"
+        android:layout_height="60dp"
+        android:gravity="center_vertical"
+        android:layout_gravity="center_vertical"
+        android:orientation="vertical" >
+        
+        <ImageView android:id="@+id/right_arrow"
+            android:src="@drawable/right_arrow"
+            android:layout_width="20dp"
+            android:layout_height="20dp"
+            android:layout_gravity="center"
+            android:scaleType="fitXY" />
+        
+    </LinearLayout>    
+
+    
+
+</LinearLayout>
