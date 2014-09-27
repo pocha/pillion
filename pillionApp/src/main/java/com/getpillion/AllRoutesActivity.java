@@ -2,6 +2,7 @@ package com.getpillion;
 
 import android.app.AlarmManager;
 import android.app.ProgressDialog;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.v4.app.FragmentTransaction;
@@ -53,43 +54,86 @@ public class AllRoutesActivity extends SherlockFragmentActivity {
         private RouteAdapter adapter;
         private ArrayList<Route> offeringData, seekingData, routes;
         private ListView listView;
+        private Tab selectedTab;
 
 
-        public void populateData(ArrayList<Route> routes, String type){
+        public void populateData(final ArrayList<Route> routes, final String type){
+            final ProgressDialog progress = ProgressDialog.show(AllRoutesActivity.this, "",
+                    "Loading Routes. Please wait", true, false);
+
             routes.clear();
+            adapter.notifyDataSetChanged(); //empty the list shown to the user
 
-            if (type == "offering"){
-               routes.add(new Route("Brigade Gardenia","Ecospace", Time.valueOf("8:00:00")));
-               routes.add(new Route("Brigade Gardenia","Ecospace", Time.valueOf("8:30:00")));
-               routes.add(new Route("Brigade Gardenia","Ecospace", Time.valueOf("9:00:00")));
-           }
-           else {
-               routes.add(new Route("Ecospace","Brigade Gardenia", Time.valueOf("16:00:00")));
-               routes.add(new Route("Ecospace","Brigade Gardenia", Time.valueOf("17:00:00")));
-               routes.add(new Route("Ecospace","Brigade Gardenia", Time.valueOf("18:00:00")));
-           }
+            final ArrayList<Route> _routes = this.routes;
+            final RouteAdapter routeAdapter = this.adapter;
+
+            new AsyncTask<Void, Void, Void>() {
+                @Override
+                protected Void doInBackground(Void... params) {
+                    try {
+
+                        /*ArrayList<NameValuePair> postParams = new ArrayList<NameValuePair>();
+                        postParams.add(new BasicNameValuePair("facebookUserID",
+                                FB_USER_ID));
+                        postParams.add(new BasicNameValuePair("app_id", appID));
+                        String url = Constant.SERVER + Constant.USER_APP_VIEW;
+                        Helper.postData(url, postParams);*/
+                        Thread.sleep(10000);
+                        if (type == "offering"){
+                            routes.add(new Route("Brigade Gardenia","Ecospace", Time.valueOf("8:00:00")));
+                            routes.add(new Route("Brigade Gardenia","Ecospace", Time.valueOf("8:30:00")));
+                            routes.add(new Route("Brigade Gardenia","Ecospace", Time.valueOf("9:00:00")));
+                        }
+                        else {
+                            routes.add(new Route("Ecospace","Brigade Gardenia", Time.valueOf("16:00:00")));
+                            routes.add(new Route("Ecospace","Brigade Gardenia", Time.valueOf("17:00:00")));
+                            routes.add(new Route("Ecospace","Brigade Gardenia", Time.valueOf("18:00:00")));
+                        }
+                    } catch (Exception e) {
+
+                    }
+                    return null;
+                }
+
+                @Override
+                protected void onPostExecute(Void result) {
+                    _routes.clear();
+                    _routes.addAll(routes);
+                    routeAdapter.notifyDataSetChanged();
+                    progress.dismiss();
+                }
+            }.execute();
+
+
         }
 
         public TabListener(){
-            offeringData = new ArrayList<Route>();
-            populateData(offeringData,"offering");
-            seekingData = new ArrayList<Route>();
-            populateData(seekingData,"seeking");
-
             routes = new ArrayList<Route>();
             adapter = new RouteAdapter(getApplicationContext(),routes);
             listView = (ListView) findViewById(R.id.listView);
             listView.setAdapter(adapter);
+
+            offeringData = new ArrayList<Route>();
+            seekingData = new ArrayList<Route>();
         }
 
         @Override
         public void onTabSelected(Tab tab, FragmentTransaction ft) {
-            if (tab.getTag() == "offering"){ // this will be populated through AsyncTask onTabSelected
-               routes.clear();
-               routes.addAll(offeringData);
-               adapter.notifyDataSetChanged();
+            if (tab.getTag() == "offering" && offeringData.isEmpty()) {
+                populateData(offeringData, tab.getTag().toString());
+                return;
             }
-            else {
+            if (tab.getTag() == "seeking" && seekingData.isEmpty()) {
+                populateData(seekingData, tab.getTag().toString());
+                return;
+            }
+
+            if (tab.getTag() == "offering") {
+                routes.clear();
+                routes.addAll(offeringData);
+                adapter.notifyDataSetChanged();
+            }
+            if (tab.getTag() == "seeking") {
                 routes.clear();
                 routes.addAll(seekingData);
                 adapter.notifyDataSetChanged();
