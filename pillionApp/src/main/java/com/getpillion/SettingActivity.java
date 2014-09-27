@@ -8,9 +8,8 @@ import android.preference.PreferenceManager;
 
 import com.actionbarsherlock.app.SherlockPreferenceActivity;
 import com.actionbarsherlock.view.MenuItem;
-import com.getpillion.R;
-import com.getpillion.common.Constant;
 import com.bugsense.trace.BugSenseHandler;
+import com.getpillion.common.Constant;
 import com.jeremyfeinstein.slidingmenu.lib.SlidingMenu;
 
 public class SettingActivity extends SherlockPreferenceActivity implements
@@ -31,7 +30,7 @@ public class SettingActivity extends SherlockPreferenceActivity implements
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
 		Intent intent = new Intent().setClass(SettingActivity.this,
-				HomeActivity.class);
+				AllRoutesActivity.class);
 		intent.putExtra("type", "friend_app");
 		intent.putExtra("title", "Friends");
 		startActivity(intent);

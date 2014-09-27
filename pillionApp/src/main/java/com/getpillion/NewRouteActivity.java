@@ -3,48 +3,39 @@ package com.getpillion;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
-import android.widget.Toast;
+import android.widget.Button;
 
 import com.actionbarsherlock.app.SherlockFragmentActivity;
-import com.actionbarsherlock.view.Menu;
-import com.actionbarsherlock.view.MenuItem;
 import com.bugsense.trace.BugSenseHandler;
-import com.facebook.FacebookException;
-import com.facebook.FacebookOperationCanceledException;
-import com.facebook.Session;
-import com.facebook.widget.WebDialog;
-import com.facebook.widget.WebDialog.OnCompleteListener;
 import com.getpillion.common.Constant;
-import com.google.analytics.tracking.android.EasyTracker;
-import com.jeremyfeinstein.slidingmenu.lib.SlidingMenu;
 
-public class InviteFriendActivity extends SherlockFragmentActivity {
+public class NewRouteActivity extends SherlockFragmentActivity {
 
-	private SlidingMenu menu = null;
+	//private SlidingMenu menu = null;
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		BugSenseHandler.initAndStartSession(getApplicationContext(), Constant.BUGSENSE_API_KEY);
-		setContentView(R.layout.activity_invite_friend);
+		setContentView(R.layout.activity_new_route);
 
-		getSupportActionBar().setHomeButtonEnabled(true);
-		getSupportActionBar().setTitle("Find More Friends");
-		
-		menu = new SlidingMenu(this);
-		menu.setMode(SlidingMenu.LEFT);
-		menu.setTouchModeAbove(SlidingMenu.TOUCHMODE_NONE);
-		menu.setShadowWidthRes(R.dimen.shadow_width);
-		menu.setShadowDrawable(R.drawable.shadow);
-		menu.setBehindOffsetRes(R.dimen.slidingmenu_offset);
-		menu.setFadeDegree(0.0f);
-		menu.attachToActivity(this, SlidingMenu.SLIDING_WINDOW);
-		menu.setMenu(R.layout.menu);
+		getSupportActionBar().setHomeButtonEnabled(false);
+		getSupportActionBar().setTitle("Home<->Office Route");
+
+        Button startButton = (Button) findViewById(R.id.saveRoute);
+
+        startButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(NewRouteActivity.this, AllRoutesActivity.class);
+                startActivity(intent);
+            }
+        });
 		
 		//publishNewsFeed(null);
 	}
 	
-	
+/*
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
 		return true;
@@ -72,7 +63,7 @@ public class InviteFriendActivity extends SherlockFragmentActivity {
 
 			showDialogWithoutNotificationBar(params);
 		} catch (Exception ex) {
-			Intent intent = new Intent().setClass(InviteFriendActivity.this,
+			Intent intent = new Intent().setClass(NewRouteActivity.this,
 					MainActivity.class);
 			startActivity(intent);
 		}
@@ -94,7 +85,7 @@ public class InviteFriendActivity extends SherlockFragmentActivity {
 
 			showFeedDialogWithoutNotificationBar(params);
 		} catch (Exception ex) {
-			Intent intent = new Intent().setClass(InviteFriendActivity.this,
+			Intent intent = new Intent().setClass(NewRouteActivity.this,
 					MainActivity.class);
 			startActivity(intent);
 		}
@@ -102,7 +93,7 @@ public class InviteFriendActivity extends SherlockFragmentActivity {
 
 	public void showDialogWithoutNotificationBar(Bundle params) {
 		WebDialog requestsDialog = (new WebDialog.RequestsDialogBuilder(
-				InviteFriendActivity.this, Session.getActiveSession(), params))
+				NewRouteActivity.this, Session.getActiveSession(), params))
 				.setOnCompleteListener(new OnCompleteListener() {
 
 					@Override
@@ -138,7 +129,7 @@ public class InviteFriendActivity extends SherlockFragmentActivity {
 
 	public void showFeedDialogWithoutNotificationBar(Bundle params) {
 		WebDialog requestsDialog = (new WebDialog.FeedDialogBuilder(
-				InviteFriendActivity.this, Session.getActiveSession(), params))
+				NewRouteActivity.this, Session.getActiveSession(), params))
 				.setOnCompleteListener(new OnCompleteListener() {
 
 					@Override
@@ -188,5 +179,6 @@ public class InviteFriendActivity extends SherlockFragmentActivity {
 		super.onStop();
 		EasyTracker.getInstance().activityStop(this);
 	}
+*/
 
 }

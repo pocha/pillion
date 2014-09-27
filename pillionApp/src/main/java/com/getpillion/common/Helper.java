@@ -1,11 +1,10 @@
 package com.getpillion.common;
 
 
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.util.List;
+import android.app.Activity;
+
+import com.getpillion.R;
+import com.jeremyfeinstein.slidingmenu.lib.SlidingMenu;
 
 import org.apache.http.HttpResponse;
 import org.apache.http.NameValuePair;
@@ -15,6 +14,12 @@ import org.apache.http.client.entity.UrlEncodedFormEntity;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.client.methods.HttpPost;
 import org.apache.http.impl.client.DefaultHttpClient;
+
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.util.List;
 
 public class Helper {
 	public static String postData(String url, List<NameValuePair> nameValuePairs) {
@@ -88,5 +93,17 @@ public class Helper {
 	    // Return full string
 	    return total; 
 	}
+
+    public static void createMenu(Activity activity){
+        SlidingMenu menu = new SlidingMenu(activity);
+        menu.setMode(SlidingMenu.LEFT);
+        menu.setTouchModeAbove(SlidingMenu.TOUCHMODE_NONE);
+        menu.setShadowWidthRes(R.dimen.shadow_width);
+        menu.setShadowDrawable(R.drawable.shadow);
+        menu.setBehindOffsetRes(R.dimen.slidingmenu_offset);
+        menu.setFadeDegree(0.0f);
+        menu.attachToActivity(activity, SlidingMenu.SLIDING_WINDOW);
+        menu.setMenu(R.layout.menu);
+    }
 
 }

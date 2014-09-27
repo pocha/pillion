@@ -1,34 +1,16 @@
 package com.getpillion;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-
-import org.apache.http.NameValuePair;
-import org.apache.http.message.BasicNameValuePair;
-
 import android.app.ProgressDialog;
 import android.content.Intent;
-import android.content.SharedPreferences;
-import android.content.pm.ApplicationInfo;
-import android.content.pm.PackageManager;
-import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.view.View.OnClickListener;
 import android.view.ViewGroup;
+import android.widget.Button;
 
-import com.getpillion.R;
-import com.getpillion.common.Constant;
-import com.getpillion.common.Helper;
-import com.facebook.Request;
-import com.facebook.Response;
-import com.facebook.Session;
-import com.facebook.SessionState;
 import com.facebook.UiLifecycleHelper;
-import com.facebook.model.GraphUser;
-import com.facebook.widget.LoginButton;
 
 public class MainFragment extends Fragment {
 
@@ -39,11 +21,22 @@ public class MainFragment extends Fragment {
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
 			Bundle savedInstanceState) {
 		View view = inflater.inflate(R.layout.activity_main, container, false);
-		LoginButton authButton = (LoginButton) view
-				.findViewById(R.id.authButton);
-		authButton.setFragment(this);
+		Button startButton = (Button) view
+				.findViewById(R.id.startButton);
+
+        getActivity().getActionBar().hide();
+
+        startButton.setOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(getActivity(),NewRouteActivity.class);
+                startActivity(intent);
+            }
+        });
+
+		/*authButton.setFragment(this);
 		// authButton.setPublishPermissions(Arrays.asList("publish_actions"));
-		authButton.setReadPermissions(Arrays.asList("user_birthday", "email"));
+		authButton.setReadPermissions(Arrays.asList("user_birthday", "email"));*/
 
 		return view;
 	}
@@ -51,11 +44,11 @@ public class MainFragment extends Fragment {
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		uiHelper = new UiLifecycleHelper(getActivity(), callback);
-		uiHelper.onCreate(savedInstanceState);
+		/*uiHelper = new UiLifecycleHelper(getActivity(), callback);
+		uiHelper.onCreate(savedInstanceState);*/
 	}
 
-	private void onSessionStateChange(Session session, SessionState state,
+/*	private void onSessionStateChange(Session session, SessionState state,
 			Exception exception) {
 		if (state.isOpened()) {
 
@@ -67,54 +60,49 @@ public class MainFragment extends Fragment {
 						"Working. Please wait ...", true, false);
 				final String accessToken = session.getAccessToken();
 				Request.executeMeRequestAsync(session,
-						new Request.GraphUserCallback() {
+                        new Request.GraphUserCallback() {
 
-							// callback after Graph API response with user
-							// object
-							@Override
-							public void onCompleted(GraphUser user,
-									Response response) {
-								if (user != null) {
-									SharedPreferences settings = getActivity()
-											.getSharedPreferences(
-													Constant.PREFS_NAME, 0);
+                            // callback after Graph API response with user
+                            // object
+                            @Override
+                            public void onCompleted(GraphUser user,
+                                                    Response response) {
+                                if (user != null) {
+                                    SharedPreferences settings = getActivity()
+                                            .getSharedPreferences(
+                                                    Constant.PREFS_NAME, 0);
 
-									SharedPreferences.Editor editor = settings
-											.edit();
-									editor.putString("facebook_user_id",
-											user.getId());
-									editor.commit();
+                                    SharedPreferences.Editor editor = settings
+                                            .edit();
+                                    editor.putString("facebook_user_id",
+                                            user.getId());
+                                    editor.commit();
 
-									if (settings.getString(
-											"facebook_access_token_"
-													+ user.getId(), "").equals(
-											"")) {
-										// First time access - register user
+                                    if (settings.getString(
+                                            "facebook_access_token_"
+                                                    + user.getId(), "").equals(
+                                            "")) {
+                                        // First time access - register user
 
-										editor = settings.edit();
-										editor.putString(
-												"facebook_access_token_"
-														+ user.getId(),
-												accessToken);
-										editor.commit();
+                                        editor = settings.edit();
+                                        editor.putString(
+                                                "facebook_access_token_"
+                                                        + user.getId(),
+                                                accessToken);
+                                        editor.commit();
 
-										MainActivity.facebookUserID = user
-												.getId();
-										registerUser();
-									} else {
+                                        MainActivity.facebookUserID = user
+                                                .getId();
+                                        registerUser();
+                                    } else {
 
-										// Update groups
-										registerUser();
-										/*
-										 * Intent intent = new
-										 * Intent(getActivity(),
-										 * HomeActivity.class);
-										 * getActivity().startActivity(intent);
-										 */
-									}
-								}
-							}
-						});
+                                        // Update groups
+                                        registerUser();
+
+                                    }
+                                }
+                            }
+                        });
 			} else {
 				progress = ProgressDialog.show(getActivity(), "",
 						"Working. Please wait ...", true, false);
@@ -245,4 +233,5 @@ public class MainFragment extends Fragment {
 		}.execute();
 
 	}
+*/
 }

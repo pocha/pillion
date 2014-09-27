@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
-    <string name="app_name">AppCovery</string>
+    <string name="app_name">Pillion</string>
     <string name="get_started">AppCovery helps you see Apps your friends are using. To get started, log in using your Facebook account</string>
     <string name="get_started1">We absolutely DO NOT SPAM anyone. We do not email/post/sms your friend on your behalf.</string>
     <string name="get_started2">Invitation Sent. Now sit back and relax - We will inform you as soon as someone joins so that you can see their apps.</string>

@@ -16,7 +16,7 @@ import android.widget.ArrayAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.getpillion.HomeActivity;
+import com.getpillion.AllRoutesActivity;
 import com.getpillion.R;
 import com.getpillion.SettingActivity;
 
@@ -145,7 +145,7 @@ public class SlidingListFragment extends ListFragment {
 				*/
 				
 				
-				Intent intent = new Intent(getActivity(),HomeActivity.class);
+				Intent intent = new Intent(getActivity(),AllRoutesActivity.class);
 				if (arg2 == 0) {
 					intent.putExtra("type", "friend_app");
 					intent.putExtra("title", "Friends");

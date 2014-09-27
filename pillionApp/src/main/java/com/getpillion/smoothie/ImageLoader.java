@@ -1,10 +1,10 @@
 package com.getpillion.smoothie;
 
-
+/*
 import org.lucasr.smoothie.SimpleItemLoader;
 
 import com.getpillion.FeedBO;
-import com.getpillion.FeedAdapter.FeedViewHolder;
+import com.getpillion.RouteAdapter.FeedViewHolder;
 
 
 import uk.co.senab.bitmapcache.BitmapLruCache;
@@ -61,18 +61,11 @@ public class ImageLoader extends SimpleItemLoader<String, CacheableBitmapDrawabl
 	        if (fromMemory) {
 	            holder.appIcon.setImageDrawable(result);
 	        } else {
-	        	/*
-	            BitmapDrawable emptyDrawable = new BitmapDrawable(itemView.getResources());
-	
-	            TransitionDrawable fadeInDrawable =
-	                    new TransitionDrawable(new Drawable[] { emptyDrawable, result });
-	
-	            holder.appIcon.setImageDrawable(fadeInDrawable);
-	            fadeInDrawable.startTransition(200);
-	            */
+
 	            holder.appIcon.setImageDrawable(result);
 	        }
     	} catch (Exception ex) { }
 		
     }
 }
+*/

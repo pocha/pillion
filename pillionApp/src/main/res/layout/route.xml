@@ -7,7 +7,7 @@
     
     
     
-    
+ <!--
     <FrameLayout 
         	 android:layout_width="58dp"
              android:layout_height="58dp" >
@@ -28,7 +28,7 @@
     
 
 </FrameLayout>  
-    
+-->
     
     <LinearLayout
         android:layout_width="0dp"
@@ -36,28 +36,37 @@
         android:padding="8dp"
         android:background="#f9f9f9"
         android:layout_height="60dp"
-        android:gravity="left"
-        android:orientation="vertical" >
+        android:gravity="center_vertical"
+        android:orientation="horizontal" >
         
         
         <TextView
-	        android:id="@+id/appName"
+	        android:id="@+id/from"
 	        android:layout_width="wrap_content"
 	        android:layout_height="wrap_content"
-	        android:text="App Description"
+	        android:text="Brigade Gardenia"
 	        android:textColor="#333333"
 	        android:lines="1"
 	        android:textSize="16sp" >
 	    </TextView>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text=" => "
+            android:lines="1"
+            android:textColor="#999999"
+            android:textSize="16sp" >
+        </TextView>
 	    
         <TextView
-	        android:id="@+id/appDeveloper"
+	        android:id="@+id/to"
 	        android:layout_width="wrap_content"
 	        android:layout_height="wrap_content"
 	        android:lines="1"
-	        android:text="..."
-	        android:textColor="#999999"
-	        android:textSize="13sp" >
+            android:textColor="#333333"
+	        android:text="Adarsh Palm Retreat"
+	        android:textSize="16sp" >
 	    </TextView>
 	    
         
@@ -65,7 +74,7 @@
         
     </LinearLayout>
     
-    
+ <!--
     <LinearLayout
         android:id="@+id/total_friends_div"
         android:layout_width="60dp"
@@ -203,17 +212,23 @@
         
     </LinearLayout>    
     
-    
+    -->
     
     <LinearLayout
         android:id="@+id/right_arrow_div"
-        android:layout_width="30dp"
+        android:layout_width="100dp"
         android:padding="4dp"
         android:background="#ffffff"
         android:layout_height="60dp"
-        android:gravity="center_vertical"
+        android:gravity="right|center_vertical"
         android:layout_gravity="center_vertical"
-        android:orientation="vertical" >
+        android:orientation="horizontal" >
+
+        <TextView
+            android:id="@+id/time"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="4:30 PM"/>
         
         <ImageView android:id="@+id/right_arrow"
             android:src="@drawable/right_arrow"
@@ -221,6 +236,7 @@
             android:layout_height="20dp"
             android:layout_gravity="center"
             android:scaleType="fitXY" />
+
         
     </LinearLayout>    
 

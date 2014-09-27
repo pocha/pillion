@@ -1,64 +1,32 @@
 package com.getpillion;
 
 import android.app.AlarmManager;
-import android.app.AlertDialog;
-import android.app.PendingIntent;
 import android.app.ProgressDialog;
-import android.content.Context;
-import android.content.DialogInterface;
-import android.content.Intent;
-import android.content.SharedPreferences;
-import android.content.pm.ApplicationInfo;
-import android.content.pm.PackageManager;
-import android.net.Uri;
-import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
-import android.os.Message;
-import android.view.View;
-import android.widget.AdapterView;
-import android.widget.AdapterView.OnItemClickListener;
-import android.widget.Button;
-import android.widget.LinearLayout;
+import android.support.v4.app.FragmentTransaction;
 import android.widget.ListView;
-import android.widget.Toast;
 
+import com.actionbarsherlock.app.ActionBar;
+import com.actionbarsherlock.app.ActionBar.Tab;
 import com.actionbarsherlock.app.SherlockFragmentActivity;
-import com.actionbarsherlock.view.Menu;
-import com.actionbarsherlock.view.MenuItem;
 import com.bugsense.trace.BugSenseHandler;
-import com.facebook.FacebookException;
-import com.facebook.FacebookOperationCanceledException;
-import com.facebook.Session;
-import com.facebook.widget.WebDialog;
-import com.facebook.widget.WebDialog.OnCompleteListener;
 import com.getpillion.common.ConnectionDetector;
 import com.getpillion.common.Constant;
 import com.getpillion.common.Helper;
-import com.getpillion.smoothie.ImageLoader;
+import com.getpillion.models.Route;
 import com.google.ads.AdView;
-import com.google.analytics.tracking.android.EasyTracker;
-import com.google.android.gcm.GCMRegistrar;
 import com.jeremyfeinstein.slidingmenu.lib.SlidingMenu;
 
-import org.apache.http.NameValuePair;
-import org.apache.http.message.BasicNameValuePair;
-import org.json.JSONArray;
-import org.json.JSONObject;
 import org.lucasr.smoothie.AsyncListView;
-import org.lucasr.smoothie.ItemManager;
 
-import java.io.File;
-import java.io.FileOutputStream;
-import java.security.MessageDigest;
-import java.security.NoSuchAlgorithmException;
+import java.sql.Time;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 import uk.co.senab.bitmapcache.BitmapLruCache;
 
-public class HomeActivity extends SherlockFragmentActivity {
+public class AllRoutesActivity extends SherlockFragmentActivity {
 
 	private AdView adView;
 	AlarmManager am;
@@ -78,17 +46,77 @@ public class HomeActivity extends SherlockFragmentActivity {
 	private List<String> packageList = new ArrayList<String>();
 
 	private SlidingMenu menu = null;
+    private ActionBar.Tab offeringTab, seekingTab;
+
+
+    public class TabListener implements ActionBar.TabListener {
+        private RouteAdapter adapter;
+        private ArrayList<Route> offeringData, seekingData, routes;
+        private ListView listView;
+
+
+        public void populateData(ArrayList<Route> routes, String type){
+            routes.clear();
+
+            if (type == "offering"){
+               routes.add(new Route("Brigade Gardenia","Ecospace", Time.valueOf("8:00:00")));
+               routes.add(new Route("Brigade Gardenia","Ecospace", Time.valueOf("8:30:00")));
+               routes.add(new Route("Brigade Gardenia","Ecospace", Time.valueOf("9:00:00")));
+           }
+           else {
+               routes.add(new Route("Ecospace","Brigade Gardenia", Time.valueOf("16:00:00")));
+               routes.add(new Route("Ecospace","Brigade Gardenia", Time.valueOf("17:00:00")));
+               routes.add(new Route("Ecospace","Brigade Gardenia", Time.valueOf("18:00:00")));
+           }
+        }
+
+        public TabListener(){
+            offeringData = new ArrayList<Route>();
+            populateData(offeringData,"offering");
+            seekingData = new ArrayList<Route>();
+            populateData(seekingData,"seeking");
+
+            routes = new ArrayList<Route>();
+            adapter = new RouteAdapter(getApplicationContext(),routes);
+            listView = (ListView) findViewById(R.id.listView);
+            listView.setAdapter(adapter);
+        }
+
+        @Override
+        public void onTabSelected(Tab tab, FragmentTransaction ft) {
+            if (tab.getTag() == "offering"){ // this will be populated through AsyncTask onTabSelected
+               routes.clear();
+               routes.addAll(offeringData);
+               adapter.notifyDataSetChanged();
+            }
+            else {
+                routes.clear();
+                routes.addAll(seekingData);
+                adapter.notifyDataSetChanged();
+            }
+        }
+
+        @Override
+        public void onTabUnselected(Tab tab, FragmentTransaction ft) {
+
+        }
+
+        @Override
+        public void onTabReselected(Tab tab, FragmentTransaction ft) {
+            // TODO Auto-generated method stub
+        }
+    }
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		BugSenseHandler.initAndStartSession(getApplicationContext(),
 				Constant.BUGSENSE_API_KEY);
-		setContentView(R.layout.feed);
+		setContentView(R.layout.route_list);
 
-		progress = ProgressDialog.show(HomeActivity.this, "",
-				"Loading Apps. Please wait", true, false);
-		getSupportActionBar().setHomeButtonEnabled(true);
+		/*progress = ProgressDialog.show(AllRoutesActivity.this, "",
+				"Loading Routes. Please wait", true, false);
+
 
 		String title = "Top Friends Apps";
 		try {
@@ -97,10 +125,25 @@ public class HomeActivity extends SherlockFragmentActivity {
 				title = "Top Friends Apps";
 			}
 		} catch (Exception ex) {
-		}
-		getSupportActionBar().setTitle(title);
-		
-		if ( com.getpillion.common.Session.packageList.size() == 0 ) {
+		}*/
+        ActionBar actionBar = getSupportActionBar();
+        actionBar.setHomeButtonEnabled(false);
+        actionBar.setTitle("All Routes");
+        actionBar.setNavigationMode(ActionBar.NAVIGATION_MODE_TABS);
+
+        TabListener tabListener = new TabListener();
+        offeringTab = actionBar.newTab().setText("Rides Offered");
+        offeringTab.setTag("offering");
+        offeringTab.setTabListener(tabListener);
+        actionBar.addTab(offeringTab);
+
+        seekingTab = actionBar.newTab().setText("Rides Sought");
+        seekingTab.setTag("seeking");
+        seekingTab.setTabListener(tabListener);
+        actionBar.addTab(seekingTab);
+
+
+        /*if ( com.getpillion.common.Session.packageList.size() == 0 ) {
 			PackageManager pm = getApplicationContext().getPackageManager();
 			List<ApplicationInfo> packages = pm
 					.getInstalledApplications(PackageManager.GET_META_DATA);
@@ -125,11 +168,12 @@ public class HomeActivity extends SherlockFragmentActivity {
 		menu.setBehindOffsetRes(R.dimen.slidingmenu_offset);
 		menu.setFadeDegree(0.0f);
 		menu.attachToActivity(this, SlidingMenu.SLIDING_WINDOW);
-		menu.setMenu(R.layout.menu);
+		menu.setMenu(R.layout.menu);*/
+        Helper.createMenu(this);
 
-		cd = new ConnectionDetector(getApplicationContext());
+		//cd = new ConnectionDetector(getApplicationContext());
 
-		mHandler = new Handler() {
+/*		mHandler = new Handler() {
 			@Override
 			public void handleMessage(Message msg) {
 				try {
@@ -138,7 +182,7 @@ public class HomeActivity extends SherlockFragmentActivity {
 					JSONObject jObj = new JSONObject(str);
 					if (jObj.getInt("count") == 0) {
 						Intent intent = new Intent().setClass(
-								HomeActivity.this, InviteFriendActivity.class);
+								AllRoutesActivity.this, NewRouteActivity.class);
 						startActivity(intent);
 					} else {
 						SharedPreferences settings = getApplicationContext()
@@ -183,7 +227,7 @@ public class HomeActivity extends SherlockFragmentActivity {
 								count = count + 1;
 							}
 
-							FeedAdapter adapter = new FeedAdapter(
+							RouteAdapter adapter = new RouteAdapter(
 									getApplicationContext(), values, FB_USER_ID);
 							listview.setAdapter(adapter);
 							progress.dismiss();
@@ -252,7 +296,7 @@ public class HomeActivity extends SherlockFragmentActivity {
 						count = count + 1;
 					}
 
-					FeedAdapter adapter = new FeedAdapter(
+					RouteAdapter adapter = new RouteAdapter(
 							getApplicationContext(), values, FB_USER_ID);
 					listview.setAdapter(adapter);
 
@@ -261,8 +305,8 @@ public class HomeActivity extends SherlockFragmentActivity {
 								getApplicationContext(),
 								"No New Apps Found. To See more apps, add more friends",
 								Toast.LENGTH_LONG).show();
-						Intent intent = new Intent(HomeActivity.this,
-								InviteFriendActivity.class);
+						Intent intent = new Intent(AllRoutesActivity.this,
+								NewRouteActivity.class);
 						startActivity(intent);
 					}
 
@@ -310,8 +354,8 @@ public class HomeActivity extends SherlockFragmentActivity {
 				String packageName = feed.getAppPackage();
 				if (packageName.indexOf("FACEBOOK_USER:") >= 0) {
 					// Friend list. Click to open the friend apps
-					Intent intent = new Intent(HomeActivity.this,
-							HomeActivity.class);
+					Intent intent = new Intent(AllRoutesActivity.this,
+							AllRoutesActivity.class);
 					intent.putExtra("friend_facebook_id", packageName);
 					intent.putExtra("type", "");
 					String[] nameArr = feed.getAppName().split(" ");
@@ -319,15 +363,7 @@ public class HomeActivity extends SherlockFragmentActivity {
 					intent.putExtra("no_invite_button", "1");
 					startActivity(intent);
 				} else {
-					/*
-					 * Intent intent = new Intent(Intent.ACTION_VIEW);
-					 * intent.setData(Uri.parse("market://details?id=" +
-					 * feed.getAppPackage()));
-					 * EasyTracker.getTracker().sendEvent("app",
-					 * "click",feed.getAppPackage(),0L);
-					 * 
-					 * startActivity(intent);
-					 */
+
 					showAppInstallDialog(feed.getFriendNames(),
 							feed.getAppName(), feed.getAppPackage());
 					updateUserView(feed.getAppID());
@@ -360,23 +396,10 @@ public class HomeActivity extends SherlockFragmentActivity {
 			fetchFriendsCount();
 			// System.out.println(">>>>>I");
 		}
-
-		/*
-		 * adView = new AdView(this, AdSize.BANNER, "a151cad1156abea");
-		 * 
-		 * // Lookup your LinearLayout assuming it's been given // the attribute
-		 * android:id="@+id/mainLayout" LinearLayout layout = (LinearLayout)
-		 * findViewById(R.id.app_layout);
-		 * 
-		 * // Add the adView to it layout.addView(adView);
-		 * 
-		 * // Initiate a generic request to load it with an ad adView.loadAd(new
-		 * AdRequest());
-		 */
-
+*/
 	}
 
-	public void updateUserView(final String appID) {
+/*	public void updateUserView(final String appID) {
 		try {
 			new AsyncTask<Void, Void, Void>() {
 				@Override
@@ -453,10 +476,7 @@ public class HomeActivity extends SherlockFragmentActivity {
 		} catch (Exception ex) {
 		}
 		if (!type.equals("friend_app")) {
-			/*
-			menu.add(0, 0, 0, "Reload").setIcon(R.drawable.reload)
-					.setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);
-			*/
+
 		} else {
 			menu.add(0, 0, 0, "Invite Friend").setIcon(R.drawable.add_friend1)
 					.setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);
@@ -480,8 +500,8 @@ public class HomeActivity extends SherlockFragmentActivity {
 				if (!type.equals("friend_app")) {
 					loadFreindsApps();
 				} else {
-					Intent intent = new Intent(HomeActivity.this,
-							InviteFriendActivity.class);
+					Intent intent = new Intent(AllRoutesActivity.this,
+							NewRouteActivity.class);
 					startActivity(intent);
 				}
 				return true;
@@ -576,7 +596,7 @@ public class HomeActivity extends SherlockFragmentActivity {
 		if (appUploaded.equals("")) {
 
 			final ProgressDialog progress = ProgressDialog.show(
-					HomeActivity.this, "", "Initializing. Please wait", true,
+					AllRoutesActivity.this, "", "Initializing. Please wait", true,
 					false);
 
 			try {
@@ -700,8 +720,8 @@ public class HomeActivity extends SherlockFragmentActivity {
 	}
 
 	public void inviteFriend(View v) {
-		Intent intent = new Intent(HomeActivity.this,
-				InviteFriendActivity.class);
+		Intent intent = new Intent(AllRoutesActivity.this,
+				NewRouteActivity.class);
 		startActivity(intent);
 	}
 
@@ -786,7 +806,7 @@ public class HomeActivity extends SherlockFragmentActivity {
 
 			showDialogWithoutNotificationBar(params);
 		} catch (Exception ex) {
-			Intent intent = new Intent().setClass(HomeActivity.this,
+			Intent intent = new Intent().setClass(AllRoutesActivity.this,
 					MainActivity.class);
 			startActivity(intent);
 		}
@@ -821,7 +841,7 @@ public class HomeActivity extends SherlockFragmentActivity {
 
 			showFeedDialogWithoutNotificationBar(params);
 		} catch (Exception ex) {
-			Intent intent = new Intent().setClass(HomeActivity.this,
+			Intent intent = new Intent().setClass(AllRoutesActivity.this,
 					MainActivity.class);
 			startActivity(intent);
 		}
@@ -829,7 +849,7 @@ public class HomeActivity extends SherlockFragmentActivity {
 
 	public void showDialogWithoutNotificationBar(Bundle params) {
 		WebDialog requestsDialog = (new WebDialog.RequestsDialogBuilder(
-				HomeActivity.this, Session.getActiveSession(), params))
+				AllRoutesActivity.this, Session.getActiveSession(), params))
 				.setOnCompleteListener(new OnCompleteListener() {
 
 					@Override
@@ -866,7 +886,7 @@ public class HomeActivity extends SherlockFragmentActivity {
 
 	public void showFeedDialogWithoutNotificationBar(Bundle params) {
 		WebDialog requestsDialog = (new WebDialog.FeedDialogBuilder(
-				HomeActivity.this, Session.getActiveSession(), params))
+				AllRoutesActivity.this, Session.getActiveSession(), params))
 				.setOnCompleteListener(new OnCompleteListener() {
 
 					@Override
@@ -962,15 +982,6 @@ public class HomeActivity extends SherlockFragmentActivity {
 	
 
 	private void myPackages() {
-
-		/*
-		 * PackageManager pm = getApplicationContext().getPackageManager();
-		 * List<ApplicationInfo> packages = pm
-		 * .getInstalledApplications(PackageManager.GET_META_DATA);
-		 * 
-		 * for (ApplicationInfo packageInfo : packages) {
-		 * packageList.add(packageInfo.packageName); }
-		 */
 		populateMyPackages();
 		
 	}
@@ -990,7 +1001,7 @@ public class HomeActivity extends SherlockFragmentActivity {
 		myPackages();
 		final ListView listview = (ListView) findViewById(R.id.listview);
 
-		FeedAdapter adapter = new FeedAdapter(this,
+		RouteAdapter adapter = new RouteAdapter(this,
 				com.getpillion.common.Session.values,
 				FB_USER_ID);
 		listview.setAdapter(adapter);
@@ -1097,5 +1108,5 @@ public class HomeActivity extends SherlockFragmentActivity {
 		Toast.makeText(getApplicationContext(), message, Toast.LENGTH_LONG)
 				.show();
 	}
-
+*/
 }

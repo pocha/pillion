@@ -1,28 +1,24 @@
 package com.getpillion;
 
 import android.os.Bundle;
+import android.support.v4.app.FragmentActivity;
 
-import com.actionbarsherlock.app.SherlockFragmentActivity;
-import com.getpillion.common.Constant;
 import com.bugsense.trace.BugSenseHandler;
+import com.getpillion.common.Constant;
 import com.google.analytics.tracking.android.EasyTracker;
 
 
 
-public class MainActivity extends SherlockFragmentActivity {
+public class MainActivity extends FragmentActivity {
 
 	private MainFragment mainFragment;
-	public static String facebookUserID;
-	
-	
-	public static String shareMyApps = "";
-	public static String newApps = "";
+    public static String facebookUserID;
 	
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 	    super.onCreate(savedInstanceState);
 	    BugSenseHandler.initAndStartSession(getApplicationContext(), Constant.BUGSENSE_API_KEY);
-	    getSupportActionBar().setHomeButtonEnabled(false);
+	    /*getSupportActionBar().setHomeButtonEnabled(false);
 		getSupportActionBar().setTitle("Login");
 		
 		try {
@@ -33,7 +29,7 @@ public class MainActivity extends SherlockFragmentActivity {
 		try {
 			newApps = getIntent().getExtras().getString("new_apps", "");
 		} catch (Exception ex) { }
-		catch (NoSuchMethodError e) { }
+		catch (NoSuchMethodError e) { }*/
 
 	    if (savedInstanceState == null) {
 	        // Add the fragment on initial activity setup
@@ -47,7 +43,7 @@ public class MainActivity extends SherlockFragmentActivity {
 	        mainFragment = (MainFragment) getSupportFragmentManager()
 	        .findFragmentById(android.R.id.content);
 	    }
-	    
+
 	    
 	}
 	

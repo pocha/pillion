@@ -2,34 +2,21 @@ package com.getpillion;
 
 import android.content.Context;
 import android.content.SharedPreferences;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
-import android.graphics.Color;
-import android.os.AsyncTask;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.CheckBox;
-import android.widget.ImageView;
-import android.widget.LinearLayout;
 import android.widget.TextView;
 
-import com.getpillion.common.Constant;
-import com.getpillion.common.Helper;
-import com.getpillion.common.Session;
+import com.getpillion.models.Route;
 
-import org.apache.http.NameValuePair;
-import org.apache.http.message.BasicNameValuePair;
-
-import java.io.InputStream;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 
-import uk.co.senab.bitmapcache.CacheableImageView;
-
-public class FeedAdapter extends ArrayAdapter<String> {
+public class RouteAdapter extends ArrayAdapter<Route> {
 	private final Context context;
-	private String[] values;
+	private ArrayList<Route> values;
 	
 	private String appName;
 	private String appPackage;
@@ -38,80 +25,47 @@ public class FeedAdapter extends ArrayAdapter<String> {
 	private String FB_USER_ID;
 	SharedPreferences settings = null;
 
-	public FeedAdapter(Context context, String[] values, String facebookUserID) {
-		super(context, R.layout.feedrow, values);
+	public RouteAdapter(Context context, ArrayList<Route> values) {
+		super(context, R.layout.route, values);
 		this.context = context;
 		this.values = values;
-		FB_USER_ID = facebookUserID;
+		/*FB_USER_ID = facebookUserID;
 		settings = context
-				.getSharedPreferences(Constant.PREFS_NAME, 0);
+				.getSharedPreferences(Constant.PREFS_NAME, 0);*/
 	}
-
+/*
 	public void populateData(FeedBO[] values) {
 		this.values = new String[values.length];
 		for (int i = 0; i < values.length; i++) {
 			this.values[i] = values[i].toString();
 		}
 	}
-
+*/
 	@Override
 	public View getView(int position, View convertView, ViewGroup parent) {
-		if ( position == (values.length - 1) ) {
+		/*if ( position == (values.length - 1) ) {
 			//Toast.makeText(context, "Reached bottom", Toast.LENGTH_SHORT).show();
-		}
-		FeedViewHolder viewHolder;
+		}*/
+		RouteViewHolder viewHolder;
 
 		if (convertView == null) {
 			LayoutInflater inflater = (LayoutInflater) context
 					.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-			convertView = inflater.inflate(R.layout.feedrow, parent, false);
-			viewHolder = new FeedViewHolder();
-			viewHolder.appName = (TextView) convertView
-					.findViewById(R.id.appName);
-			viewHolder.appIcon = (CacheableImageView) convertView
-					.findViewById(R.id.appIcon);
-			viewHolder.appIconLocal = (ImageView) convertView
-					.findViewById(R.id.appIconLocal);
-			viewHolder.appDeveloper = (TextView) convertView
-					.findViewById(R.id.appDeveloper);
+			convertView = inflater.inflate(R.layout.route, parent, false);
+			viewHolder = new RouteViewHolder();
+			viewHolder.from = (TextView) convertView.findViewById(R.id.from);
+            viewHolder.to = (TextView) convertView.findViewById(R.id.to);
+            viewHolder.time = (TextView) convertView.findViewById(R.id.time);
 
-			viewHolder.installIcon = (ImageView) convertView
-					.findViewById(R.id.installIcon);
-			viewHolder.googlePlayIcon = (ImageView) convertView
-					.findViewById(R.id.googlePlayIcon);
-			viewHolder.installText = (TextView) convertView
-					.findViewById(R.id.installText);
-			viewHolder.totalFriends = (TextView) convertView
-					.findViewById(R.id.total_friends);
-
-			viewHolder.actionDiv = (LinearLayout) convertView
-					.findViewById(R.id.action_div);
-			viewHolder.totalFriendsDiv = (LinearLayout) convertView
-					.findViewById(R.id.total_friends_div);
-			viewHolder.friendNewApp = (LinearLayout) convertView
-					.findViewById(R.id.friend_new_app);
-			viewHolder.shareCheckboxDiv = (LinearLayout) convertView
-					.findViewById(R.id.share_checkbox_div);
-			
-			viewHolder.rightArrowDiv = (LinearLayout) convertView
-					.findViewById(R.id.right_arrow_div);
-
-			viewHolder.shareCheckbox = (CheckBox) convertView
-					.findViewById(R.id.share_checkbox);
-			
-			viewHolder.totalNew = (TextView) convertView
-					.findViewById(R.id.total_new);
-
-			convertView.setTag(viewHolder);
+            convertView.setTag(viewHolder);
 		} else {
-			viewHolder = (FeedViewHolder) convertView.getTag();
+			viewHolder = (RouteViewHolder) convertView.getTag();
 		}
 
-		String selectedVal = values[position];
-		final FeedBO feed = new FeedBO();
-		feed.populateFromString(selectedVal);
+		final Route route = values.get(position);
+/*		route.populateFromString(selectedVal);
 		
-		final CheckBox viewHolderCheckBox = viewHolder.shareCheckbox;
+    	final CheckBox viewHolderCheckBox = viewHolder.shareCheckbox;
 
 		viewHolder.shareCheckbox.setOnClickListener(new View.OnClickListener() {
 			public void onClick(View v) {
@@ -128,13 +82,13 @@ public class FeedAdapter extends ArrayAdapter<String> {
 				// Toast.makeText(context, message, Toast.LENGTH_SHORT).show();
 			}
 		});
-
+*/
 		viewHolder.position = position;
-		viewHolder.appName.setText(feed.getAppName());
-		viewHolder.appDeveloper.setText(feed.getAppDeveloper());
-		viewHolder.totalFriends.setText(feed.getTotalFriends());
+		viewHolder.from.setText(route.from);
+		viewHolder.to.setText(route.to);
+		viewHolder.time.setText( new SimpleDateFormat("hh:mm a").format(route.time));
 
-		
+/*
 		viewHolder.friendNewApp.setVisibility(LinearLayout.GONE);
 		if (feed.getAppPackage().indexOf("FACEBOOK_USER:") >= 0) {
 			viewHolder.actionDiv.setVisibility(LinearLayout.GONE);
@@ -190,9 +144,9 @@ public class FeedAdapter extends ArrayAdapter<String> {
 		}
 
 		// new DownloadImageTask(viewHolder.appIcon)
-		// .execute(feed.getAppIcon());
+		// .execute(route_list.getAppIcon());
 
-		// new ThumbnailTask(position, viewHolder).execute(feed.getAppIcon());
+		// new ThumbnailTask(position, viewHolder).execute(route_list.getAppIcon());
 		viewHolder.appIcon.setImageDrawable(null);
 		if (feed.getAppIcon().equals("NA")) {
 			viewHolder.appIcon.setVisibility(View.GONE);
@@ -200,36 +154,23 @@ public class FeedAdapter extends ArrayAdapter<String> {
 			viewHolder.appIconLocal.setImageDrawable(Session.hm.get(feed
 					.getIconResourceID()));
 		}
-
+*/
 		// imageView.setImageResource(R.drawable.no);
 		return convertView;
 	}
 
-	public class FeedViewHolder {
-		public TextView appName;
-		public CacheableImageView appIcon;
-		public ImageView appIconLocal;
-		public TextView appDeveloper;
-		public int position;
-		public ImageView newApp;
-		public ImageView installIcon;
-		public ImageView googlePlayIcon;
-		public TextView installText;
-		public TextView totalFriends;
-		public LinearLayout actionDiv;
-		public LinearLayout totalFriendsDiv;
-		public LinearLayout shareCheckboxDiv;
-		public LinearLayout friendNewApp;
-		public CheckBox shareCheckbox;
-		public TextView totalNew;
-		public LinearLayout rightArrowDiv;
+	public class RouteViewHolder {
+        public int position;
+		public TextView from;
+        public TextView to;
+        public TextView time;
 	}
 
-	private static class ThumbnailTask extends AsyncTask {
+/*	private static class ThumbnailTask extends AsyncTask {
 		private int mPosition;
-		private FeedViewHolder mHolder;
+		private RouteViewHolder mHolder;
 
-		public ThumbnailTask(int position, FeedViewHolder holder) {
+		public ThumbnailTask(int position, RouteViewHolder holder) {
 			mPosition = position;
 			mHolder = holder;
 		}
@@ -259,59 +200,7 @@ public class FeedAdapter extends ArrayAdapter<String> {
 
 	public void confirmShare() {
 		updateUserAppShareSetting();
-		/*
-		AlertDialog.Builder alertDialog = new AlertDialog.Builder(context);
-
-		if ( shareFlag.equals("1")) {
-			alertDialog.setTitle("Confirm Share ...");
-			alertDialog.setMessage("Do you really want to share " + appName + "?");
-		} else {
-			alertDialog.setTitle("Confirm UnShare ...");
-			alertDialog.setMessage("Do you really want to unshare " + appName + "?");
-		}
-
-
-		alertDialog.setPositiveButton("YES",
-				new DialogInterface.OnClickListener() {
-					public void onClick(DialogInterface dialog, int which) {
-						updateUserAppShareSetting();
-						dialog.dismiss();
-					}
-				});
-
-		alertDialog.setNegativeButton("NO",
-				new DialogInterface.OnClickListener() {
-					public void onClick(DialogInterface dialog, int which) {
-						dialog.dismiss();
-						if ( shareFlag.equals("1")) {
-							itemCheckBox.setChecked(false);
-						} else {
-							itemCheckBox.setChecked(true);
-						}
-					}
-				});
-
-		alertDialog.show();
-		*/
 	}
-
-	/*
-	 * private class DownloadImageTask extends AsyncTask<String, Void, Bitmap> {
-	 * ImageView bmImage;
-	 * 
-	 * public DownloadImageTask(ImageView bmImage) { this.bmImage = bmImage; }
-	 * 
-	 * protected Bitmap doInBackground(String... urls) { String urldisplay =
-	 * urls[0]; Bitmap mIcon11 = null; try { InputStream in = new
-	 * java.net.URL(urldisplay).openStream(); mIcon11 =
-	 * BitmapFactory.decodeStream(in); } catch (Exception e) {
-	 * e.printStackTrace(); } return mIcon11; }
-	 * 
-	 * protected void onPostExecute(Bitmap result) {
-	 * bmImage.setImageBitmap(result); } }
-	 */
-	
-	
 	
 	public void updateUserAppShareSetting() {
 		try {
@@ -346,5 +235,5 @@ public class FeedAdapter extends ArrayAdapter<String> {
 		} catch (Exception ex) {
 		}
 	}
-
+*/
 }
