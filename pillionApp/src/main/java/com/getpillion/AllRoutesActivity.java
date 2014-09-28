@@ -11,6 +11,8 @@ import android.widget.ListView;
 import com.actionbarsherlock.app.ActionBar;
 import com.actionbarsherlock.app.ActionBar.Tab;
 import com.actionbarsherlock.app.SherlockFragmentActivity;
+import com.actionbarsherlock.view.Menu;
+import com.actionbarsherlock.view.MenuItem;
 import com.bugsense.trace.BugSenseHandler;
 import com.getpillion.common.ConnectionDetector;
 import com.getpillion.common.Constant;
@@ -54,18 +56,12 @@ public class AllRoutesActivity extends SherlockFragmentActivity {
         private RouteAdapter adapter;
         private ArrayList<Route> offeringData, seekingData, routes;
         private ListView listView;
-        private Tab selectedTab;
+        private Tab selectedTab = null;
 
 
-        public void populateData(final ArrayList<Route> routes, final String type){
-            final ProgressDialog progress = ProgressDialog.show(AllRoutesActivity.this, "",
+        public void populateData(){
+            progress = ProgressDialog.show(AllRoutesActivity.this, "",
                     "Loading Routes. Please wait", true, false);
-
-            routes.clear();
-            adapter.notifyDataSetChanged(); //empty the list shown to the user
-
-            final ArrayList<Route> _routes = this.routes;
-            final RouteAdapter routeAdapter = this.adapter;
 
             new AsyncTask<Void, Void, Void>() {
                 @Override
@@ -78,17 +74,16 @@ public class AllRoutesActivity extends SherlockFragmentActivity {
                         postParams.add(new BasicNameValuePair("app_id", appID));
                         String url = Constant.SERVER + Constant.USER_APP_VIEW;
                         Helper.postData(url, postParams);*/
-                        Thread.sleep(10000);
-                        if (type == "offering"){
-                            routes.add(new Route("Brigade Gardenia","Ecospace", Time.valueOf("8:00:00")));
-                            routes.add(new Route("Brigade Gardenia","Ecospace", Time.valueOf("8:30:00")));
-                            routes.add(new Route("Brigade Gardenia","Ecospace", Time.valueOf("9:00:00")));
-                        }
-                        else {
-                            routes.add(new Route("Ecospace","Brigade Gardenia", Time.valueOf("16:00:00")));
-                            routes.add(new Route("Ecospace","Brigade Gardenia", Time.valueOf("17:00:00")));
-                            routes.add(new Route("Ecospace","Brigade Gardenia", Time.valueOf("18:00:00")));
-                        }
+                        Thread.sleep(3000);
+
+                            offeringData.add(new Route("Brigade Gardenia","Ecospace", Time.valueOf("8:00:00")));
+                            offeringData.add(new Route("Brigade Gardenia","Ecospace", Time.valueOf("8:30:00")));
+                            offeringData.add(new Route("Brigade Gardenia","Ecospace", Time.valueOf("9:00:00")));
+
+                            seekingData.add(new Route("Ecospace","Brigade Gardenia", Time.valueOf("16:00:00")));
+                            seekingData.add(new Route("Ecospace","Brigade Gardenia", Time.valueOf("17:00:00")));
+                            seekingData.add(new Route("Ecospace","Brigade Gardenia", Time.valueOf("18:00:00")));
+
                     } catch (Exception e) {
 
                     }
@@ -97,10 +92,15 @@ public class AllRoutesActivity extends SherlockFragmentActivity {
 
                 @Override
                 protected void onPostExecute(Void result) {
-                    _routes.clear();
-                    _routes.addAll(routes);
-                    routeAdapter.notifyDataSetChanged();
-                    progress.dismiss();
+                    routes.clear();
+                    if (selectedTab.getTag() == "offering") {
+                        routes.addAll(offeringData);
+                    }
+                    else {
+                        routes.addAll(seekingData);
+                    }
+                    adapter.notifyDataSetChanged();
+                    progress.hide();
                 }
             }.execute();
 
@@ -115,18 +115,13 @@ public class AllRoutesActivity extends SherlockFragmentActivity {
 
             offeringData = new ArrayList<Route>();
             seekingData = new ArrayList<Route>();
+
+            populateData();
         }
 
         @Override
         public void onTabSelected(Tab tab, FragmentTransaction ft) {
-            if (tab.getTag() == "offering" && offeringData.isEmpty()) {
-                populateData(offeringData, tab.getTag().toString());
-                return;
-            }
-            if (tab.getTag() == "seeking" && seekingData.isEmpty()) {
-                populateData(seekingData, tab.getTag().toString());
-                return;
-            }
+            selectedTab = tab;
 
             if (tab.getTag() == "offering") {
                 routes.clear();
@@ -171,7 +166,7 @@ public class AllRoutesActivity extends SherlockFragmentActivity {
 		} catch (Exception ex) {
 		}*/
         ActionBar actionBar = getSupportActionBar();
-        actionBar.setHomeButtonEnabled(false);
+        actionBar.setHomeButtonEnabled(true);
         actionBar.setTitle("All Routes");
         actionBar.setNavigationMode(ActionBar.NAVIGATION_MODE_TABS);
 
@@ -204,7 +199,8 @@ public class AllRoutesActivity extends SherlockFragmentActivity {
 				.getSharedPreferences(Constant.PREFS_NAME, 0);
 		FB_USER_ID = settings.getString("facebook_user_id", "");
 
-		menu = new SlidingMenu(this);
+
+        menu = new SlidingMenu(this);
 		menu.setMode(SlidingMenu.LEFT);
 		menu.setTouchModeAbove(SlidingMenu.TOUCHMODE_NONE);
 		menu.setShadowWidthRes(R.dimen.shadow_width);
@@ -212,10 +208,13 @@ public class AllRoutesActivity extends SherlockFragmentActivity {
 		menu.setBehindOffsetRes(R.dimen.slidingmenu_offset);
 		menu.setFadeDegree(0.0f);
 		menu.attachToActivity(this, SlidingMenu.SLIDING_WINDOW);
-		menu.setMenu(R.layout.menu);*/
-        Helper.createMenu(this);
+		menu.setMenu(R.layout.menu);
+*/
+        menu = new SlidingMenu(this);
+        Helper.createMenu(menu, this);
 
-		//cd = new ConnectionDetector(getApplicationContext());
+
+        //cd = new ConnectionDetector(getApplicationContext());
 
 /*		mHandler = new Handler() {
 			@Override
@@ -511,7 +510,25 @@ public class AllRoutesActivity extends SherlockFragmentActivity {
 			GCMRegistrar.register(getApplicationContext(), Constant.SENDER_ID);
 		}
 	}
+*/
+public boolean onCreateOptionsMenu(Menu menu) {
+    return true;
+}
 
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        try {
+            if (item.getItemId() == android.R.id.home) {
+                menu.toggle();
+                return true;
+            } else {
+                return true;
+            }
+        } catch (Exception ex) {
+            return true;
+        }
+    }
+    /*
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
 		String type = "";

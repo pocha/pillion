@@ -1,8 +1,7 @@
 package com.getpillion.common;
 
 
-import android.app.Activity;
-
+import com.actionbarsherlock.app.SherlockFragmentActivity;
 import com.getpillion.R;
 import com.jeremyfeinstein.slidingmenu.lib.SlidingMenu;
 
@@ -94,8 +93,8 @@ public class Helper {
 	    return total; 
 	}
 
-    public static void createMenu(Activity activity){
-        SlidingMenu menu = new SlidingMenu(activity);
+    public static void createMenu(SlidingMenu menu, SherlockFragmentActivity activity){
+        //menu = new SlidingMenu(activity);
         menu.setMode(SlidingMenu.LEFT);
         menu.setTouchModeAbove(SlidingMenu.TOUCHMODE_NONE);
         menu.setShadowWidthRes(R.dimen.shadow_width);
