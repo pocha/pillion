@@ -4,7 +4,6 @@ package com.getpillion.common;
 
 import android.content.Context;
 import android.content.Intent;
-import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.ListFragment;
 import android.view.LayoutInflater;
@@ -18,7 +17,6 @@ import android.widget.TextView;
 
 import com.getpillion.AllRoutesActivity;
 import com.getpillion.R;
-import com.getpillion.SettingActivity;
 
 public class SlidingListFragment extends ListFragment {
 
@@ -41,13 +39,13 @@ public class SlidingListFragment extends ListFragment {
 		adapter.add(new SampleItem("Invite friends", R.drawable.invite_friend));
 		*/
 		
-		adapter.add(new SampleItem("Friends", R.drawable.office));
-		adapter.add(new SampleItem("Top Apps", R.drawable.all_friends));
+		adapter.add(new SampleItem("All Routes", R.drawable.office));
+		adapter.add(new SampleItem("My Routes", R.drawable.all_friends));
 		//adapter.add(new SampleItem("New Apps", R.drawable.new_app1));
-		adapter.add(new SampleItem("My Shared Apps", R.drawable.my_apps));
+		adapter.add(new SampleItem("My Rides", R.drawable.my_apps));
 		//adapter.add(new SampleItem("Find More Friends", R.drawable.invite_friend));
-		adapter.add(new SampleItem("Like AppCovery", R.drawable.like));
-		adapter.add(new SampleItem("Settings", R.drawable.settings));
+		adapter.add(new SampleItem("My Vehicles", R.drawable.like));
+		adapter.add(new SampleItem("My Profile", R.drawable.settings));
 		
 		setListAdapter(adapter);
 	}
@@ -146,7 +144,7 @@ public class SlidingListFragment extends ListFragment {
 				
 				
 				Intent intent = new Intent(getActivity(),AllRoutesActivity.class);
-				if (arg2 == 0) {
+				/*if (arg2 == 0) {
 					intent.putExtra("type", "friend_app");
 					intent.putExtra("title", "Friends");
 					intent.putExtra("show_right_arrow", "1");
@@ -161,7 +159,7 @@ public class SlidingListFragment extends ListFragment {
 				} else if ( arg2 == 2) {
 					intent.putExtra("type", "my_apps");
 					intent.putExtra("title", "Select Apps to Share");
-				}
+				}*/
 				startActivity(intent);
 			}
 		});

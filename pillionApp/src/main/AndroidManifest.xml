@@ -51,7 +51,7 @@
         <activity
             android:name=".AllRoutesActivity"
             android:label="@string/title_activity_home"
-            android:logo="@drawable/list"
+            android:logo="@drawable/ic_launcher"
             android:screenOrientation="portrait" >
         </activity>
         
