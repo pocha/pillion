@@ -1,0 +1,135 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android" 
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    android:orientation="vertical" >
+    
+    <ScrollView
+        android:layout_width="fill_parent"
+        android:layout_height="0dp"
+        android:layout_weight="6"
+        android:layout_gravity="bottom|center_horizontal">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:padding="5dp"
+            android:orientation="vertical">
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                style="@style/TextViewLabel"
+                android:text="From"/>
+            <View
+                android:layout_width="fill_parent"
+                android:layout_height="1dp"
+                style="@style/TextViewLabelDivider"/>
+
+            <TextView
+                android:id="@+id/from"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="From Address here"/>
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                style="@style/TextViewLabel"
+                android:text="To"/>
+            <View
+                android:layout_width="fill_parent"
+                android:layout_height="1dp"
+                style="@style/TextViewLabelDivider"/>
+
+            <TextView
+                android:id="@+id/to"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="To Address here"/>
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                style="@style/TextViewLabel"
+                android:text="Status"/>
+            <View
+                android:layout_width="fill_parent"
+                android:layout_height="1dp"
+                style="@style/TextViewLabelDivider"/>
+
+            <TextView
+                android:id="@+id/status"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Scheduled for 4:30 PM today"/>
+
+            <LinearLayout
+                android:id="@+id/vehicleInfo"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical">
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    style="@style/TextViewLabel"
+                    android:text="Vehicle"/>
+                <View
+                    android:layout_width="fill_parent"
+                    android:layout_height="1dp"
+                    style="@style/TextViewLabelDivider"/>
+
+                <TextView
+                    android:id="@+id/vehicle"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="Maruti 800"/>
+
+            </LinearLayout>
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                style="@style/TextViewLabel"
+                android:text="Travellers"/>
+            <View
+                android:layout_width="fill_parent"
+                android:layout_height="1dp"
+                style="@style/TextViewLabelDivider"/>
+
+            <ListView
+                android:id="@+id/travellers"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+            </ListView>
+
+            <Button
+                android:id="@+id/requestRide"
+                android:layout_marginTop="10dp"
+                android:layout_marginLeft="2dp"
+                android:layout_marginRight="2dp"
+                android:layout_marginBottom="0dp"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Request Ride"
+                android:gravity="center"
+                />
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                style="@style/TextViewLabel"
+                android:layout_marginTop="2dp"
+                android:gravity="center"
+                android:text="Do request ride even if it is not scheduled for today. The owner can always cancel your request if the ride is not happening."/>
+
+        </LinearLayout>
+        
+
+        
+    </ScrollView>
+
+</LinearLayout>
+    
+    
+    

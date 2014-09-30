@@ -31,6 +31,7 @@ public class MainFragment extends Fragment {
             public void onClick(View view) {
                 Intent intent = new Intent(getActivity(),NewRouteActivity.class);
                 startActivity(intent);
+                getActivity().finish();
             }
         });
 

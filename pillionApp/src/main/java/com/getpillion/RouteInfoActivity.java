@@ -1,8 +1,14 @@
 package com.getpillion;
 
+import android.app.ProgressDialog;
 import android.content.Intent;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.view.View;
+import android.widget.Button;
+import android.widget.LinearLayout;
+import android.widget.ListView;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.actionbarsherlock.app.SherlockFragmentActivity;
@@ -13,31 +19,114 @@ import com.facebook.Session;
 import com.facebook.widget.WebDialog;
 import com.facebook.widget.WebDialog.OnCompleteListener;
 import com.getpillion.common.Constant;
+import com.getpillion.common.Helper;
+import com.getpillion.models.Route;
+import com.getpillion.models.User;
 import com.jeremyfeinstein.slidingmenu.lib.SlidingMenu;
 
-public class AfterInviteActivity extends SherlockFragmentActivity {
+import java.sql.Time;
+import java.util.ArrayList;
 
-	private SlidingMenu menu = null;
+public class RouteInfoActivity extends SherlockFragmentActivity {
+
+	//private SlidingMenu menu = null;
+    private Route route;
+    private ProgressDialog progress;
+    private TravellerAdapter adapter;
+    private ArrayList<User> travellers;
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		BugSenseHandler.initAndStartSession(getApplicationContext(), Constant.BUGSENSE_API_KEY);
-		setContentView(R.layout.after_invite);
+		setContentView(R.layout.activity_route_info);
 
-		getSupportActionBar().setHomeButtonEnabled(false);
-		getSupportActionBar().setTitle("Successfully invited");
+		//getSupportActionBar().setHomeButtonEnabled(true);
+		getSupportActionBar().setTitle("Route Info");
 		
-		menu = new SlidingMenu(this);
-		menu.setMode(SlidingMenu.LEFT);
+		//menu = new SlidingMenu(this);
+		/*menu.setMode(SlidingMenu.LEFT);
 		menu.setTouchModeAbove(SlidingMenu.TOUCHMODE_NONE);
 		menu.setShadowWidthRes(R.dimen.shadow_width);
 		menu.setShadowDrawable(R.drawable.shadow);
 		menu.setBehindOffsetRes(R.dimen.slidingmenu_offset);
 		menu.setFadeDegree(0.0f);
 		menu.attachToActivity(this, SlidingMenu.SLIDING_WINDOW);
-		menu.setMenu(R.layout.menu);
+		menu.setMenu(R.layout.menu);*/
+        //Helper.createMenu(menu,this);
+
+        Long routeId = getIntent().getExtras().getLong("routeId");
+        getRouteData(routeId);
+
+        travellers = new ArrayList<User>();
+        adapter = new TravellerAdapter(getApplicationContext(),travellers);
+        ((ListView)findViewById(R.id.travellers)).setAdapter(adapter);
+
+        Button requestButton = (Button) findViewById(R.id.requestRide);
+
+        requestButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(RouteInfoActivity.this, AllRoutesActivity.class);
+                startActivity(intent);
+            }
+        });
 	}
+
+    private void getRouteData(final Long routeId){
+        try {
+            progress = ProgressDialog.show(RouteInfoActivity.this,"",
+                    "Loading Route Info. Please wait..", true, false);
+            new AsyncTask<Void, Void, Void>() {
+                @Override
+                protected Void doInBackground(Void... params) {
+                    try {
+
+                        /*ArrayList<NameValuePair> postParams = new ArrayList<NameValuePair>();
+                        postParams.add(new BasicNameValuePair("routeId", routeId.toString()));
+                        String url = Constant.SERVER + Constant.USER_APP_VIEW;
+                        Helper.postData(url, postParams);*/
+                        Thread.sleep(3000);
+                        route = new Route("Brigade Gardenia, J P Nagar 7th Phase, RBI Layout", "Ecospace, Outer Ring Road, Kadbisnehalli", Time.valueOf("8:00:00"));
+                    } catch (Exception e) {
+
+                    }
+                    return null;
+                }
+
+                @Override
+                protected void onPostExecute(Void result) {
+                    ((TextView)findViewById(R.id.from)).setText(route.from);
+                    ((TextView)findViewById(R.id.to)).setText(route.to);
+
+                    if (route.isScheduled) {
+                        ((TextView)findViewById(R.id.status)).setText("Scheduled at " + route.time + " on " + route.date);
+                    }
+                    else if (route.date != null ){ // not scheduled so must have happened in past
+                        ((TextView)findViewById(R.id.status)).setText("Last ride happened at " + route.time + " on " + route.date );
+                    }
+                    else {// no information of ride present
+                        ((TextView)findViewById(R.id.status)).setText("No prior information of this ride happening is available.");
+                    }
+
+                    if (route.vehicle != null ){
+                        ((TextView)findViewById(R.id.vehicle)).setText(route.vehicle.color + " " + route.vehicle.model);
+                    }
+                    else {
+                        ((LinearLayout)findViewById(R.id.vehicleInfo)).setVisibility(View.GONE);
+                    }
+                    //travellers.clear();
+                    travellers.addAll(route.users);
+                    adapter.notifyDataSetChanged();
+
+                    progress.dismiss();
+                }
+            }.execute();
+        } catch (Exception ex) {
+        }
+    }
+
+
 	
 	
 	public void sendRequestDialog(View v) {
@@ -48,7 +137,7 @@ public class AfterInviteActivity extends SherlockFragmentActivity {
 
 			showDialogWithoutNotificationBar(params);
 		} catch (Exception ex) {
-			Intent intent = new Intent().setClass(AfterInviteActivity.this,
+			Intent intent = new Intent().setClass(RouteInfoActivity.this,
 					MainActivity.class);
 			startActivity(intent);
 		}
@@ -70,7 +159,7 @@ public class AfterInviteActivity extends SherlockFragmentActivity {
 
 			showFeedDialogWithoutNotificationBar(params);
 		} catch (Exception ex) {
-			Intent intent = new Intent().setClass(AfterInviteActivity.this,
+			Intent intent = new Intent().setClass(RouteInfoActivity.this,
 					MainActivity.class);
 			startActivity(intent);
 		}
@@ -78,7 +167,7 @@ public class AfterInviteActivity extends SherlockFragmentActivity {
 
 	public void showDialogWithoutNotificationBar(Bundle params) {
 		WebDialog requestsDialog = (new WebDialog.RequestsDialogBuilder(
-				AfterInviteActivity.this, Session.getActiveSession(), params))
+				RouteInfoActivity.this, Session.getActiveSession(), params))
 				.setOnCompleteListener(new OnCompleteListener() {
 
 					@Override
@@ -115,7 +204,7 @@ public class AfterInviteActivity extends SherlockFragmentActivity {
 
 	public void showFeedDialogWithoutNotificationBar(Bundle params) {
 		WebDialog requestsDialog = (new WebDialog.FeedDialogBuilder(
-				AfterInviteActivity.this, Session.getActiveSession(), params))
+				RouteInfoActivity.this, Session.getActiveSession(), params))
 				.setOnCompleteListener(new OnCompleteListener() {
 
 					@Override

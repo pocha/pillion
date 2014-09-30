@@ -31,8 +31,9 @@
     <string name="options_clear">Clear</string>
     <string name="options_exit">Exit</string>
     <string name="title_activity_invite_friend">InviteFriendActivity</string>
-
     <string name="network_error">Please check your Internet Setting</string>
     <string name="request_cancelled">Request Cancelled</string>
     <string name="invitation_sent">Invitation Sent. We will notify you once someone joins.</string>
+    <string name="title_activity_activity_with_menu">ActivityWithMenu</string>
+
 </resources>

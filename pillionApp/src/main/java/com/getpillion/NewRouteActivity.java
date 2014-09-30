@@ -29,6 +29,7 @@ public class NewRouteActivity extends SherlockFragmentActivity {
             public void onClick(View view) {
                 Intent intent = new Intent(NewRouteActivity.this, AllRoutesActivity.class);
                 startActivity(intent);
+                finish();
             }
         });
 		

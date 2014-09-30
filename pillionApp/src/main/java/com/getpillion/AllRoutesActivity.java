@@ -2,10 +2,15 @@ package com.getpillion;
 
 import android.app.AlarmManager;
 import android.app.ProgressDialog;
+import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.v4.app.FragmentTransaction;
+import android.util.Log;
+import android.view.View;
+import android.widget.AdapterView;
+import android.widget.AdapterView.OnItemClickListener;
 import android.widget.ListView;
 
 import com.actionbarsherlock.app.ActionBar;
@@ -21,15 +26,13 @@ import com.getpillion.models.Route;
 import com.google.ads.AdView;
 import com.jeremyfeinstein.slidingmenu.lib.SlidingMenu;
 
-import org.lucasr.smoothie.AsyncListView;
-
 import java.sql.Time;
 import java.util.ArrayList;
 import java.util.List;
 
 import uk.co.senab.bitmapcache.BitmapLruCache;
 
-public class AllRoutesActivity extends SherlockFragmentActivity {
+public class AllRoutesActivity extends SherlockFragmentActivity implements ActionBar.TabListener {
 
 	private AdView adView;
 	AlarmManager am;
@@ -39,7 +42,8 @@ public class AllRoutesActivity extends SherlockFragmentActivity {
 	private Handler fHandler;
 	ConnectionDetector cd;
 
-	private AsyncListView mListView;
+//	private AsyncListView mListView;
+    private ListView mListView;
 	private BitmapLruCache mCache;
 
 	private String FB_USER_ID = "";
@@ -52,99 +56,95 @@ public class AllRoutesActivity extends SherlockFragmentActivity {
     private ActionBar.Tab offeringTab, seekingTab;
 
 
-    public class TabListener implements ActionBar.TabListener {
-        private RouteAdapter adapter;
-        private ArrayList<Route> offeringData, seekingData, routes;
-        private ListView listView;
-        private Tab selectedTab = null;
+    private RouteAdapter adapter;
+    private ArrayList<Route> offeringData, seekingData, routes;
+    private Tab selectedTab = null;
 
 
-        public void populateData(){
-            progress = ProgressDialog.show(AllRoutesActivity.this, "",
-                    "Loading Routes. Please wait", true, false);
+    public void populateData(){
+        progress = ProgressDialog.show(AllRoutesActivity.this, "",
+                "Loading Routes. Please wait", true, false);
 
-            new AsyncTask<Void, Void, Void>() {
-                @Override
-                protected Void doInBackground(Void... params) {
-                    try {
+        new AsyncTask<Void, Void, Void>() {
+            @Override
+            protected Void doInBackground(Void... params) {
+                try {
 
-                        /*ArrayList<NameValuePair> postParams = new ArrayList<NameValuePair>();
-                        postParams.add(new BasicNameValuePair("facebookUserID",
-                                FB_USER_ID));
-                        postParams.add(new BasicNameValuePair("app_id", appID));
-                        String url = Constant.SERVER + Constant.USER_APP_VIEW;
-                        Helper.postData(url, postParams);*/
-                        Thread.sleep(3000);
+                    /*ArrayList<NameValuePair> postParams = new ArrayList<NameValuePair>();
+                    postParams.add(new BasicNameValuePair("facebookUserID",
+                            FB_USER_ID));
+                    postParams.add(new BasicNameValuePair("app_id", appID));
+                    String url = Constant.SERVER + Constant.USER_APP_VIEW;
+                    Helper.postData(url, postParams);*/
+                    Thread.sleep(10000);
 
-                            offeringData.add(new Route("Brigade Gardenia","Ecospace", Time.valueOf("8:00:00")));
-                            offeringData.add(new Route("Brigade Gardenia","Ecospace", Time.valueOf("8:30:00")));
-                            offeringData.add(new Route("Brigade Gardenia","Ecospace", Time.valueOf("9:00:00")));
+                    Log.d("ashish","Calling new route");
+                    offeringData.add(new Route("Brigade Gardenia","Ecospace", Time.valueOf("8:00:00")));
+                    offeringData.add(new Route("Brigade Gardenia","Ecospace", Time.valueOf("8:30:00")));
+                    offeringData.add(new Route("Brigade Gardenia","Ecospace", Time.valueOf("9:00:00")));
 
-                            seekingData.add(new Route("Ecospace","Brigade Gardenia", Time.valueOf("16:00:00")));
-                            seekingData.add(new Route("Ecospace","Brigade Gardenia", Time.valueOf("17:00:00")));
-                            seekingData.add(new Route("Ecospace","Brigade Gardenia", Time.valueOf("18:00:00")));
 
-                    } catch (Exception e) {
+                    seekingData.add(new Route("Ecospace","Brigade Gardenia", Time.valueOf("16:00:00")));
+                    seekingData.add(new Route("Ecospace","Brigade Gardenia", Time.valueOf("17:00:00")));
+                    seekingData.add(new Route("Ecospace","Brigade Gardenia", Time.valueOf("18:00:00")));
 
-                    }
-                    return null;
+                    Log.d("ashish","offering rides added " + offeringData);
+                    Log.d("ashish","seeking rides added " + seekingData);
+
+                } catch (Exception e) {
+                    Log.e("ashish","exception",e);
                 }
+                return null;
+            }
 
-                @Override
-                protected void onPostExecute(Void result) {
-                    routes.clear();
-                    if (selectedTab.getTag() == "offering") {
-                        routes.addAll(offeringData);
-                    }
-                    else {
-                        routes.addAll(seekingData);
-                    }
-                    adapter.notifyDataSetChanged();
-                    progress.hide();
+            @Override
+            protected void onPostExecute(Void result) {
+                Log.d("ashish","offering rides added " + offeringData);
+                Log.d("ashish","seeking rides added " + seekingData);
+
+                routes.clear();
+                if (selectedTab.getTag() == "offering") {
+                    routes.addAll(offeringData);
                 }
-            }.execute();
-
-
-        }
-
-        public TabListener(){
-            routes = new ArrayList<Route>();
-            adapter = new RouteAdapter(getApplicationContext(),routes);
-            listView = (ListView) findViewById(R.id.listView);
-            listView.setAdapter(adapter);
-
-            offeringData = new ArrayList<Route>();
-            seekingData = new ArrayList<Route>();
-
-            populateData();
-        }
-
-        @Override
-        public void onTabSelected(Tab tab, FragmentTransaction ft) {
-            selectedTab = tab;
-
-            if (tab.getTag() == "offering") {
-                routes.clear();
-                routes.addAll(offeringData);
+                else {
+                    routes.addAll(seekingData);
+                }
                 adapter.notifyDataSetChanged();
+                progress.hide();
             }
-            if (tab.getTag() == "seeking") {
-                routes.clear();
-                routes.addAll(seekingData);
-                adapter.notifyDataSetChanged();
-            }
+        }.execute();
+
+
+    }
+
+
+
+    @Override
+    public void onTabSelected(Tab tab, FragmentTransaction ft) {
+        selectedTab = tab;
+
+        if (tab.getTag() == "offering") {
+            routes.clear();
+            routes.addAll(offeringData);
+            adapter.notifyDataSetChanged();
         }
-
-        @Override
-        public void onTabUnselected(Tab tab, FragmentTransaction ft) {
-
-        }
-
-        @Override
-        public void onTabReselected(Tab tab, FragmentTransaction ft) {
-            // TODO Auto-generated method stub
+        if (tab.getTag() == "seeking") {
+            routes.clear();
+            routes.addAll(seekingData);
+            adapter.notifyDataSetChanged();
         }
     }
+
+    @Override
+    public void onTabUnselected(Tab tab, FragmentTransaction ft) {
+
+    }
+
+    @Override
+    public void onTabReselected(Tab tab, FragmentTransaction ft) {
+        // TODO Auto-generated method stub
+    }
+
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -170,15 +170,24 @@ public class AllRoutesActivity extends SherlockFragmentActivity {
         actionBar.setTitle("All Routes");
         actionBar.setNavigationMode(ActionBar.NAVIGATION_MODE_TABS);
 
-        TabListener tabListener = new TabListener();
+        routes = new ArrayList<Route>();
+        offeringData = new ArrayList<Route>();
+        seekingData = new ArrayList<Route>();
+
+        adapter = new RouteAdapter(getApplicationContext(),routes);
+        mListView = (ListView) findViewById(R.id.listView);
+        mListView.setAdapter(adapter);
+
+        populateData();
+
         offeringTab = actionBar.newTab().setText("Rides Offered");
         offeringTab.setTag("offering");
-        offeringTab.setTabListener(tabListener);
+        offeringTab.setTabListener(this);
         actionBar.addTab(offeringTab);
 
         seekingTab = actionBar.newTab().setText("Rides Sought");
         seekingTab.setTag("seeking");
-        seekingTab.setTabListener(tabListener);
+        seekingTab.setTabListener(this);
         actionBar.addTab(seekingTab);
 
 
@@ -381,12 +390,16 @@ public class AllRoutesActivity extends SherlockFragmentActivity {
 		builder.setThreadPoolSize(4);
 
 		mListView.setItemManager(builder.build());
+*/
 
 		mListView.setOnItemClickListener(new OnItemClickListener() {
 			@Override
 			public void onItemClick(AdapterView<?> parent, View view,
 					int position, long id) {
-
+                Intent intent = new Intent(AllRoutesActivity.this, RouteInfoActivity.class);
+                intent.putExtra("routeId",routes.get(position).id);
+                startActivity(intent);
+                /*
 				// publishOpenGraphAction();
 				final String item = (String) parent.getItemAtPosition(position);
 				// Toast.makeText(getBaseContext(), item,
@@ -411,6 +424,7 @@ public class AllRoutesActivity extends SherlockFragmentActivity {
 							feed.getAppName(), feed.getAppPackage());
 					updateUserView(feed.getAppID());
 				}
+				*/
 			}
 		});
 
@@ -418,7 +432,7 @@ public class AllRoutesActivity extends SherlockFragmentActivity {
 
 		//myPackages();
 		
-		try {
+/*		try {
 			String no_invite_button = getIntent().getExtras().getString("no_invite_button");
 			if ( no_invite_button != null && no_invite_button.equals("1") ) {
 				LinearLayout no_invite_button_div = (LinearLayout)findViewById(R.id.invite_friend_div);
