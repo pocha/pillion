@@ -35,5 +35,6 @@
     <string name="request_cancelled">Request Cancelled</string>
     <string name="invitation_sent">Invitation Sent. We will notify you once someone joins.</string>
     <string name="title_activity_activity_with_menu">ActivityWithMenu</string>
+    <string name="title_activity_extend_me_sherlock_with_menu">ExtendMeSherlockWithMenuActivity</string>
 
 </resources>

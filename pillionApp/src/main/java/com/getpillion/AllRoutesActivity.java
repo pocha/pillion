@@ -15,13 +15,9 @@ import android.widget.ListView;
 
 import com.actionbarsherlock.app.ActionBar;
 import com.actionbarsherlock.app.ActionBar.Tab;
-import com.actionbarsherlock.app.SherlockFragmentActivity;
-import com.actionbarsherlock.view.Menu;
-import com.actionbarsherlock.view.MenuItem;
 import com.bugsense.trace.BugSenseHandler;
 import com.getpillion.common.ConnectionDetector;
 import com.getpillion.common.Constant;
-import com.getpillion.common.Helper;
 import com.getpillion.models.Route;
 import com.google.ads.AdView;
 import com.jeremyfeinstein.slidingmenu.lib.SlidingMenu;
@@ -32,7 +28,7 @@ import java.util.List;
 
 import uk.co.senab.bitmapcache.BitmapLruCache;
 
-public class AllRoutesActivity extends SherlockFragmentActivity implements ActionBar.TabListener {
+public class AllRoutesActivity extends ExtendMeSherlockWithMenuActivity implements ActionBar.TabListener {
 
 	private AdView adView;
 	AlarmManager am;
@@ -219,9 +215,6 @@ public class AllRoutesActivity extends SherlockFragmentActivity implements Actio
 		menu.attachToActivity(this, SlidingMenu.SLIDING_WINDOW);
 		menu.setMenu(R.layout.menu);
 */
-        menu = new SlidingMenu(this);
-        Helper.createMenu(menu, this);
-
 
         //cd = new ConnectionDetector(getApplicationContext());
 
@@ -524,25 +517,6 @@ public class AllRoutesActivity extends SherlockFragmentActivity implements Actio
 			GCMRegistrar.register(getApplicationContext(), Constant.SENDER_ID);
 		}
 	}
-*/
-public boolean onCreateOptionsMenu(Menu menu) {
-    return true;
-}
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        try {
-            if (item.getItemId() == android.R.id.home) {
-                menu.toggle();
-                return true;
-            } else {
-                return true;
-            }
-        } catch (Exception ex) {
-            return true;
-        }
-    }
-    /*
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
 		String type = "";

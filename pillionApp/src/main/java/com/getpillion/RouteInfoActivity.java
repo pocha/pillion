@@ -11,7 +11,6 @@ import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.actionbarsherlock.app.SherlockFragmentActivity;
 import com.bugsense.trace.BugSenseHandler;
 import com.facebook.FacebookException;
 import com.facebook.FacebookOperationCanceledException;
@@ -19,15 +18,13 @@ import com.facebook.Session;
 import com.facebook.widget.WebDialog;
 import com.facebook.widget.WebDialog.OnCompleteListener;
 import com.getpillion.common.Constant;
-import com.getpillion.common.Helper;
 import com.getpillion.models.Route;
 import com.getpillion.models.User;
-import com.jeremyfeinstein.slidingmenu.lib.SlidingMenu;
 
 import java.sql.Time;
 import java.util.ArrayList;
 
-public class RouteInfoActivity extends SherlockFragmentActivity {
+public class RouteInfoActivity extends ExtendMeSherlockWithMenuActivity {
 
 	//private SlidingMenu menu = null;
     private Route route;
@@ -43,17 +40,6 @@ public class RouteInfoActivity extends SherlockFragmentActivity {
 
 		//getSupportActionBar().setHomeButtonEnabled(true);
 		getSupportActionBar().setTitle("Route Info");
-		
-		//menu = new SlidingMenu(this);
-		/*menu.setMode(SlidingMenu.LEFT);
-		menu.setTouchModeAbove(SlidingMenu.TOUCHMODE_NONE);
-		menu.setShadowWidthRes(R.dimen.shadow_width);
-		menu.setShadowDrawable(R.drawable.shadow);
-		menu.setBehindOffsetRes(R.dimen.slidingmenu_offset);
-		menu.setFadeDegree(0.0f);
-		menu.attachToActivity(this, SlidingMenu.SLIDING_WINDOW);
-		menu.setMenu(R.layout.menu);*/
-        //Helper.createMenu(menu,this);
 
         Long routeId = getIntent().getExtras().getLong("routeId");
         getRouteData(routeId);

@@ -82,6 +82,10 @@
             android:name="com.getpillion.ActivityWithMenu"
             android:label="@string/title_activity_activity_with_menu" >
         </activity>
+        <activity
+            android:name="com.getpillion.ExtendMeSherlockWithMenuActivity"
+            android:label="@string/title_activity_extend_me_sherlock_with_menu" >
+        </activity>
     </application>
 
 </manifest>
