@@ -28,9 +28,9 @@ public class Route {
         this.users = new ArrayList<User>();
         if (this.isScheduled) {
             this.vehicle = new Vehicle("Mercedez","black","KA51 Q8745");
-            for (int i=0; i < Math.random()*10; i++){
-                this.users.add(User.returnDummyUser());
-            }
+        }
+        for (int i=0; i < Math.random()*3; i++){
+            this.users.add(User.returnDummyUser());
         }
         Log.d("ashish","New route created - " + this.toString());
     }

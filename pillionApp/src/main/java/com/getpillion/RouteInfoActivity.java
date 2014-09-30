@@ -4,9 +4,16 @@ import android.app.ProgressDialog;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.util.Log;
+import android.view.MotionEvent;
 import android.view.View;
+import android.view.View.MeasureSpec;
+import android.view.View.OnTouchListener;
+import android.view.ViewGroup;
+import android.view.ViewGroup.LayoutParams;
 import android.widget.Button;
 import android.widget.LinearLayout;
+import android.widget.ListAdapter;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -18,6 +25,7 @@ import com.facebook.Session;
 import com.facebook.widget.WebDialog;
 import com.facebook.widget.WebDialog.OnCompleteListener;
 import com.getpillion.common.Constant;
+import com.getpillion.common.Helper;
 import com.getpillion.models.Route;
 import com.getpillion.models.User;
 
@@ -43,10 +51,6 @@ public class RouteInfoActivity extends ExtendMeSherlockWithMenuActivity {
 
         Long routeId = getIntent().getExtras().getLong("routeId");
         getRouteData(routeId);
-
-        travellers = new ArrayList<User>();
-        adapter = new TravellerAdapter(getApplicationContext(),travellers);
-        ((ListView)findViewById(R.id.travellers)).setAdapter(adapter);
 
         Button requestButton = (Button) findViewById(R.id.requestRide);
 
@@ -86,13 +90,13 @@ public class RouteInfoActivity extends ExtendMeSherlockWithMenuActivity {
                     ((TextView)findViewById(R.id.to)).setText(route.to);
 
                     if (route.isScheduled) {
-                        ((TextView)findViewById(R.id.status)).setText("Scheduled at " + route.time + " on " + route.date);
+                        ((TextView)findViewById(R.id.status)).setText("Scheduled at " + Helper.niceTime(route.time) + " on " + Helper.niceDate(route.date));
                     }
                     else if (route.date != null ){ // not scheduled so must have happened in past
-                        ((TextView)findViewById(R.id.status)).setText("Last ride happened at " + route.time + " on " + route.date );
+                        ((TextView)findViewById(R.id.status)).setText("Last ride happened at " + Helper.niceTime(route.time) + " on " + Helper.niceDate(route.date) );
                     }
                     else {// no information of ride present
-                        ((TextView)findViewById(R.id.status)).setText("No prior information of this ride happening is available.");
+                        ((TextView)findViewById(R.id.status)).setText("The owner created the route but probably forgot to start his ride on the app. Hence no prior information of the ride available.");
                     }
 
                     if (route.vehicle != null ){
@@ -102,8 +106,21 @@ public class RouteInfoActivity extends ExtendMeSherlockWithMenuActivity {
                         ((LinearLayout)findViewById(R.id.vehicleInfo)).setVisibility(View.GONE);
                     }
                     //travellers.clear();
-                    travellers.addAll(route.users);
-                    adapter.notifyDataSetChanged();
+                    //travellers = new ArrayList<User>();
+                    Log.d("RouteInfoActivity","traveller count " + route.users.size());
+                    adapter = new TravellerAdapter(getApplicationContext(),route.users);
+                    ListView lv =  (ListView)findViewById(R.id.travellers);
+                    lv.setAdapter(adapter);
+                    lv.setOnTouchListener(new OnTouchListener() {
+                        // Setting on Touch Listener for handling the touch inside ScrollView
+                        @Override
+                        public boolean onTouch(View v, MotionEvent event) {
+                            // Disallow the touch request for parent scroll on touch of child view
+                            v.getParent().requestDisallowInterceptTouchEvent(true);
+                            return false;
+                        }
+                    });
+                    setListViewHeightBasedOnChildren(lv);
 
                     progress.dismiss();
                 }
@@ -113,7 +130,27 @@ public class RouteInfoActivity extends ExtendMeSherlockWithMenuActivity {
     }
 
 
-	
+    public static void setListViewHeightBasedOnChildren(ListView listView) {
+        ListAdapter listAdapter = listView.getAdapter();
+        if (listAdapter == null)
+            return;
+
+        int desiredWidth = MeasureSpec.makeMeasureSpec(listView.getWidth(), MeasureSpec.UNSPECIFIED);
+        int totalHeight = 0;
+        View view = null;
+        for (int i = 0; i < listAdapter.getCount(); i++) {
+            view = listAdapter.getView(i, view, listView);
+            if (i == 0)
+                view.setLayoutParams(new ViewGroup.LayoutParams(desiredWidth, LayoutParams.WRAP_CONTENT));
+
+            view.measure(desiredWidth, MeasureSpec.UNSPECIFIED);
+            totalHeight += view.getMeasuredHeight();
+        }
+        ViewGroup.LayoutParams params = listView.getLayoutParams();
+        params.height = totalHeight + (listView.getDividerHeight() * (listAdapter.getCount() - 1));
+        listView.setLayoutParams(params);
+        listView.requestLayout();
+    }
 	
 	public void sendRequestDialog(View v) {
 		try {

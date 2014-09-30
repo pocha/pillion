@@ -18,7 +18,10 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.text.SimpleDateFormat;
 import java.util.List;
+import java.util.Date;
+import java.sql.Time;
 
 public class Helper {
 	public static String postData(String url, List<NameValuePair> nameValuePairs) {
@@ -103,6 +106,15 @@ public class Helper {
         menu.setFadeDegree(0.0f);
         menu.attachToActivity(activity, SlidingMenu.SLIDING_WINDOW);
         menu.setMenu(R.layout.menu);
+    }
+
+    public static String niceDate(Date date) {
+        SimpleDateFormat ft = new SimpleDateFormat("E MMM d");
+        return ft.format(date);
+    }
+
+    public static String niceTime(Time time){
+        return new SimpleDateFormat("hh:mm a").format(time);
     }
 
 }

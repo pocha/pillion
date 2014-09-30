@@ -9,9 +9,9 @@ import android.widget.ArrayAdapter;
 import android.widget.CheckBox;
 import android.widget.TextView;
 
+import com.getpillion.common.Helper;
 import com.getpillion.models.Route;
 
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 
 public class RouteAdapter extends ArrayAdapter<Route> {
@@ -86,7 +86,7 @@ public class RouteAdapter extends ArrayAdapter<Route> {
 		viewHolder.position = position;
 		viewHolder.from.setText(route.from);
 		viewHolder.to.setText(route.to);
-		viewHolder.time.setText( new SimpleDateFormat("hh:mm a").format(route.time));
+		viewHolder.time.setText( Helper.niceTime(route.time));
 
 /*
 		viewHolder.friendNewApp.setVisibility(LinearLayout.GONE);

@@ -28,12 +28,10 @@ public class TravellerAdapter extends ArrayAdapter<User> {
 		if (convertView == null) {
 			LayoutInflater inflater = (LayoutInflater) context
 					.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-			convertView = inflater.inflate(R.layout.route, parent, false);
+			convertView = inflater.inflate(R.layout.traveller, parent, false);
 			viewHolder = new ViewHolder();
-			viewHolder.name = (TextView) convertView.findViewById(R.id.from);
-            viewHolder.fromTo = (TextView) convertView.findViewById(R.id.fromTo);
-            viewHolder.to = (TextView) convertView.findViewById(R.id.to);
-            viewHolder.info = (TextView) convertView.findViewById(R.id.time);
+			viewHolder.name = (TextView) convertView.findViewById(R.id.name);
+            viewHolder.title = (TextView) convertView.findViewById(R.id.title);
             convertView.setTag(viewHolder);
 		} else {
 			viewHolder = (ViewHolder) convertView.getTag();
@@ -62,9 +60,8 @@ public class TravellerAdapter extends ArrayAdapter<User> {
 */
 		viewHolder.position = position;
 		viewHolder.name.setText(user.name);
-		viewHolder.info.setText(user.title);
-        viewHolder.fromTo.setVisibility(View.GONE);
-        viewHolder.to.setVisibility(View.GONE);
+		viewHolder.title.setText(user.title);
+
 
 /*
 		viewHolder.friendNewApp.setVisibility(LinearLayout.GONE);
@@ -140,9 +137,7 @@ public class TravellerAdapter extends ArrayAdapter<User> {
 	public class ViewHolder {
         public int position;
 		public TextView name;
-        public TextView info;
-        public TextView fromTo;
-        public TextView to;
+        public TextView title;
 	}
 
 /*	private static class ThumbnailTask extends AsyncTask {
