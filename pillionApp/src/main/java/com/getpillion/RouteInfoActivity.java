@@ -111,12 +111,16 @@ public class RouteInfoActivity extends ExtendMeSherlockWithMenuActivity {
                     adapter = new TravellerAdapter(getApplicationContext(),route.users);
                     ListView lv =  (ListView)findViewById(R.id.travellers);
                     lv.setAdapter(adapter);
+
+
+
                     lv.setOnTouchListener(new OnTouchListener() {
                         // Setting on Touch Listener for handling the touch inside ScrollView
                         @Override
                         public boolean onTouch(View v, MotionEvent event) {
-                            // Disallow the touch request for parent scroll on touch of child view
-                            v.getParent().requestDisallowInterceptTouchEvent(true);
+                            if (event.getAction() == MotionEvent.ACTION_MOVE) {
+                                return true; // Indicates that this has been handled by you and will not be forwarded further.
+                            }
                             return false;
                         }
                     });
