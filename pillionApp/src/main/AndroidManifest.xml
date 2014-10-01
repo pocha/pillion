@@ -12,9 +12,9 @@
     <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
-<!--
+
     <android:uses-permission android:name="android.permission.READ_PHONE_STATE" />
--->
+<!--     <android:uses-permission android:name="android.permission.READ_PHONE_STATE" /> -->
     <application
         android:allowBackup="false"
         android:icon="@drawable/ic_icon"
@@ -38,19 +38,16 @@
 
         <activity
             android:name="com.facebook.LoginActivity"
-            android:label="@string/app_name"
-             >
+            android:label="@string/app_name" >
         </activity>
         <activity
             android:name="com.getpillion.Like"
-            android:label="Like AppCovery"
-            >
+            android:label="Like AppCovery" >
         </activity>
         <activity
             android:name="com.getpillion.AllRoutesActivity"
             android:label="@string/title_activity_home"
-            android:logo="@drawable/list"
-           >
+            android:logo="@drawable/list" >
         </activity>
 
         <receiver android:name="com.getpillion.BootAlarm" >
@@ -63,23 +60,31 @@
         <activity
             android:name="com.getpillion.NewRouteActivity"
             android:label="@string/title_activity_invite_friend"
-            android:logo="@drawable/list"
-             >
+            android:logo="@drawable/list" >
         </activity>
         <activity
             android:name="com.getpillion.RouteInfoActivity"
             android:label="@string/title_activity_invite_friend"
-            android:logo="@drawable/list"
-            >
+            android:logo="@drawable/ic_launcher"
+            android:parentActivityName="com.getpillion.AllRoutesActivity" >
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="com.getpillion.AllRoutesActivity" />
         </activity>
         <activity
             android:name="com.getpillion.SettingActivity"
             android:label="Setting"
-            android:logo="@drawable/back"
-             >
+            android:logo="@drawable/back" >
         </activity>
-
-
+        <activity
+            android:name="com.getpillion.RequestRideActivity"
+            android:label="@string/title_activity_request_ride"
+            android:logo="@drawable/ic_launcher"
+            android:parentActivityName="com.getpillion.RouteInfoActivity" >
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="com.getpillion.RouteInfoActivity" />
+        </activity>
     </application>
 
 </manifest>

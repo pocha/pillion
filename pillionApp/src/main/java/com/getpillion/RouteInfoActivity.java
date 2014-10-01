@@ -18,6 +18,7 @@ import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.actionbarsherlock.view.MenuItem;
 import com.bugsense.trace.BugSenseHandler;
 import com.facebook.FacebookException;
 import com.facebook.FacebookOperationCanceledException;
@@ -57,7 +58,7 @@ public class RouteInfoActivity extends ExtendMeSherlockWithMenuActivity {
         requestButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent intent = new Intent(RouteInfoActivity.this, AllRoutesActivity.class);
+                Intent intent = new Intent(RouteInfoActivity.this, RequestRideActivity.class);
                 startActivity(intent);
             }
         });
@@ -131,6 +132,12 @@ public class RouteInfoActivity extends ExtendMeSherlockWithMenuActivity {
             }.execute();
         } catch (Exception ex) {
         }
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        finish();
+        return true;
     }
 
 

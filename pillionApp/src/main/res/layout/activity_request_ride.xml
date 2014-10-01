@@ -1,0 +1,89 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    android:orientation="vertical"
+    android:padding="2dp">
+
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        style="@style/TextViewLabel"
+        android:text="Enter Pickup Point Address"/>
+
+    <EditText
+        android:id="@+id/pickUp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="Pickup Address"/>
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        style="@style/TextViewLabel"
+        android:text="Drop Point"/>
+
+    <EditText
+        android:id="@+id/drop"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="Enter Drop Address"/>
+
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        style="@style/TextViewLabel"
+        android:text="Total Distance (calculated)"/>
+    <View
+        android:layout_width="fill_parent"
+        android:layout_height="1dp"
+        style="@style/TextViewLabelDivider"/>
+
+    <TextView
+        android:id="@+id/distance"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="10 km"/>
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        style="@style/TextViewLabel"
+        android:text="Total Cost (calculated)"/>
+    <View
+        android:layout_width="fill_parent"
+        android:layout_height="1dp"
+        style="@style/TextViewLabelDivider"/>
+
+    <TextView
+        android:id="@+id/cost"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="INR 100"/>
+
+
+    <Button
+        android:id="@+id/requestRide"
+        android:layout_marginTop="10dp"
+        android:layout_marginLeft="2dp"
+        android:layout_marginRight="2dp"
+        android:layout_marginBottom="0dp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Pay to Request"
+        android:gravity="center"
+        />
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        style="@style/TextViewLabel"
+        android:layout_marginTop="2dp"
+        android:gravity="center"
+        android:text="The amount will be refunded to your account if ride owner or you cancel the request"/>
+
+
+</LinearLayout>
+
+
