@@ -49,7 +49,7 @@
         <activity
             android:name="com.getpillion.AllRoutesActivity"
             android:label="@string/title_activity_home"
-            android:logo="@drawable/ic_launcher"
+            android:logo="@drawable/list"
             android:screenOrientation="portrait" >
         </activity>
 
@@ -78,14 +78,8 @@
             android:logo="@drawable/back"
             android:screenOrientation="portrait" >
         </activity>
-        <activity
-            android:name="com.getpillion.ActivityWithMenu"
-            android:label="@string/title_activity_activity_with_menu" >
-        </activity>
-        <activity
-            android:name="com.getpillion.ExtendMeSherlockWithMenuActivity"
-            android:label="@string/title_activity_extend_me_sherlock_with_menu" >
-        </activity>
+
+
     </application>
 
 </manifest>
