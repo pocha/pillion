@@ -10,13 +10,13 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         style="@style/TextViewLabel"
-        android:text="Enter Pickup Point Address"/>
+        android:text="Pickup Point"/>
 
     <EditText
         android:id="@+id/pickUp"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:hint="Pickup Address"/>
+        android:hint="Enter Pickup Address"/>
 
     <TextView
         android:layout_width="match_parent"

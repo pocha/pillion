@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    android:orientation="vertical" >
+    
+    <ScrollView
+        android:layout_width="fill_parent"
+        android:layout_height="0dp"
+        android:layout_weight="6"
+        android:layout_gravity="bottom|center_horizontal">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:padding="5dp"
+            android:orientation="vertical">
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                style="@style/TextViewLabel"
+                android:text="Upcoming Rides"/>
+            <View
+                android:layout_width="fill_parent"
+                android:layout_height="1dp"
+                style="@style/TextViewLabelDivider"/>
+            <ListView
+                android:id="@+id/upcomingRides"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+            </ListView>
+            <TextView
+                android:id="@+id/emptyUpcomingRides"
+                style="@style/EditTextStyle"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="No upcoming Rides"
+                android:visibility="gone"
+               />
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                style="@style/TextViewLabel"
+                android:text="Past Rides"/>
+            <View
+                android:layout_width="fill_parent"
+                android:layout_height="1dp"
+                style="@style/TextViewLabelDivider"/>
+
+            <ListView
+                android:id="@+id/pastRides"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+            </ListView>
+            <TextView
+                android:id="@+id/emptyPastRides"
+                style="@style/EditTextStyle"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="No past Rides"
+                android:visibility="gone"
+                />
+
+        </LinearLayout>
+        
+    </ScrollView>
+
+</LinearLayout>
+    
+    
+    

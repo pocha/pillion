@@ -60,7 +60,7 @@
         <activity
             android:name="com.getpillion.NewRouteActivity"
             android:label="@string/title_activity_invite_friend"
-            android:logo="@drawable/list" >
+            android:logo="@drawable/ic_launcher" >
         </activity>
         <activity
             android:name="com.getpillion.RouteInfoActivity"
@@ -84,6 +84,11 @@
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="com.getpillion.RouteInfoActivity" />
+        </activity>
+        <activity
+            android:name="com.getpillion.MyRidesActivity"
+            android:label="My Rides"
+            android:logo="@drawable/list">
         </activity>
     </application>
 

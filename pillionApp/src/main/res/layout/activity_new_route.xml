@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:float="http://schemas.android.com/apk/res-auto"
     android:layout_width="fill_parent"
     android:layout_height="fill_parent"
     android:orientation="vertical" >
@@ -15,11 +16,13 @@
             android:padding="2dp">
 
         <TextView
+
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="Home Location"/>
 
         <EditText
+            android:id="@+id/home"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:hint="Enter Home Location"/>
@@ -30,6 +33,7 @@
             android:text="Office Location"/>
 
         <EditText
+            android:id="@+id/office"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:hint="Enter Office Location"/>
@@ -39,37 +43,99 @@
             android:layout_height="wrap_content"
             android:text="Time when you start from home (optional)"/>
 
-        <EditText
+        <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:hint="9:30 AM"/>
+            android:orientation="horizontal"
+            style="@style/EditTextStyle"
+            android:gravity="center">
+            <EditText
+                android:id="@+id/homeStartTime"
+                android:inputType="time"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:gravity="right"
+                android:hint="9:30AM"
+                android:background="@null"
+                style="@style/EditTextStyle"
+                android:layout_marginBottom="0dp"
+                />
+            <TextView
+                android:id="@+id/homeStartTimeHint"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text=""
+                style="@style/EditTextStyle"
+                android:textColor="#777"
+                android:gravity="left"
+                android:background="@null"
+                android:layout_marginBottom="0dp"/>
+        </LinearLayout>
+
 
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="Time when you start from office (optional)"/>
 
-        <EditText
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:hint="5:30 PM"/>
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                style="@style/EditTextStyle"
+                android:gravity="center">
+                <EditText
+                    android:id="@+id/officeStartTime"
+                    android:inputType="time"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:gravity="right"
+                    android:hint="5:30PM"
+                    android:background="@null"
+                    style="@style/EditTextStyle"
+                    android:layout_marginBottom="0dp"
+                    />
+                <TextView
+                    android:id="@+id/officeStartTimeHint"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text=""
+                    style="@style/EditTextStyle"
+                    android:textColor="#777"
+                    android:gravity="left"
+                    android:background="@null"
+                    android:layout_marginBottom="0dp"/>
+            </LinearLayout>
 
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="Do you drive to work ?"/>
 
-        <Spinner
-            android:id="@+id/driveToWork"
-            android:layout_width="match_parent"
+        <RadioGroup xmlns:android="http://schemas.android.com/apk/res/android"
+            android:layout_width="fill_parent"
             android:layout_height="wrap_content"
-            android:gravity="center"></Spinner>
+            android:orientation="horizontal"
+            style="@style/EditTextStyle">
+            <RadioButton android:id="@+id/driveToWorkYes"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Yes/Occasionally"
+                android:checked="true"
+                />
+            <RadioButton android:id="@+id/driveToWorkNo"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="No, I dont have a vehicle"
+                />
+        </RadioGroup>
 
          <Button
              android:id="@+id/saveRoute"
              android:layout_width="match_parent"
              android:layout_height="wrap_content"
-             android:text="Save my Route"/>
+             android:text="Save my Route"
+             android:onClick="onSubmit"/>
 
          <TextView
              android:layout_width="match_parent"

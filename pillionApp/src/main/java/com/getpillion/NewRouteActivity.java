@@ -2,39 +2,65 @@ package com.getpillion;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.view.View;
-import android.widget.Button;
+import android.widget.EditText;
+import android.widget.RadioButton;
+import android.widget.TextView;
 
 import com.actionbarsherlock.app.SherlockFragmentActivity;
 import com.bugsense.trace.BugSenseHandler;
 import com.getpillion.common.Constant;
+import com.getpillion.common.Helper;
+
+import butterknife.ButterKnife;
+import butterknife.InjectView;
+import butterknife.OnFocusChange;
+import butterknife.OnTextChanged;
 
 public class NewRouteActivity extends SherlockFragmentActivity {
 
 	//private SlidingMenu menu = null;
+    @InjectView(R.id.office) EditText office;
+    @InjectView(R.id.home) EditText home;
+    @InjectView(R.id.homeStartTime) EditText homeStartTime;
+    @InjectView(R.id.homeStartTimeHint) TextView homeStartTimeHint;
+    @InjectView(R.id.officeStartTime) EditText officeStartTime;
+    @InjectView(R.id.officeStartTimeHint) TextView officeStartTimeHint;
+    @InjectView(R.id.driveToWorkYes) RadioButton driveToWorkYes;
+    @InjectView(R.id.driveToWorkNo) RadioButton driveToWorkNo;
+
+    @OnTextChanged(R.id.homeStartTime) void onTextChangedHome(CharSequence text) {
+        Helper.autoCompleteTime(text,homeStartTime, homeStartTimeHint);
+        //Log.d("NewRouteActivity","inside ontextchanged");
+    }
+    @OnFocusChange(R.id.homeStartTime) void onFocusChangeHome(boolean isFocussed) {
+        Helper.pushCursorToEnd(isFocussed,homeStartTime);
+    }
+    @OnTextChanged(R.id.officeStartTime) void onTextChangedOffice(CharSequence text) {
+        Helper.autoCompleteTime(text, officeStartTime, officeStartTimeHint);
+    }
+    @OnFocusChange(R.id.officeStartTime) void onFocusChangeOffice(boolean isFocussed) {
+        Helper.pushCursorToEnd(isFocussed,officeStartTime);
+    }
+
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		BugSenseHandler.initAndStartSession(getApplicationContext(), Constant.BUGSENSE_API_KEY);
 		setContentView(R.layout.activity_new_route);
+        ButterKnife.inject(this);
 
 		getSupportActionBar().setHomeButtonEnabled(false);
-		getSupportActionBar().setTitle("Home<->Office Route");
-
-        Button startButton = (Button) findViewById(R.id.saveRoute);
-
-        startButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Intent intent = new Intent(NewRouteActivity.this, AllRoutesActivity.class);
-                startActivity(intent);
-                finish();
-            }
-        });
+		getSupportActionBar().setTitle("Home <-> Office Route");
 		
 		//publishNewsFeed(null);
 	}
+
+    public void onSubmit(){
+        Intent intent = new Intent(NewRouteActivity.this, AllRoutesActivity.class);
+        startActivity(intent);
+        finish();
+    }
 	
 /*
 	@Override

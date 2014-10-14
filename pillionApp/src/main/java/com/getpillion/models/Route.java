@@ -17,6 +17,8 @@ public class Route {
     public boolean isScheduled = false;
     public Vehicle vehicle = null;
     public ArrayList<User> users;
+    public boolean isOffered = true;
+    public User owner;
 
     public Route(String from, String to, Time time) {
         Log.d("ashish","Entered new route creation");

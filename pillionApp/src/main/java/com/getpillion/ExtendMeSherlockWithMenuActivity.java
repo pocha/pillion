@@ -1,5 +1,6 @@
 package com.getpillion;
 
+import android.app.ProgressDialog;
 import android.os.Bundle;
 
 import com.actionbarsherlock.app.SherlockFragmentActivity;
@@ -12,6 +13,8 @@ import com.jeremyfeinstein.slidingmenu.lib.SlidingMenu;
 public class ExtendMeSherlockWithMenuActivity extends SherlockFragmentActivity {
 
     private SlidingMenu menu = null;
+    public ProgressDialog progress;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);

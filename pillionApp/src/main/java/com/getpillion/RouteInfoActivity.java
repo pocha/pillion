@@ -1,19 +1,16 @@
 package com.getpillion;
 
+import android.app.Activity;
+import android.app.AlertDialog;
 import android.app.ProgressDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.util.Log;
-import android.view.MotionEvent;
 import android.view.View;
-import android.view.View.MeasureSpec;
-import android.view.View.OnTouchListener;
-import android.view.ViewGroup;
-import android.view.ViewGroup.LayoutParams;
 import android.widget.Button;
 import android.widget.LinearLayout;
-import android.widget.ListAdapter;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -27,6 +24,7 @@ import com.facebook.widget.WebDialog;
 import com.facebook.widget.WebDialog.OnCompleteListener;
 import com.getpillion.common.Constant;
 import com.getpillion.common.Helper;
+import com.getpillion.models.Ride;
 import com.getpillion.models.Route;
 import com.getpillion.models.User;
 
@@ -40,29 +38,42 @@ public class RouteInfoActivity extends ExtendMeSherlockWithMenuActivity {
     private ProgressDialog progress;
     private TravellerAdapter adapter;
     private ArrayList<User> travellers;
-	
+    private Boolean bookingStatus = null;
+    private Ride.Status rideStatus = null;
+    private AlertDialog alert;
+    private Activity thisActivity;
+
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
-		super.onCreate(savedInstanceState);
-		BugSenseHandler.initAndStartSession(getApplicationContext(), Constant.BUGSENSE_API_KEY);
-		setContentView(R.layout.activity_route_info);
+        super.onCreate(savedInstanceState);
+        BugSenseHandler.initAndStartSession(getApplicationContext(), Constant.BUGSENSE_API_KEY);
+        setContentView(R.layout.activity_route_info);
 
-		//getSupportActionBar().setHomeButtonEnabled(true);
-		getSupportActionBar().setTitle("Route Info");
+        //getSupportActionBar().setHomeButtonEnabled(true);
+        getSupportActionBar().setTitle("Route Info");
 
-        Long routeId = getIntent().getExtras().getLong("routeId");
+        if (getIntent().hasExtra("bookingStatus")) {
+            bookingStatus = getIntent().getExtras().getBoolean("bookingStatus");
+            Log.d("RouteInfoActivity", "Booking Status " + bookingStatus);
+
+            AlertDialog.Builder builder = new AlertDialog.Builder(this);
+            builder.setTitle("Your request has been sent.")
+                    .setMessage("You can access this screen under 'My Rides' inside the top left menu. You can cancel the request anytime you like to before the driver starts the ride & the money will be refunded into your account.")
+                    .setCancelable(false)
+                    .setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                        public void onClick(DialogInterface dialog, int id) {
+                            dialog.dismiss();
+                        }
+                    });
+            alert = builder.create();
+        }
+
+        thisActivity = this;
+        final Long routeId = getIntent().getExtras().getLong("routeId");
         getRouteData(routeId);
 
-        Button requestButton = (Button) findViewById(R.id.requestRide);
 
-        requestButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Intent intent = new Intent(RouteInfoActivity.this, RequestRideActivity.class);
-                startActivity(intent);
-            }
-        });
-	}
+    }
 
     private void getRouteData(final Long routeId){
         try {
@@ -79,6 +90,8 @@ public class RouteInfoActivity extends ExtendMeSherlockWithMenuActivity {
                         Helper.postData(url, postParams);*/
                         Thread.sleep(3000);
                         route = new Route("Brigade Gardenia, J P Nagar 7th Phase, RBI Layout", "Ecospace, Outer Ring Road, Kadbisnehalli", Time.valueOf("8:00:00"));
+                        rideStatus = Ride.getRandomStatus();
+                        Log.d("RouteInfoActivity","rideStatus value - " + rideStatus);
                     } catch (Exception e) {
 
                     }
@@ -113,21 +126,72 @@ public class RouteInfoActivity extends ExtendMeSherlockWithMenuActivity {
                     ListView lv =  (ListView)findViewById(R.id.travellers);
                     lv.setAdapter(adapter);
 
+                    Helper.setListViewHeightBasedOnChildren(lv);
 
+                    Button requestButton = (Button) findViewById(R.id.requestRide);
+                    TextView requestRideHelperMessage = (TextView) findViewById(R.id.requestRideHelperMessage);
+                    LinearLayout checkInButtonContainer = (LinearLayout) findViewById(R.id.checkInButtonContainer);
 
-                    lv.setOnTouchListener(new OnTouchListener() {
-                        // Setting on Touch Listener for handling the touch inside ScrollView
-                        @Override
-                        public boolean onTouch(View v, MotionEvent event) {
-                            if (event.getAction() == MotionEvent.ACTION_MOVE) {
-                                return true; // Indicates that this has been handled by you and will not be forwarded further.
+                    if (rideStatus == null) {
+                        requestButton.setOnClickListener(new View.OnClickListener() {
+                            @Override
+                            public void onClick(View view) {
+                                Intent intent = new Intent(RouteInfoActivity.this, RequestRideActivity.class);
+                                intent.putExtra("routeId", routeId);
+                                startActivity(intent);
                             }
-                            return false;
+                        });
+                    }
+                    else {
+                        switch (rideStatus) {
+                            case requested:
+                            case accepted:
+                                requestButton.setText("Cancel Ride Request");
+                                requestRideHelperMessage.setVisibility(View.GONE);
+                                requestButton.setOnClickListener(new View.OnClickListener() {
+                                    @Override
+                                    public void onClick(View view) {
+                                        AlertDialog.Builder builder = new AlertDialog.Builder(thisActivity);
+                                        builder.setMessage("Want to cancel the ride ?")
+                                                .setCancelable(false)
+                                                .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+                                                    public void onClick(DialogInterface dialog, int id) {
+                                                        //To-do send data to server in AsyncTask & wrap the below code in onPostExecute
+                                                        Intent intent = new Intent(RouteInfoActivity.this, RouteInfoActivity.class);
+                                                        intent.putExtra("routeId", routeId);
+                                                        startActivity(intent);
+                                                        finish();
+                                                    }
+                                                })
+                                                .setNegativeButton("No", new DialogInterface.OnClickListener() {
+                                                    public void onClick(DialogInterface dialog, int id) {
+                                                        dialog.dismiss();
+                                                    }
+                                                });
+                                        AlertDialog alert = builder.create();
+                                        alert.show();
+                                    }
+                                });
+
+                                //show checkin button
+                                checkInButtonContainer.setVisibility(View.VISIBLE);
+                                break;
+                            case cancelled:
+                                requestButton.setVisibility(View.GONE);
+                                requestRideHelperMessage.setText("You have cancelled your request");
+                                break;
+                            case rejected:
+                                requestButton.setVisibility(View.GONE);
+                                requestRideHelperMessage.setText("Your request has been rejected");
                         }
-                    });
-                    setListViewHeightBasedOnChildren(lv);
+                    }
 
                     progress.dismiss();
+
+                    if (bookingStatus != null) {
+                        //show alert dialog once data is populated
+                        alert.show();
+                    }
                 }
             }.execute();
         } catch (Exception ex) {
@@ -141,27 +205,7 @@ public class RouteInfoActivity extends ExtendMeSherlockWithMenuActivity {
     }
 
 
-    public static void setListViewHeightBasedOnChildren(ListView listView) {
-        ListAdapter listAdapter = listView.getAdapter();
-        if (listAdapter == null)
-            return;
 
-        int desiredWidth = MeasureSpec.makeMeasureSpec(listView.getWidth(), MeasureSpec.UNSPECIFIED);
-        int totalHeight = 0;
-        View view = null;
-        for (int i = 0; i < listAdapter.getCount(); i++) {
-            view = listAdapter.getView(i, view, listView);
-            if (i == 0)
-                view.setLayoutParams(new ViewGroup.LayoutParams(desiredWidth, LayoutParams.WRAP_CONTENT));
-
-            view.measure(desiredWidth, MeasureSpec.UNSPECIFIED);
-            totalHeight += view.getMeasuredHeight();
-        }
-        ViewGroup.LayoutParams params = listView.getLayoutParams();
-        params.height = totalHeight + (listView.getDividerHeight() * (listAdapter.getCount() - 1));
-        listView.setLayoutParams(params);
-        listView.requestLayout();
-    }
 	
 	public void sendRequestDialog(View v) {
 		try {

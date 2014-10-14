@@ -72,7 +72,7 @@ public class AllRoutesActivity extends ExtendMeSherlockWithMenuActivity implemen
                     postParams.add(new BasicNameValuePair("app_id", appID));
                     String url = Constant.SERVER + Constant.USER_APP_VIEW;
                     Helper.postData(url, postParams);*/
-                    Thread.sleep(10000);
+                    Thread.sleep(2000);
 
                     Log.d("ashish","Calling new route");
                     offeringData.add(new Route("Brigade Gardenia","Ecospace", Time.valueOf("8:00:00")));

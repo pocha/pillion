@@ -91,6 +91,7 @@
     <orderEntry type="library" exported="" name="actionbarsherlock-4.4.0" level="project" />
     <orderEntry type="library" exported="" name="bugsense3.2.3" level="project" />
     <orderEntry type="library" exported="" name="Android-BitmapCache-2.1" level="project" />
+    <orderEntry type="library" exported="" name="butterknife-5.1.2" level="project" />
     <orderEntry type="module" module-name="slidingMenu" exported="" />
     <orderEntry type="module" module-name="smoothie" exported="" />
     <orderEntry type="module" module-name="facebookSDK" exported="" />

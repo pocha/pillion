@@ -1,7 +1,6 @@
 package com.getpillion.common;
 
 
-
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
@@ -16,6 +15,8 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.getpillion.AllRoutesActivity;
+import com.getpillion.MyRidesActivity;
+import com.getpillion.MyRoutesActivity;
 import com.getpillion.R;
 
 public class SlidingListFragment extends ListFragment {
@@ -144,22 +145,25 @@ public class SlidingListFragment extends ListFragment {
 				
 				
 				Intent intent = new Intent(getActivity(),AllRoutesActivity.class);
-				/*if (arg2 == 0) {
-					intent.putExtra("type", "friend_app");
+				if (arg2 == 0) {
+					/*intent.putExtra("type", "friend_app");
 					intent.putExtra("title", "Friends");
-					intent.putExtra("show_right_arrow", "1");
+					intent.putExtra("show_right_arrow", "1");*/
+                    intent = new Intent(getActivity(),AllRoutesActivity.class);
 				} else if (arg2 == 1) {
-					intent.putExtra("type", "all");
-					intent.putExtra("title", "Top Friends Apps");
-				} else if (arg2 == 3) {
+					/*intent.putExtra("type", "all");
+					intent.putExtra("title", "Top Friends Apps");*/
+                    intent = new Intent(getActivity(),MyRoutesActivity.class);
+				} /*else if (arg2 == 3) {
 					intent = new Intent(Intent.ACTION_VIEW, Uri.parse("http://www.facebook.com/appcovery"));
 				} else if ( arg2 == 4 ) {
 					intent = new Intent().setClass(getActivity(),
 							SettingActivity.class);
-				} else if ( arg2 == 2) {
-					intent.putExtra("type", "my_apps");
-					intent.putExtra("title", "Select Apps to Share");
-				}*/
+				}*/ else if ( arg2 == 2) {
+					/*intent.putExtra("type", "my_apps");
+					intent.putExtra("title", "Select Apps to Share");*/
+                    intent = new Intent(getActivity(),MyRidesActivity.class);
+				}
 				startActivity(intent);
 			}
 		});

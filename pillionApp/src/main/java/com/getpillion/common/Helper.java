@@ -1,6 +1,15 @@
 package com.getpillion.common;
 
 
+import android.text.InputType;
+import android.view.MotionEvent;
+import android.view.View;
+import android.view.ViewGroup;
+import android.widget.EditText;
+import android.widget.ListAdapter;
+import android.widget.ListView;
+import android.widget.TextView;
+
 import com.actionbarsherlock.app.SherlockFragmentActivity;
 import com.getpillion.R;
 import com.jeremyfeinstein.slidingmenu.lib.SlidingMenu;
@@ -18,10 +27,10 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
-import java.text.SimpleDateFormat;
-import java.util.List;
-import java.util.Date;
 import java.sql.Time;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.List;
 
 public class Helper {
 	public static String postData(String url, List<NameValuePair> nameValuePairs) {
@@ -115,6 +124,84 @@ public class Helper {
 
     public static String niceTime(Time time){
         return new SimpleDateFormat("hh:mm a").format(time);
+    }
+
+    public static int compareDate(Date date1, Date date2){
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMdd");
+        return sdf.format(date1).compareTo(sdf.format(date2));
+    }
+
+    public static void setListViewHeightBasedOnChildren(ListView listView) {
+        ListAdapter listAdapter = listView.getAdapter();
+        if (listAdapter == null)
+            return;
+
+        int desiredWidth = View.MeasureSpec.makeMeasureSpec(listView.getWidth(), View.MeasureSpec.UNSPECIFIED);
+        int totalHeight = 0;
+        View view = null;
+        for (int i = 0; i < listAdapter.getCount(); i++) {
+            view = listAdapter.getView(i, view, listView);
+            if (i == 0)
+                view.setLayoutParams(new ViewGroup.LayoutParams(desiredWidth, ViewGroup.LayoutParams.WRAP_CONTENT));
+
+            view.measure(desiredWidth, View.MeasureSpec.UNSPECIFIED);
+            totalHeight += view.getMeasuredHeight();
+        }
+        ViewGroup.LayoutParams params = listView.getLayoutParams();
+        params.height = totalHeight + (listView.getDividerHeight() * (listAdapter.getCount() - 1));
+        listView.setLayoutParams(params);
+        listView.requestLayout();
+
+        listView.setOnTouchListener(new View.OnTouchListener() {
+            // Setting on Touch Listener for handling the touch inside ScrollView
+            @Override
+            public boolean onTouch(View v, MotionEvent event) {
+                if (event.getAction() == MotionEvent.ACTION_MOVE) {
+                    return true; // Indicates that this has been handled by you and will not be forwarded further.
+                }
+                return false;
+            }
+        });
+    }
+
+    public static void autoCompleteTime(CharSequence text, EditText time, TextView timeHint){
+        String stringText = text.toString();
+        String textToBeSet = "";
+        int inputType = InputType.TYPE_CLASS_DATETIME|InputType.TYPE_DATETIME_VARIATION_TIME;
+
+        if (stringText.matches("^\\d$")) {
+            if (stringText.equals("1") || stringText.equals("0"))
+                textToBeSet = "0:00AM";
+            else {
+                textToBeSet = ":00AM";
+            }
+        }
+        else if (stringText.matches("^\\d\\d$")) {
+            textToBeSet = ":00AM";
+        }else if (stringText.matches("^\\d+:$"))
+            textToBeSet = "00AM";
+        else if (stringText.matches("^\\d+:\\d$"))
+            textToBeSet = "0AM";
+        else if (stringText.matches("^\\d+:\\d\\d$")) {
+            inputType = InputType.TYPE_TEXT_FLAG_CAP_CHARACTERS;
+            textToBeSet = "AM";
+        } else if (stringText.matches("^\\d+:\\d\\d(A|P)$")) {
+            inputType = InputType.TYPE_TEXT_FLAG_CAP_CHARACTERS;
+            textToBeSet = "M";
+        } else
+            textToBeSet = "";
+
+        time.setInputType(inputType);
+        timeHint.setText(textToBeSet);
+
+    }
+
+    public static void pushCursorToEnd(boolean isFocussed, EditText editText){
+        if (isFocussed && editText.getText().length() > 0){
+            String text = editText.getText().toString();
+            editText.setText("");
+            editText.append(text);
+        }
     }
 
 }
