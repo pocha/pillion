@@ -38,6 +38,7 @@
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
+
         </activity>
 
         <meta-data
@@ -67,8 +68,14 @@
 
         <activity
             android:name="com.getpillion.NewRouteActivity"
-            android:label="@string/title_activity_invite_friend"
+            android:label="Step 2/2: Location &amp; Timing"
             android:logo="@drawable/ic_launcher" >
+        </activity>
+        <activity
+            android:name="com.getpillion.NewRouteActivitySelectMode"
+            android:label="Step 1/2: Home &lt;-&gt; Office route"
+            android:logo="@drawable/ic_launcher" >
+
         </activity>
         <activity
             android:name="com.getpillion.RouteInfoActivity"

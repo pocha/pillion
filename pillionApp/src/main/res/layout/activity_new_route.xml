@@ -7,16 +7,15 @@
 
     <ScrollView
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="match_parent"
+        android:padding="10dp">
 
         <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
             android:layout_width="fill_parent"
             android:layout_height="fill_parent"
-            android:orientation="vertical"
-            android:padding="2dp">
+            android:orientation="vertical">
 
         <TextView
-
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="Home Location"/>
@@ -107,40 +106,18 @@
                     android:layout_marginBottom="0dp"/>
             </LinearLayout>
 
-        <TextView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="Do you drive to work ?"/>
-
-        <RadioGroup xmlns:android="http://schemas.android.com/apk/res/android"
-            android:layout_width="fill_parent"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            style="@style/EditTextStyle">
-            <RadioButton android:id="@+id/driveToWorkYes"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Yes/Occasionally"
-                android:checked="true"
-                />
-            <RadioButton android:id="@+id/driveToWorkNo"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="No, I dont have a vehicle"
-                />
-        </RadioGroup>
-
          <Button
              android:id="@+id/saveRoute"
              android:layout_width="match_parent"
              android:layout_height="wrap_content"
-             android:text="Save my Route"/>
+             android:text="Save Route"/>
 
          <TextView
              android:layout_width="match_parent"
              android:layout_height="wrap_content"
-             android:gravity="center"
-             android:text="&amp; show me all routes from other users"/>
+             style="@style/TextViewLabel"
+             android:layout_marginTop="5dp"
+             android:text="Once you save your route, you will be able to see all the routes created by other users. You can then offer/request ride."/>
 
         </LinearLayout>
 

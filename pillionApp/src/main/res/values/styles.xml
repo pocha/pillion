@@ -22,9 +22,11 @@
     <style name="EditTextStyle" parent="android:Widget.EditText">
         <item name="android:layout_width">match_parent</item>
         <item name="android:layout_height">16sp</item>
-        <item name="android:layout_marginBottom">5dp</item>
+        <item name="android:layout_marginBottom">10dp</item>
         <item name="android:gravity">center</item>
     </style>
+
+
     
     <style name="ButtonStyle">
 	    <item name="android:layout_width">fill_parent</item>
@@ -52,6 +54,12 @@
     <style name="TextViewLabelDivider">
         <item name="android:background">#ababab</item>
         <item name="android:layout_marginBottom">5dp</item>
+    </style>
+
+    <style name="TextViewRadioButtonSupport" parent="TextViewLabel">
+        <item name="android:layout_marginTop">1dp</item>
+        <item name="android:layout_marginBottom">20dp</item>
+        <item name="android:layout_marginLeft">20dp</item>
     </style>
 
 

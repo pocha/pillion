@@ -33,7 +33,7 @@ public class MainFragment extends Fragment {
         startButton.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent intent = new Intent(getActivity(),NewRouteActivity.class);
+                Intent intent = new Intent(getActivity(),NewRouteActivitySelectMode.class);
                 startActivity(intent);
                 getActivity().finish();
             }

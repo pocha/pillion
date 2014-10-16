@@ -6,7 +6,6 @@ import android.content.SharedPreferences.Editor;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.EditText;
-import android.widget.RadioButton;
 import android.widget.TextView;
 
 import com.actionbarsherlock.app.SherlockFragmentActivity;
@@ -31,8 +30,6 @@ public class NewRouteActivity extends SherlockFragmentActivity {
     @InjectView(R.id.homeStartTimeHint) TextView homeStartTimeHint;
     @InjectView(R.id.officeStartTime) EditText officeStartTime;
     @InjectView(R.id.officeStartTimeHint) TextView officeStartTimeHint;
-    @InjectView(R.id.driveToWorkYes) RadioButton driveToWorkYes;
-    //@InjectView(R.id.driveToWorkNo) RadioButton driveToWorkNo;
 
     @OnTextChanged(R.id.homeStartTime) void onTextChangedHome(CharSequence text) {
         Helper.autoCompleteTime(text,homeStartTime, homeStartTimeHint);
@@ -58,21 +55,33 @@ public class NewRouteActivity extends SherlockFragmentActivity {
                 Constant.PREFS_NAME, 0);
         sharedPref.edit().putLong("thisUser",user.getId());
 
-        new Route(home.getText().toString(),office.getText().toString(),
-                Helper.formatAmPmTimetoSqlTime(homeStartTime.getText().toString()),
-                driveToWorkYes.isChecked(),user);
+        if (getIntent().getBooleanExtra("offerRide",false)) {
+            new Route(home.getText().toString(), office.getText().toString(),
+                    Helper.formatAmPmTimetoSqlTime(homeStartTime.getText().toString()),
+                    true, user);
+            new Route(office.getText().toString(), home.getText().toString(),
+                    Helper.formatAmPmTimetoSqlTime(officeStartTime.getText().toString()),
+                    true, user);
+        }
 
-        new Route(office.getText().toString(),home.getText().toString(),
-                Helper.formatAmPmTimetoSqlTime(officeStartTime.getText().toString()),
-                driveToWorkYes.isChecked(),user);
+        if (getIntent().getBooleanExtra("requestRide",false)) {
+            new Route(home.getText().toString(), office.getText().toString(),
+                    Helper.formatAmPmTimetoSqlTime(homeStartTime.getText().toString()),
+                    false, user);
+            new Route(office.getText().toString(), home.getText().toString(),
+                    Helper.formatAmPmTimetoSqlTime(officeStartTime.getText().toString()),
+                    false, user);
+        }
 
 
         //send user & route data to the server through AsyncTask/SyncAdapter, get respective Ids & update the objects
         Editor editor = sharedPref.edit();
         editor.putBoolean("appInitialized", true);
         editor.commit();
-        
+
         Intent intent = new Intent(NewRouteActivity.this, AllRoutesActivity.class);
+        //clear top stack so that user cant go back
+        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
         startActivity(intent);
         finish();
     }
@@ -86,8 +95,7 @@ public class NewRouteActivity extends SherlockFragmentActivity {
         ButterKnife.inject(this);
 
 		getSupportActionBar().setHomeButtonEnabled(false);
-		getSupportActionBar().setTitle("Home <-> Office Route");
-		
+
 		//publishNewsFeed(null);
 	}
 

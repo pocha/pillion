@@ -1,0 +1,92 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:custom="http://schemas.android.com/apk/res-auto"
+    android:orientation="vertical" android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    >
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:padding="10dp">
+
+        <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+            android:layout_width="fill_parent"
+            android:layout_height="fill_parent"
+            android:orientation="vertical">
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="While commuting to office, you would like to :-"/>
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                style="@style/TextViewLabel"
+                android:layout_marginTop="5dp"
+                android:text="We will store your route preference based on the option you select below. You can always change/delete it later."/>
+            <View
+                android:layout_width="fill_parent"
+                android:layout_height="1dp"
+                style="@style/TextViewLabelDivider"/>
+
+            <RadioGroup xmlns:android="http://schemas.android.com/apk/res/android"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+               >
+                <RadioButton android:id="@+id/both"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Both offer &amp; request ride"
+                    android:checked="true"
+                    />
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    style="@style/TextViewRadioButtonSupport"
+                    android:text="You drive to office &amp; willing to offer a ride. But you would also like to request rides on the days you do not feel like driving."/>
+
+                <RadioButton android:id="@+id/needRide"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="only Request ride"
+                    />
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    style="@style/TextViewRadioButtonSupport"
+                    android:text="You do not have a vehicle or you always take cab/auto/bus to work. Driving to work is cool in a volve bus cost. Take this option."/>
+
+                <RadioButton android:id="@+id/onlyOfferRide"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="only Offer ride"
+                    />
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    style="@style/TextViewRadioButtonSupport"
+                    android:text="Take this option if you are in love with your vehicle (or driving) &amp; always drive to work (&amp; hence will never need a ride to office)."/>
+            </RadioGroup>
+
+            <Button
+                android:id="@+id/button"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:text="Go to Step 2"/>
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                style="@style/TextViewLabel"
+                android:layout_marginTop="5dp"
+                android:text="We are only going to create route from the information above. You will get ride requests &amp; you can choose to accept/reject based on the profile of the person."/>
+
+        </LinearLayout>
+    </ScrollView>
+
+</LinearLayout>
