@@ -33,6 +33,8 @@ import java.util.Date;
 import java.util.List;
 
 public class Helper {
+
+
 	public static String postData(String url, List<NameValuePair> nameValuePairs) {
 	    // Create a new HttpClient and Post Header
 	    HttpClient httpclient = new DefaultHttpClient();
@@ -117,18 +119,16 @@ public class Helper {
         menu.setMenu(R.layout.menu);
     }
 
-    public static String niceDate(Date date) {
+    public static String niceDate(Long date) {
         SimpleDateFormat ft = new SimpleDateFormat("E MMM d");
-        return ft.format(date);
+        return ft.format(new Date(date));
     }
 
-    public static String niceTime(Time time){
-        return new SimpleDateFormat("hh:mm a").format(time);
-    }
 
-    public static int compareDate(Date date1, Date date2){
+
+    public static int compareDate(Long date1, Date date2){
         SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMdd");
-        return sdf.format(date1).compareTo(sdf.format(date2));
+        return sdf.format(new Date(date1)).compareTo(sdf.format(date2));
     }
 
     public static void setListViewHeightBasedOnChildren(ListView listView) {
@@ -166,8 +166,11 @@ public class Helper {
 
     public static void autoCompleteTime(CharSequence text, EditText time, TextView timeHint){
         String stringText = text.toString();
+
         String textToBeSet = "";
         int inputType = InputType.TYPE_CLASS_DATETIME|InputType.TYPE_DATETIME_VARIATION_TIME;
+        time.setError(null); //remove any error set from previously
+        boolean error = false;
 
         if (stringText.matches("^\\d$")) {
             if (stringText.equals("1") || stringText.equals("0"))
@@ -176,20 +179,39 @@ public class Helper {
                 textToBeSet = ":00AM";
             }
         }
-        else if (stringText.matches("^\\d\\d$")) {
-            textToBeSet = ":00AM";
+        else if (stringText.matches("^\\d\\d$") ) {
+            int intText = Integer.parseInt(stringText);
+            if (intText >= 0 && intText <= 12)
+                textToBeSet = ":00AM";
+            else
+                error = true;
         }else if (stringText.matches("^\\d+:$"))
             textToBeSet = "00AM";
         else if (stringText.matches("^\\d+:\\d$"))
             textToBeSet = "0AM";
         else if (stringText.matches("^\\d+:\\d\\d$")) {
-            inputType = InputType.TYPE_TEXT_FLAG_CAP_CHARACTERS;
-            textToBeSet = "AM";
+            int intText = Integer.parseInt(stringText.replaceAll("^\\d+:", "")); //get minutes
+            if (intText > 0 && intText < 60) {
+                inputType = InputType.TYPE_TEXT_FLAG_CAP_CHARACTERS;
+                textToBeSet = "AM";
+            }
+            else
+                error = true;
         } else if (stringText.matches("^\\d+:\\d\\d(A|P)$")) {
             inputType = InputType.TYPE_TEXT_FLAG_CAP_CHARACTERS;
             textToBeSet = "M";
-        } else
+        } else if (stringText.equals(""))
             textToBeSet = "";
+        else if (stringText.matches("^\\d+:\\d+(A|P)M")) {
+            //To-do - take control to next input field
+        } else {//error condition
+            error = true;
+        }
+
+        if (error){
+            textToBeSet = "";
+            time.setError("Incorrect time format");
+        }
 
         time.setInputType(inputType);
         timeHint.setText(textToBeSet);
@@ -202,6 +224,22 @@ public class Helper {
             editText.setText("");
             editText.append(text);
         }
+    }
+
+    public static Time formatAmPmTimetoSqlTime(String AmPmTime){
+        try {
+            return Time.valueOf(AmPmTime.replaceAll("(\\d+):(\\d+)(A|P)M", getString("$1", "$2", "$3")));
+        }catch (Exception e){ //the time field could be empty. Return null in that case.
+            e.printStackTrace();
+            return null;
+        }
+    }
+
+    public static String getString(String s1, String s2, String s3){
+        if (s3 == "P")
+            return (Integer.parseInt(s1) + 12) + ":" + s2 + ":00";
+        else
+            return s1 + ":" + s2 + ":00";
     }
 
 }

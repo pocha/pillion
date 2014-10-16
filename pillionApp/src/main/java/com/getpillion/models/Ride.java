@@ -2,6 +2,8 @@ package com.getpillion.models;
 
 import android.util.Log;
 
+import com.orm.SugarRecord;
+
 import java.sql.Time;
 import java.util.ArrayList;
 
@@ -10,25 +12,28 @@ import java.util.ArrayList;
  */
 
 
-public class Ride {
-    public Long Id;
+public class Ride extends SugarRecord<Ride> {
+    public Long globalId;
     public Route route;
+    //public ArrayList<User> users;
+
     public enum Status {
         requested,accepted,rejected,cancelled, //for request ride;
         scheduled//for created ride
     }
-    public Status status;
+    public Status myStatus;
 
+    public Ride(){}
 
     public Ride(String from, String to, Time time, Status status){
-        this.route = new Route(from,to,time);
+        this.route = new Route(from,to,time,true, User.returnDummyUser());
         //this.routeId = route.id;
-        this.status = status;
+        this.myStatus = status;
     }
 
     public Ride (Route route, Status status){
         this.route = route;
-        this.status = status;
+        this.myStatus = status;
     }
 
     public static ArrayList<Ride> getAll(){

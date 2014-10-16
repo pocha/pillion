@@ -7,18 +7,19 @@ import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.TextView;
 
+import com.getpillion.models.RouteUserMapping;
 import com.getpillion.models.User;
 
-import java.util.ArrayList;
+import java.util.List;
 
-public class TravellerAdapter extends ArrayAdapter<User> {
+public class TravellerAdapter extends ArrayAdapter<RouteUserMapping> {
 	private final Context context;
-    private ArrayList<User> users;
+    private List<RouteUserMapping> routeUsers;
 
-	public TravellerAdapter(Context context, ArrayList<User> users) {
+	public TravellerAdapter(Context context, List<RouteUserMapping> users) {
         super(context, R.layout.route, users);
         this.context = context;
-        this.users = users;
+        this.routeUsers = users;
     }
 	@Override
 	public View getView(int position, View convertView, ViewGroup parent) {
@@ -37,7 +38,7 @@ public class TravellerAdapter extends ArrayAdapter<User> {
 			viewHolder = (ViewHolder) convertView.getTag();
 		}
 
-		final User user = users.get(position);
+		final User user = routeUsers.get(position).user;
 /*		route.populateFromString(selectedVal);
 		
     	final CheckBox viewHolderCheckBox = viewHolder.shareCheckbox;

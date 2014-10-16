@@ -19,6 +19,7 @@ import com.bugsense.trace.BugSenseHandler;
 import com.getpillion.common.ConnectionDetector;
 import com.getpillion.common.Constant;
 import com.getpillion.models.Route;
+import com.getpillion.models.User;
 import com.google.ads.AdView;
 import com.jeremyfeinstein.slidingmenu.lib.SlidingMenu;
 
@@ -53,11 +54,11 @@ public class AllRoutesActivity extends ExtendMeSherlockWithMenuActivity implemen
 
 
     private RouteAdapter adapter;
-    private ArrayList<Route> offeringData, seekingData, routes;
+    private ArrayList<Route> routes;
     private Tab selectedTab = null;
 
 
-    public void populateData(){
+    public void getData(){
         progress = ProgressDialog.show(AllRoutesActivity.this, "",
                 "Loading Routes. Please wait", true, false);
 
@@ -75,17 +76,15 @@ public class AllRoutesActivity extends ExtendMeSherlockWithMenuActivity implemen
                     Thread.sleep(2000);
 
                     Log.d("ashish","Calling new route");
-                    offeringData.add(new Route("Brigade Gardenia","Ecospace", Time.valueOf("8:00:00")));
-                    offeringData.add(new Route("Brigade Gardenia","Ecospace", Time.valueOf("8:30:00")));
-                    offeringData.add(new Route("Brigade Gardenia","Ecospace", Time.valueOf("9:00:00")));
+                    //User user = new User("Ashish","CEO Codelearn","IT Software","9538384545",R.drawable.action_people);
+                    new Route("Brigade Gardenia","Ecospace", Time.valueOf("8:00:00"), true, User.returnDummyUser());
+                    new Route("Brigade Gardenia","Ecospace", Time.valueOf("8:30:00"), true, User.returnDummyUser());
+                    new Route("Brigade Gardenia","Ecospace", Time.valueOf("9:00:00"), true, User.returnDummyUser());
 
 
-                    seekingData.add(new Route("Ecospace","Brigade Gardenia", Time.valueOf("16:00:00")));
-                    seekingData.add(new Route("Ecospace","Brigade Gardenia", Time.valueOf("17:00:00")));
-                    seekingData.add(new Route("Ecospace","Brigade Gardenia", Time.valueOf("18:00:00")));
-
-                    Log.d("ashish","offering rides added " + offeringData);
-                    Log.d("ashish","seeking rides added " + seekingData);
+                    new Route("Ecospace","Brigade Gardenia", Time.valueOf("16:00:00"), false, User.returnDummyUser());
+                    new Route("Ecospace","Brigade Gardenia", Time.valueOf("17:00:00"), false, User.returnDummyUser());
+                    new Route("Ecospace","Brigade Gardenia", Time.valueOf("18:00:00"), false, User.returnDummyUser());
 
                 } catch (Exception e) {
                     Log.e("ashish","exception",e);
@@ -95,22 +94,21 @@ public class AllRoutesActivity extends ExtendMeSherlockWithMenuActivity implemen
 
             @Override
             protected void onPostExecute(Void result) {
-                Log.d("ashish","offering rides added " + offeringData);
-                Log.d("ashish","seeking rides added " + seekingData);
-
-                routes.clear();
-                if (selectedTab.getTag() == "offering") {
-                    routes.addAll(offeringData);
-                }
-                else {
-                    routes.addAll(seekingData);
-                }
-                adapter.notifyDataSetChanged();
+                showRoutes();
                 progress.hide();
             }
         }.execute();
+    }
 
-
+    public void showRoutes(){
+        routes.clear();
+        if (selectedTab.getTag() == "offering") {
+            routes.addAll(Route.find(Route.class,"is_offered = 1")); //To-do order by time
+        }
+        else {
+            routes.addAll(Route.find(Route.class,"is_offered = 0"));
+        }
+        adapter.notifyDataSetChanged();
     }
 
 
@@ -118,17 +116,7 @@ public class AllRoutesActivity extends ExtendMeSherlockWithMenuActivity implemen
     @Override
     public void onTabSelected(Tab tab, FragmentTransaction ft) {
         selectedTab = tab;
-
-        if (tab.getTag() == "offering") {
-            routes.clear();
-            routes.addAll(offeringData);
-            adapter.notifyDataSetChanged();
-        }
-        if (tab.getTag() == "seeking") {
-            routes.clear();
-            routes.addAll(seekingData);
-            adapter.notifyDataSetChanged();
-        }
+        showRoutes();
     }
 
     @Override
@@ -167,14 +155,12 @@ public class AllRoutesActivity extends ExtendMeSherlockWithMenuActivity implemen
         actionBar.setNavigationMode(ActionBar.NAVIGATION_MODE_TABS);
 
         routes = new ArrayList<Route>();
-        offeringData = new ArrayList<Route>();
-        seekingData = new ArrayList<Route>();
 
         adapter = new RouteAdapter(getApplicationContext(),routes);
         mListView = (ListView) findViewById(R.id.listView);
         mListView.setAdapter(adapter);
 
-        populateData();
+        getData();
 
         offeringTab = actionBar.newTab().setText("Rides Offered");
         offeringTab.setTag("offering");
@@ -390,7 +376,7 @@ public class AllRoutesActivity extends ExtendMeSherlockWithMenuActivity implemen
 			public void onItemClick(AdapterView<?> parent, View view,
 					int position, long id) {
                 Intent intent = new Intent(AllRoutesActivity.this, RouteInfoActivity.class);
-                intent.putExtra("routeId",routes.get(position).id);
+                intent.putExtra("routeId",routes.get(position).globalId);
                 startActivity(intent);
                 /*
 				// publishOpenGraphAction();

@@ -2,6 +2,7 @@ package com.getpillion;
 
 import android.app.ProgressDialog;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
@@ -11,6 +12,7 @@ import android.view.ViewGroup;
 import android.widget.Button;
 
 import com.facebook.UiLifecycleHelper;
+import com.getpillion.common.Constant;
 
 public class MainFragment extends Fragment {
 
@@ -25,6 +27,8 @@ public class MainFragment extends Fragment {
 				.findViewById(R.id.startButton);
 
         getActivity().getActionBar().hide();
+
+
 
         startButton.setOnClickListener(new OnClickListener() {
             @Override
@@ -44,6 +48,13 @@ public class MainFragment extends Fragment {
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
+        SharedPreferences sharedPref = getActivity().getSharedPreferences(
+                Constant.PREFS_NAME, 0);
+        if (sharedPref.getBoolean("appInitialized",false)) { //app already initialized. Take to all routes page
+            Intent intent = new Intent(getActivity(),AllRoutesActivity.class);
+            startActivity(intent);
+            getActivity().finish();
+        }
 		super.onCreate(savedInstanceState);
 		/*uiHelper = new UiLifecycleHelper(getActivity(), callback);
 		uiHelper.onCreate(savedInstanceState);*/

@@ -26,10 +26,11 @@ import com.getpillion.common.Constant;
 import com.getpillion.common.Helper;
 import com.getpillion.models.Ride;
 import com.getpillion.models.Route;
+import com.getpillion.models.RouteUserMapping;
 import com.getpillion.models.User;
 
 import java.sql.Time;
-import java.util.ArrayList;
+import java.util.List;
 
 public class RouteInfoActivity extends ExtendMeSherlockWithMenuActivity {
 
@@ -37,7 +38,7 @@ public class RouteInfoActivity extends ExtendMeSherlockWithMenuActivity {
     private Route route;
     private ProgressDialog progress;
     private TravellerAdapter adapter;
-    private ArrayList<User> travellers;
+    private List<RouteUserMapping> travellers;
     private Boolean bookingStatus = null;
     private Ride.Status rideStatus = null;
     private AlertDialog alert;
@@ -89,7 +90,7 @@ public class RouteInfoActivity extends ExtendMeSherlockWithMenuActivity {
                         String url = Constant.SERVER + Constant.USER_APP_VIEW;
                         Helper.postData(url, postParams);*/
                         Thread.sleep(3000);
-                        route = new Route("Brigade Gardenia, J P Nagar 7th Phase, RBI Layout", "Ecospace, Outer Ring Road, Kadbisnehalli", Time.valueOf("8:00:00"));
+                        route = new Route("Brigade Gardenia, J P Nagar 7th Phase, RBI Layout", "Ecospace, Outer Ring Road, Kadbisnehalli", Time.valueOf("8:00:00"), true, User.returnDummyUser());
                         rideStatus = Ride.getRandomStatus();
                         Log.d("RouteInfoActivity","rideStatus value - " + rideStatus);
                     } catch (Exception e) {
@@ -100,29 +101,29 @@ public class RouteInfoActivity extends ExtendMeSherlockWithMenuActivity {
 
                 @Override
                 protected void onPostExecute(Void result) {
-                    ((TextView)findViewById(R.id.from)).setText(route.from);
-                    ((TextView)findViewById(R.id.to)).setText(route.to);
+                    ((TextView)findViewById(R.id.from)).setText(route.origin);
+                    ((TextView)findViewById(R.id.to)).setText(route.dest);
 
                     if (route.isScheduled) {
-                        ((TextView)findViewById(R.id.status)).setText("Scheduled at " + Helper.niceTime(route.time) + " on " + Helper.niceDate(route.date));
+                        ((TextView)findViewById(R.id.status)).setText("Scheduled at " + route.getAmPmTime() + " on " + Helper.niceDate(route.date));
                     }
                     else if (route.date != null ){ // not scheduled so must have happened in past
-                        ((TextView)findViewById(R.id.status)).setText("Last ride happened at " + Helper.niceTime(route.time) + " on " + Helper.niceDate(route.date) );
+                        ((TextView)findViewById(R.id.status)).setText("Last ride happened at " + route.getAmPmTime() + " on " + Helper.niceDate(route.date) );
                     }
                     else {// no information of ride present
                         ((TextView)findViewById(R.id.status)).setText("The owner created the route but probably forgot to start his ride on the app. Hence no prior information of the ride available.");
                     }
 
                     if (route.vehicle != null ){
-                        ((TextView)findViewById(R.id.vehicle)).setText(route.vehicle.color + " " + route.vehicle.model);
+                        //((TextView)findViewById(R.id.vehicle)).setText(route.vehicle.color + " " + route.vehicle.model);
                     }
                     else {
                         ((LinearLayout)findViewById(R.id.vehicleInfo)).setVisibility(View.GONE);
                     }
-                    //travellers.clear();
-                    //travellers = new ArrayList<User>();
-                    Log.d("RouteInfoActivity","traveller count " + route.users.size());
-                    adapter = new TravellerAdapter(getApplicationContext(),route.users);
+                    travellers.clear();
+                    travellers = RouteUserMapping.find(RouteUserMapping.class,"route=?", String.valueOf(route.getId()) );
+                    Log.d("RouteInfoActivity", "traveller count " + travellers.size());
+                    adapter = new TravellerAdapter(getApplicationContext(),travellers);
                     ListView lv =  (ListView)findViewById(R.id.travellers);
                     lv.setAdapter(adapter);
 

@@ -68,7 +68,7 @@ public class MyRidesActivity extends ExtendMeSherlockWithMenuActivity {
             public void onItemClick(AdapterView<?> parent, View view,
                                     int position, long id) {
                 Intent intent = new Intent(MyRidesActivity.this, RouteInfoActivity.class);
-                intent.putExtra("routeId", upcomingRides.get(position).id);
+                intent.putExtra("routeId", upcomingRides.get(position).globalId);
                 startActivity(intent);
             }
         });
@@ -78,7 +78,7 @@ public class MyRidesActivity extends ExtendMeSherlockWithMenuActivity {
             public void onItemClick(AdapterView<?> parent, View view,
                                     int position, long id) {
                 Intent intent = new Intent(MyRidesActivity.this, RouteInfoActivity.class);
-                intent.putExtra("routeId", pastRides.get(position).id);
+                intent.putExtra("routeId", pastRides.get(position).globalId);
                 startActivity(intent);
             }
         });

@@ -3,6 +3,8 @@ package com.getpillion.models;
 import android.util.Log;
 
 import com.getpillion.R;
+import com.orm.SugarRecord;
+import com.orm.dsl.Ignore;
 
 import java.util.ArrayList;
 
@@ -10,14 +12,17 @@ import java.util.ArrayList;
  * Created by pocha on 29/09/14.
  */
 
-public class User {
-    public Long id;
+public class User extends SugarRecord<User> {
+    public Long globalId;
     public String name;
     public String title;
     public String fieldOfWork;
     public String phone;
     public int profilePic;
+    @Ignore
     public static ArrayList<User> dummyUsers = new ArrayList<User>();
+
+    public User(){}
 
     public User(String name, String title, String fieldOfWork, String phone, int profilePic) {
         this.name = name;
@@ -25,6 +30,7 @@ public class User {
         this.fieldOfWork = fieldOfWork;
         this.phone = phone;
         this.profilePic = profilePic;
+        this.save();
     }
 
     public static User returnDummyUser() {

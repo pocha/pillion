@@ -1,7 +1,10 @@
 package com.getpillion;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
+import android.content.SharedPreferences.Editor;
 import android.os.Bundle;
+import android.view.View;
 import android.widget.EditText;
 import android.widget.RadioButton;
 import android.widget.TextView;
@@ -10,9 +13,12 @@ import com.actionbarsherlock.app.SherlockFragmentActivity;
 import com.bugsense.trace.BugSenseHandler;
 import com.getpillion.common.Constant;
 import com.getpillion.common.Helper;
+import com.getpillion.models.Route;
+import com.getpillion.models.User;
 
 import butterknife.ButterKnife;
 import butterknife.InjectView;
+import butterknife.OnClick;
 import butterknife.OnFocusChange;
 import butterknife.OnTextChanged;
 
@@ -26,7 +32,7 @@ public class NewRouteActivity extends SherlockFragmentActivity {
     @InjectView(R.id.officeStartTime) EditText officeStartTime;
     @InjectView(R.id.officeStartTimeHint) TextView officeStartTimeHint;
     @InjectView(R.id.driveToWorkYes) RadioButton driveToWorkYes;
-    @InjectView(R.id.driveToWorkNo) RadioButton driveToWorkNo;
+    //@InjectView(R.id.driveToWorkNo) RadioButton driveToWorkNo;
 
     @OnTextChanged(R.id.homeStartTime) void onTextChangedHome(CharSequence text) {
         Helper.autoCompleteTime(text,homeStartTime, homeStartTimeHint);
@@ -40,6 +46,35 @@ public class NewRouteActivity extends SherlockFragmentActivity {
     }
     @OnFocusChange(R.id.officeStartTime) void onFocusChangeOffice(boolean isFocussed) {
         Helper.pushCursorToEnd(isFocussed,officeStartTime);
+    }
+    @OnClick(R.id.saveRoute) void onSubmit(View v){
+        //To-Do validate data
+
+
+        //check if user exists else create new user
+        User user = new User();
+        user.save();
+        SharedPreferences sharedPref = getApplicationContext().getSharedPreferences(
+                Constant.PREFS_NAME, 0);
+        sharedPref.edit().putLong("thisUser",user.getId());
+
+        new Route(home.getText().toString(),office.getText().toString(),
+                Helper.formatAmPmTimetoSqlTime(homeStartTime.getText().toString()),
+                driveToWorkYes.isChecked(),user);
+
+        new Route(office.getText().toString(),home.getText().toString(),
+                Helper.formatAmPmTimetoSqlTime(officeStartTime.getText().toString()),
+                driveToWorkYes.isChecked(),user);
+
+
+        //send user & route data to the server through AsyncTask/SyncAdapter, get respective Ids & update the objects
+        Editor editor = sharedPref.edit();
+        editor.putBoolean("appInitialized", true);
+        editor.commit();
+        
+        Intent intent = new Intent(NewRouteActivity.this, AllRoutesActivity.class);
+        startActivity(intent);
+        finish();
     }
 
 	
@@ -56,11 +91,7 @@ public class NewRouteActivity extends SherlockFragmentActivity {
 		//publishNewsFeed(null);
 	}
 
-    public void onSubmit(){
-        Intent intent = new Intent(NewRouteActivity.this, AllRoutesActivity.class);
-        startActivity(intent);
-        finish();
-    }
+
 	
 /*
 	@Override

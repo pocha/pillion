@@ -41,7 +41,7 @@
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Time when you start from home (optional)"/>
+            android:text="Time when you start from home"/>
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -76,7 +76,7 @@
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Time when you start from office (optional)"/>
+            android:text="Time when you start from office"/>
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -134,8 +134,7 @@
              android:id="@+id/saveRoute"
              android:layout_width="match_parent"
              android:layout_height="wrap_content"
-             android:text="Save my Route"
-             android:onClick="onSubmit"/>
+             android:text="Save my Route"/>
 
          <TextView
              android:layout_width="match_parent"
