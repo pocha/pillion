@@ -1,12 +1,17 @@
 package com.getpillion;
 
+import android.app.AlertDialog;
+import android.app.AlertDialog.Builder;
+import android.content.DialogInterface;
+import android.content.DialogInterface.OnClickListener;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
-import android.widget.EditText;
 import android.widget.TextView;
+import android.widget.TimePicker;
 
 import com.actionbarsherlock.app.SherlockFragmentActivity;
 import com.bugsense.trace.BugSenseHandler;
@@ -15,38 +20,71 @@ import com.getpillion.common.Helper;
 import com.getpillion.models.Route;
 import com.getpillion.models.User;
 
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+
 import butterknife.ButterKnife;
 import butterknife.InjectView;
 import butterknife.OnClick;
-import butterknife.OnFocusChange;
-import butterknife.OnTextChanged;
 
-public class NewRouteActivity extends SherlockFragmentActivity {
+public class NewRouteActivity extends SherlockFragmentActivity  {
+
 
 	//private SlidingMenu menu = null;
-    @InjectView(R.id.office) EditText office;
-    @InjectView(R.id.home) EditText home;
-    @InjectView(R.id.homeStartTime) EditText homeStartTime;
-    @InjectView(R.id.homeStartTimeHint) TextView homeStartTimeHint;
-    @InjectView(R.id.officeStartTime) EditText officeStartTime;
-    @InjectView(R.id.officeStartTimeHint) TextView officeStartTimeHint;
+    @InjectView(R.id.office) TextView office;
+    @InjectView(R.id.home) TextView home;
+    @InjectView(R.id.homeStartTime) TextView homeStartTime;
+    @InjectView(R.id.officeStartTime) TextView officeStartTime;
 
-    @OnTextChanged(R.id.homeStartTime) void onTextChangedHome(CharSequence text) {
-        Helper.autoCompleteTime(text,homeStartTime, homeStartTimeHint);
-        //Log.d("NewRouteActivity","inside ontextchanged");
+    @OnClick(R.id.homeStartTime) void setHomeStartTime(View v){
+        setTime(homeStartTime);
     }
-    @OnFocusChange(R.id.homeStartTime) void onFocusChangeHome(boolean isFocussed) {
-        Helper.pushCursorToEnd(isFocussed,homeStartTime);
+    @OnClick(R.id.officeStartTime) void setOfficeStartTime(View v){
+        setTime(officeStartTime);
     }
-    @OnTextChanged(R.id.officeStartTime) void onTextChangedOffice(CharSequence text) {
-        Helper.autoCompleteTime(text, officeStartTime, officeStartTimeHint);
+
+    private Builder timeDialog;
+    private TimePicker timePicker;
+
+    private void setTime(final TextView clickedView){
+        timePicker = new TimePicker(this);
+        timePicker.setIs24HourView(false);
+        Log.d("TimePicker",clickedView.getText().toString());
+        Matcher matcher = Pattern.compile("^(\\d+):(\\d+)(A|P)M$").matcher(clickedView.getText().toString());
+        matcher.find();
+        Log.d("TimePicker","3rd group value " + matcher.group(3));
+        timePicker.setCurrentHour( (matcher.group(3).equals("P")) ? Integer.parseInt(matcher.group(1)) + 12 : Integer.parseInt(matcher.group(1)) );
+        timePicker.setCurrentMinute(Integer.parseInt(matcher.group(2)));
+        
+        timeDialog = new AlertDialog.Builder(this)
+                .setTitle("Select Time")
+                .setPositiveButton(android.R.string.ok, new OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        Log.d("Picker", timePicker.getCurrentHour() + ":"
+                                + timePicker.getCurrentMinute());
+                        int hour = timePicker.getCurrentHour();
+                        int minute = timePicker.getCurrentMinute();
+                        if (hour > 12) {
+                            clickedView.setText((hour - 12) + ":" + ((minute < 10) ? "0" + minute : minute) + "PM");
+                        } else {
+                            clickedView.setText(hour + ":" + ((minute < 10) ? "0" + minute : minute) + "AM");
+                        }
+                    }
+                })
+                .setNegativeButton(android.R.string.cancel,
+                        new OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog,
+                                                int which) {
+                                Log.d("Picker", "Cancelled!");
+                            }
+                        });
+        timeDialog.setView(timePicker).show();
     }
-    @OnFocusChange(R.id.officeStartTime) void onFocusChangeOffice(boolean isFocussed) {
-        Helper.pushCursorToEnd(isFocussed,officeStartTime);
-    }
+
     @OnClick(R.id.saveRoute) void onSubmit(View v){
         //To-Do validate data
-
 
         //check if user exists else create new user
         User user = new User();
@@ -96,11 +134,13 @@ public class NewRouteActivity extends SherlockFragmentActivity {
 
 		getSupportActionBar().setHomeButtonEnabled(false);
 
+
+
 		//publishNewsFeed(null);
 	}
 
 
-	
+
 /*
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
