@@ -56,13 +56,14 @@
                         android:layout_width="fill_parent"
                         android:layout_height="1dp"
                         style="@style/TextViewLabelDivider"/>
-                    <TextView
+                    <EditText
                         android:id="@+id/homeStartTime"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         style="@style/EditTextStyle"
                         android:textSize="30sp"
-                        android:text="9:00AM"/>
+                        android:text="9:00AM"
+                        android:clickable="true"/>
 
                 </LinearLayout>
                 <LinearLayout
@@ -116,13 +117,14 @@
                         android:layout_width="fill_parent"
                         android:layout_height="1dp"
                         style="@style/TextViewLabelDivider"/>
-                    <TextView
+                    <EditText
                         android:id="@+id/officeStartTime"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         style="@style/EditTextStyle"
                         android:textSize="30sp"
-                        android:text="5:00PM"/>
+                        android:text="5:00PM"
+                        android:clickable="true"/>
 
                 </LinearLayout>
 

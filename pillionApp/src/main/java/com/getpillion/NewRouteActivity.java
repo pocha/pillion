@@ -9,7 +9,9 @@ import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.MotionEvent;
 import android.view.View;
+import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.TimePicker;
 
@@ -26,6 +28,7 @@ import java.util.regex.Pattern;
 import butterknife.ButterKnife;
 import butterknife.InjectView;
 import butterknife.OnClick;
+import butterknife.OnTouch;
 
 public class NewRouteActivity extends SherlockFragmentActivity  {
 
@@ -33,20 +36,25 @@ public class NewRouteActivity extends SherlockFragmentActivity  {
 	//private SlidingMenu menu = null;
     @InjectView(R.id.office) TextView office;
     @InjectView(R.id.home) TextView home;
-    @InjectView(R.id.homeStartTime) TextView homeStartTime;
-    @InjectView(R.id.officeStartTime) TextView officeStartTime;
+    @InjectView(R.id.homeStartTime)
+    EditText homeStartTime;
+    @InjectView(R.id.officeStartTime) EditText officeStartTime;
 
-    @OnClick(R.id.homeStartTime) void setHomeStartTime(View v){
-        setTime(homeStartTime);
+    @OnTouch(R.id.homeStartTime) boolean setHomeStartTime(View v, MotionEvent event){
+        if(event.getAction()==MotionEvent.ACTION_UP)
+            setTime(homeStartTime);
+        return true;
     }
-    @OnClick(R.id.officeStartTime) void setOfficeStartTime(View v){
-        setTime(officeStartTime);
+    @OnTouch(R.id.officeStartTime) boolean setOfficeStartTime(View v, MotionEvent event){
+        if(event.getAction()==MotionEvent.ACTION_UP)
+            setTime(officeStartTime);
+        return true;
     }
 
     private Builder timeDialog;
     private TimePicker timePicker;
 
-    private void setTime(final TextView clickedView){
+    private void setTime(final EditText clickedView){
         timePicker = new TimePicker(this);
         timePicker.setIs24HourView(false);
         Log.d("TimePicker",clickedView.getText().toString());
@@ -58,6 +66,7 @@ public class NewRouteActivity extends SherlockFragmentActivity  {
         
         timeDialog = new AlertDialog.Builder(this)
                 .setTitle("Select Time")
+                .setMessage("Touch on hour/minute field to launch keyboard")
                 .setPositiveButton(android.R.string.ok, new OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
