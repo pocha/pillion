@@ -68,7 +68,7 @@ public class SlidingListFragment extends ListFragment {
 		public TextView title;
 	}
 
-	public class SampleAdapter extends ArrayAdapter<SampleItem> {
+	private class SampleAdapter extends ArrayAdapter<SampleItem> {
 
 		public SampleAdapter(Context context) {
 			super(context, 0);

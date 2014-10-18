@@ -12,13 +12,13 @@ import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
 import android.widget.EditText;
-import android.widget.TextView;
 import android.widget.TimePicker;
 
 import com.actionbarsherlock.app.SherlockFragmentActivity;
 import com.bugsense.trace.BugSenseHandler;
 import com.getpillion.common.Constant;
 import com.getpillion.common.Helper;
+import com.getpillion.common.PlaceSelectFragment;
 import com.getpillion.models.Route;
 import com.getpillion.models.User;
 
@@ -34,27 +34,48 @@ public class NewRouteActivity extends SherlockFragmentActivity  {
 
 
 	//private SlidingMenu menu = null;
-    @InjectView(R.id.office) TextView office;
-    @InjectView(R.id.home) TextView home;
+    @InjectView(R.id.office) EditText office;
+    @InjectView(R.id.home) EditText home;
     @InjectView(R.id.homeStartTime)
     EditText homeStartTime;
     @InjectView(R.id.officeStartTime) EditText officeStartTime;
 
-    @OnTouch(R.id.homeStartTime) boolean setHomeStartTime(View v, MotionEvent event){
-        if(event.getAction()==MotionEvent.ACTION_UP)
-            setTime(homeStartTime);
+    @OnTouch(R.id.home) boolean setHomeLocation(View v, MotionEvent event){
+        return setLocation(R.id.home,event);
+    }
+    @OnTouch(R.id.office) boolean setOfficeLocation(View v, MotionEvent event){
+        return setLocation(R.id.office,event);
+    }
+
+    private boolean setLocation(int viewId, MotionEvent event){
+        if (event.getAction() != MotionEvent.ACTION_UP)
+            return true;
+        //launch Dialog
+        PlaceSelectFragment p = PlaceSelectFragment.newInstance("some title");
+        Bundle bundle = new Bundle();
+        bundle.putInt("populateMeInParent",viewId);
+        p.setArguments(bundle);
+        p.show(getSupportFragmentManager(),"not sure what this tag suppose to do");
+        return true; //indicating this function consumed the event & it will not be propagated further
+    }
+
+    @OnTouch(R.id.homeStartTime) boolean setHomeStartTime(View v, MotionEvent event) {
+        setTime(homeStartTime,event);
         return true;
     }
+
     @OnTouch(R.id.officeStartTime) boolean setOfficeStartTime(View v, MotionEvent event){
-        if(event.getAction()==MotionEvent.ACTION_UP)
-            setTime(officeStartTime);
+        setTime(officeStartTime,event);
         return true;
     }
 
     private Builder timeDialog;
     private TimePicker timePicker;
 
-    private void setTime(final EditText clickedView){
+    private void setTime(final EditText clickedView, MotionEvent event){
+        if (event.getAction() != MotionEvent.ACTION_UP)
+            return;
+
         timePicker = new TimePicker(this);
         timePicker.setIs24HourView(false);
         Log.d("TimePicker",clickedView.getText().toString());

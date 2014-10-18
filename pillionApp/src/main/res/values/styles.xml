@@ -67,6 +67,12 @@
         <item name="android:layout_marginLeft">20dp</item>
     </style>
 
+    <style name="EditTextDialog" parent="EditTextStyle">
+        <item name="android:focusable">false</item>
+        <item name="android:cursorVisible">false</item>
+        <item name="android:textSize">10sp</item>
+    </style>
+
 
 
 </resources>

@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical" android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:padding="10dp">
+
+    <EditText
+        android:id="@+id/searchBox"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="Type location"/>
+    <TextView
+        android:id="@+id/loading"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        style="@style/TextViewLabel"
+        android:layout_marginTop="2dp"
+        android:gravity="center"
+        android:text="loading..."
+        android:visibility="gone"/>
+    <ListView
+        android:id="@+id/searchResult"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+    </ListView>
+    <TextView
+        android:id="@+id/poweredByGoogle"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        style="@style/TextViewLabel"
+        android:text="powered by Google"
+        android:visibility="gone"/>
+
+</LinearLayout>
