@@ -38,4 +38,8 @@
     <string name="title_activity_extend_me_sherlock_with_menu">ExtendMeSherlockWithMenuActivity</string>
     <string name="title_activity_request_ride">RequestRideActivity</string>
 
+    <string-array name="AM_PM">
+        <item>AM</item>
+        <item>PM</item>
+    </string-array>
 </resources>

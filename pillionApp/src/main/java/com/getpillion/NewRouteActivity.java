@@ -57,6 +57,7 @@ public class NewRouteActivity extends SherlockFragmentActivity  {
         p.setArguments(bundle);
         p.show(getSupportFragmentManager(),"not sure what this tag suppose to do");
         return true; //indicating this function consumed the event & it will not be propagated further
+
     }
 
     @OnTouch(R.id.homeStartTime) boolean setHomeStartTime(View v, MotionEvent event) {

@@ -8,9 +8,11 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.support.v4.app.FragmentTransaction;
 import android.util.Log;
+import android.view.MotionEvent;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
+import android.widget.EditText;
 import android.widget.ListView;
 
 import com.actionbarsherlock.app.ActionBar;
@@ -18,6 +20,7 @@ import com.actionbarsherlock.app.ActionBar.Tab;
 import com.bugsense.trace.BugSenseHandler;
 import com.getpillion.common.ConnectionDetector;
 import com.getpillion.common.Constant;
+import com.getpillion.common.TimeDateFilterFragment;
 import com.getpillion.models.Route;
 import com.getpillion.models.User;
 import com.google.ads.AdView;
@@ -27,6 +30,8 @@ import java.sql.Time;
 import java.util.ArrayList;
 import java.util.List;
 
+import butterknife.ButterKnife;
+import butterknife.OnTouch;
 import uk.co.senab.bitmapcache.BitmapLruCache;
 
 public class AllRoutesActivity extends ExtendMeSherlockWithMenuActivity implements ActionBar.TabListener {
@@ -56,6 +61,15 @@ public class AllRoutesActivity extends ExtendMeSherlockWithMenuActivity implemen
     private RouteAdapter adapter;
     private ArrayList<Route> routes;
     private Tab selectedTab = null;
+
+    @OnTouch(R.id.filterTime) boolean launchFilterTimeDialog(View v, MotionEvent event){
+        if (event.getAction() != MotionEvent.ACTION_UP)
+            return true;
+        TimeDateFilterFragment p = TimeDateFilterFragment.newInstance((EditText)v);
+        p.show(getSupportFragmentManager(),"not sure what this tag suppose to do");
+
+        return true;
+    }
 
 
     public void getData(){
@@ -130,12 +144,14 @@ public class AllRoutesActivity extends ExtendMeSherlockWithMenuActivity implemen
     }
 
 
+
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		BugSenseHandler.initAndStartSession(getApplicationContext(),
 				Constant.BUGSENSE_API_KEY);
 		setContentView(R.layout.route_list);
+        ButterKnife.inject(this);
 
 		/*progress = ProgressDialog.show(AllRoutesActivity.this, "",
 				"Loading Routes. Please wait", true, false);
@@ -171,6 +187,9 @@ public class AllRoutesActivity extends ExtendMeSherlockWithMenuActivity implemen
         seekingTab.setTag("seeking");
         seekingTab.setTabListener(this);
         actionBar.addTab(seekingTab);
+
+        //Time filter
+
 
 
         /*if ( com.getpillion.common.Session.packageList.size() == 0 ) {

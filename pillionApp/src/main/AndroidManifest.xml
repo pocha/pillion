@@ -41,7 +41,7 @@
 
         </activity>
 
-        <meta-data
+     <!--   <meta-data
             android:name="com.facebook.sdk.ApplicationId"
             android:value="@string/app_id" />
 
@@ -52,20 +52,20 @@
         <activity
             android:name="com.getpillion.Like"
             android:label="Like AppCovery" >
-        </activity>
+        </activity> -->
         <activity
             android:name="com.getpillion.AllRoutesActivity"
             android:label="@string/title_activity_home"
             android:logo="@drawable/list" >
         </activity>
 
-        <receiver android:name="com.getpillion.BootAlarm" >
+      <!--  <receiver android:name="com.getpillion.BootAlarm" >
             <intent-filter>
                 <action android:name="android.intent.action.BOOT_COMPLETED" />
             </intent-filter>
         </receiver>
         <receiver android:name="com.getpillion.TimeAlarm" />
-
+-->
         <activity
             android:name="com.getpillion.NewRouteActivity"
             android:label="Step 2/2: Location &amp; Timing"
@@ -103,6 +103,11 @@
         <activity
             android:name="com.getpillion.MyRidesActivity"
             android:label="My Rides"
+            android:logo="@drawable/list">
+        </activity>
+        <activity
+            android:name="com.getpillion.MyRoutesActivity"
+            android:label="My Routes"
             android:logo="@drawable/list">
         </activity>
     </application>

@@ -4,11 +4,12 @@
     android:layout_height="fill_parent"
     android:id="@+id/app_layout"
     android:orientation="vertical" >
+
     
     <LinearLayout
         android:layout_width="fill_parent"
         android:layout_height="0dp"
-        android:layout_weight="6"
+        android:layout_weight="1"
         android:layout_gravity="bottom|center_horizontal">
 
       <!--  <org.lucasr.smoothie.AsyncListView xmlns:android="http://schemas.android.com/apk/res/android"
@@ -30,8 +31,7 @@
 
         
     </LinearLayout>
-    
-   <!--
+
     <LinearLayout android:orientation="horizontal"
         android:layout_width="fill_parent"
         android:layout_height="3dp"
@@ -43,33 +43,87 @@
         android:id="@+id/invite_friend_div"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
-        android:background="#f1f1f1"
         android:gravity="center"
-        android:layout_gravity="center">
+        android:background="#eee"
+        android:layout_gravity="center"
+        android:orientation="horizontal"
+        android:paddingTop="1dp">
         
-        
-        <Button
-			    android:id="@+id/load_more_app"
-			    android:layout_width="0dp"
-			    android:layout_weight="1.3"
-			    android:padding="5dp"
-		        android:layout_height="wrap_content"
-		        android:text="Load More App"
-		        android:onClick="loadFreindsAppsBtn"
-		        android:drawableLeft="@drawable/reload"
-		        android:visibility="gone"
-				/>
-        
-        <Button
+        <!--<Button
 			    android:id="@+id/invite_friend"
 			    android:layout_width="0dp"
 			    android:layout_weight="1"
 			    android:layout_height="wrap_content"
 		        android:text="+ Add Friends to See Their Apps"
 		        android:onClick="inviteFriend"
-		        />
+		        />-->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:orientation="vertical"
+            android:gravity="center">
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                style="@style/TextViewLabel"
+                android:text="From"
+                android:gravity="center"
+                android:layout_marginTop="1dp"
+                android:layout_marginBottom="1dp"/>
+            <EditText
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                style="@style/TextViewLabel"
+                android:layout_marginTop="5dp"
+                android:hint="filter from location"/>
+        </LinearLayout>
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:orientation="vertical"
+            android:gravity="center">
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                style="@style/TextViewLabel"
+                android:text="To"
+                android:gravity="center"
+                android:layout_marginTop="1dp"
+                android:layout_marginBottom="1dp"/>
+            <EditText
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                style="@style/TextViewLabel"
+                android:layout_marginTop="5dp"
+                android:hint="filter to location"/>
+        </LinearLayout>
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:orientation="vertical"
+            android:gravity="center">
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                style="@style/TextViewLabel"
+                android:text="Time"
+                android:gravity="center"
+                android:layout_marginTop="1dp"
+                android:layout_marginBottom="1dp"/>
+            <EditText
+                android:id="@+id/filterTime"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                style="@style/TextViewLabel"
+                android:layout_marginTop="5dp"
+                android:hint="filter by start time"/>
+
+        </LinearLayout>
         
-    </LinearLayout>-->
+    </LinearLayout>
     
 </LinearLayout>
     
