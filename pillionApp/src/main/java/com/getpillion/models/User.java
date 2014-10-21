@@ -3,8 +3,12 @@ package com.getpillion.models;
 import android.util.Log;
 
 import com.getpillion.R;
+import com.getpillion.common.Helper;
 import com.orm.SugarRecord;
 import com.orm.dsl.Ignore;
+
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.util.ArrayList;
 
@@ -44,6 +48,27 @@ public class User extends SugarRecord<User> {
         }
         User user = dummyUsers.get((int)(Math.random()*3.99));
         Log.d("ashish","User returned - " + user.name);
+        return user;
+    }
+
+    public static User createOrUpdateFromJson(JSONObject jsonUser){
+        User user = null;
+        try {
+            user = User.findById(User.class,jsonUser.getLong("globalId"));
+            if (user == null){
+                user = new User();
+                user.globalId = jsonUser.getLong("globalId");
+            }
+            Helper.updateFromJsonField(user.name , jsonUser.optString("name"));
+            Helper.updateFromJsonField(user.title , jsonUser.optString("title"));
+            Helper.updateFromJsonField(user.fieldOfWork , jsonUser.optString("fieldOfWork"));
+            Helper.updateFromJsonField(user.phone , jsonUser.optString("phone"));
+            user.save();
+        }
+        catch (JSONException e){
+            e.printStackTrace();
+            Log.d("User.java","Error in createOrUpdateFromJSON " + e.toString());
+        }
         return user;
     }
 }

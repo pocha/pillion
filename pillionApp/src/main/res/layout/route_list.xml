@@ -10,7 +10,8 @@
         android:layout_width="fill_parent"
         android:layout_height="0dp"
         android:layout_weight="1"
-        android:layout_gravity="bottom|center_horizontal">
+        android:layout_gravity="bottom|center_horizontal"
+        android:orientation="vertical">
 
       <!--  <org.lucasr.smoothie.AsyncListView xmlns:android="http://schemas.android.com/apk/res/android"
                                    android:id="@+id/offeringList"
@@ -27,6 +28,14 @@
             android:scaleType="fitXY"
             android:background="#f7f7f7"
             />
+        <TextView
+            android:id="@+id/noRoutesFound"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:text="No Routes Found"
+            android:visibility="gone"
+            style="@style/TextViewLabel"/>
 
 
         
@@ -72,6 +81,7 @@
                 android:layout_marginTop="1dp"
                 android:layout_marginBottom="1dp"/>
             <EditText
+                android:id="@+id/fromFilter"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 style="@style/TextViewLabel"
@@ -93,6 +103,7 @@
                 android:layout_marginTop="1dp"
                 android:layout_marginBottom="1dp"/>
             <EditText
+                android:id="@+id/toFilter"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 style="@style/TextViewLabel"

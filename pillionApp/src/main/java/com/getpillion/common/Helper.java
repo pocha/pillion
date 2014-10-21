@@ -242,4 +242,17 @@ public class Helper {
             return s1 + ":" + s2 + ":00";
     }
 
+    public static void updateFromJsonField(String classField,String jsonField){
+        if (jsonField != null)
+            classField = jsonField;
+    }
+    public static void updateFromJsonField(Long classField, Long jsonField){
+        if (jsonField != null)
+            classField = jsonField;
+    }
+    public static void updateFromJsonField(Boolean classField, Boolean jsonField){
+        if (jsonField != null)
+            classField = jsonField;
+    }
+
 }

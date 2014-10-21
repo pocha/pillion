@@ -14,6 +14,7 @@ import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.EditText;
 import android.widget.ListView;
+import android.widget.TextView;
 
 import com.actionbarsherlock.app.ActionBar;
 import com.actionbarsherlock.app.ActionBar.Tab;
@@ -22,15 +23,17 @@ import com.getpillion.common.ConnectionDetector;
 import com.getpillion.common.Constant;
 import com.getpillion.common.TimeDateFilterFragment;
 import com.getpillion.models.Route;
-import com.getpillion.models.User;
 import com.google.ads.AdView;
 import com.jeremyfeinstein.slidingmenu.lib.SlidingMenu;
 
 import java.sql.Time;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 import butterknife.ButterKnife;
+import butterknife.InjectView;
+import butterknife.OnTextChanged;
 import butterknife.OnTouch;
 import uk.co.senab.bitmapcache.BitmapLruCache;
 
@@ -70,16 +73,46 @@ public class AllRoutesActivity extends ExtendMeSherlockWithMenuActivity implemen
 
         return true;
     }
+    @InjectView(R.id.fromFilter) EditText from;
+    @OnTextChanged(R.id.fromFilter) void updateRoutesFrom(CharSequence text){
+        updateRoutes(text);
+    }
+    @InjectView(R.id.toFilter) EditText to;
+    @OnTextChanged(R.id.toFilter) void updateRoutesTo(CharSequence text){
+        updateRoutes(text);
+    }
+    //TODO implement time filtering
+
+    private void updateRoutes(CharSequence text){
+        if (text.length() < 3 && text.length() != 0) //2nd condition takes care of clearing filter if user has cleared the input field
+            return;
+        getData();
+    }
+
+    @InjectView(R.id.noRoutesFound)
+    TextView noRoutesFound;
+    //@InjectView(R.id.loading) TextView loading;
 
 
+    private AsyncTask asyncTask;
     public void getData(){
-        progress = ProgressDialog.show(AllRoutesActivity.this, "",
-                "Loading Routes. Please wait", true, false);
+       /* progress = ProgressDialog.show(AllRoutesActivity.this, "",
+                "Loading Routes. Please wait", true, false);*/
+        if (asyncTask != null )
+            asyncTask.cancel(true);
 
-        new AsyncTask<Void, Void, Void>() {
+        //loading.setVisibility(View.VISIBLE);
+        noRoutesFound.setText("Loading routes ..");
+        routes.clear(); // so that Loading routes become visible
+        adapter.notifyDataSetChanged();
+
+        asyncTask = new AsyncTask<Void, Void, Void>() {
             @Override
             protected Void doInBackground(Void... params) {
                 try {
+                    Thread.sleep(1000);
+                    if (isCancelled())
+                        return null;
 
                     /*ArrayList<NameValuePair> postParams = new ArrayList<NameValuePair>();
                     postParams.add(new BasicNameValuePair("facebookUserID",
@@ -89,17 +122,54 @@ public class AllRoutesActivity extends ExtendMeSherlockWithMenuActivity implemen
                     Helper.postData(url, postParams);*/
                     Thread.sleep(2000);
 
-                    Log.d("ashish","Calling new route");
-                    //User user = new User("Ashish","CEO Codelearn","IT Software","9538384545",R.drawable.action_people);
-                    new Route("Brigade Gardenia","Ecospace", Time.valueOf("8:00:00"), true, User.returnDummyUser());
-                    new Route("Brigade Gardenia","Ecospace", Time.valueOf("8:30:00"), true, User.returnDummyUser());
-                    new Route("Brigade Gardenia","Ecospace", Time.valueOf("9:00:00"), true, User.returnDummyUser());
-
-
-                    new Route("Ecospace","Brigade Gardenia", Time.valueOf("16:00:00"), false, User.returnDummyUser());
-                    new Route("Ecospace","Brigade Gardenia", Time.valueOf("17:00:00"), false, User.returnDummyUser());
-                    new Route("Ecospace","Brigade Gardenia", Time.valueOf("18:00:00"), false, User.returnDummyUser());
-
+                    //send filter data to server through Helper.postData
+                    String result = "{\"routes\":[" +
+                                        "{\"globalId\":1, " +
+                                            "\"origin\":\"Brigade\", " +
+                                            "\"dest\":\"Ecospace\", " +
+                                            "\"timstamp\":\" " + Time.valueOf("08:00:00").getTime() + " \" ," +
+                                            "\"vehicle\":{ \"globalId\":\"1\",\"model\":\"Merc\", \"color\":\"black\", \"number\":\"KA51 Q8745\"}," +
+                                            "\"isOffered\":\"true\"," +
+                                            "\"owner\":{\"globalId\":\"1\",\"name\":\"Ashish\", \"title\":\"CEO Codelearn\"}," +
+                                            "\"date\":\""+ new Date().getTime() +"\"," +
+                                            "\"isScheduled\":\"true\"" +
+                                         "}," +
+                                        "{\"globalId\":2, " +
+                                            "\"origin\":\"Ecospace\", " +
+                                            "\"dest\":\"Brigade\", " +
+                                            "\"timstamp\":\" " + Time.valueOf("17:00:00").getTime() + " \"," +
+                                            "\"vehicle\":{ \"globalId\":\"1\",\"model\":\"Merc\", \"color\":\"black\", \"number\":\"KA51 Q8745\"}," +
+                                            "\"isOffered\":\"true\"," +
+                                            "\"owner\":{\"globalId\":\"1\",\"name\":\"Ashish\", \"title\":\"CEO Codelearn\"}," +
+                                           // "\"date\":\""+ new Date() +"\"," +
+                                            "\"isScheduled\":\"false\"" +
+                                        "}" +
+                                    "]}";
+                    if (Math.random() < 0.5){
+                        result = "{\"routes\":[" +
+                                    "{\"globalId\":3, " +
+                                        "\"origin\":\"Adarsh\", " +
+                                        "\"dest\":\"Ecospace\", " +
+                                        "\"timstamp\":\" " + Time.valueOf("09:00:00").getTime() + " \"," +
+                                        "\"vehicle\":{ \"globalId\":\"2\",\"model\":\"Maruti\", \"color\":\"black\", \"number\":\"KA51 Q8745\"}," +
+                                        "\"isOffered\":\"true\"," +
+                                        "\"owner\":{\"globalId\":\"2\",\"name\":\"Anish\", \"title\":\"CEO Codelearn\"}," +
+                                        "\"date\":\""+ new Date().getTime() +"\"," +
+                                        "\"isScheduled\":\"true\"" +
+                                    "}," +
+                                    "{\"globalId\":4, " +
+                                        "\"origin\":\"Ecospace\", " +
+                                        "\"dest\":\"Adarsh\", " +
+                                        "\"timstamp\":\" " + Time.valueOf("18:00:00").getTime() + " \"," +
+                                        "\"vehicle\":{ \"globalId\":\"2\",\"model\":\"Merc\", \"color\":\"black\", \"number\":\"KA51 Q8745\"}," +
+                                        "\"isOffered\":\"true\"," +
+                                        "\"owner\":{\"globalId\":\"2\",\"name\":\"Anish\", \"title\":\"Changed title\"}," +
+                                        // "\"date\":\""+ new Date() +"\"," +
+                                        "\"isScheduled\":\"false\"" +
+                                     "}" +
+                                "]}";
+                    }
+                    Route.getRoutesFromJson(result);
                 } catch (Exception e) {
                     Log.e("ashish","exception",e);
                 }
@@ -108,21 +178,33 @@ public class AllRoutesActivity extends ExtendMeSherlockWithMenuActivity implemen
 
             @Override
             protected void onPostExecute(Void result) {
-                showRoutes();
-                progress.hide();
+                if (!isCancelled()) {
+                    showRoutes();
+                    //progress.hide();
+                    //loading.setVisibility(View.GONE);
+                }
             }
         }.execute();
     }
 
     public void showRoutes(){
         routes.clear();
+
+        String whereString = "";
+        if (!from.getText().toString().isEmpty())
+            whereString += "origin like '%"+ from.getText().toString() +"%' AND ";
+        if (!to.getText().toString().isEmpty())
+            whereString += "dest like '%"+ to.getText().toString() +"%' AND ";
+
         if (selectedTab.getTag() == "offering") {
-            routes.addAll(Route.find(Route.class,"is_offered = 1")); //To-do order by time
+            routes.addAll(Route.find(Route.class, whereString + " is_offered = 1 order by timestamp"));
         }
         else {
-            routes.addAll(Route.find(Route.class,"is_offered = 0"));
+            routes.addAll(Route.find(Route.class, whereString + " is_offered = 0 order by timestamp"));
         }
         adapter.notifyDataSetChanged();
+
+        noRoutesFound.setText("No Routes Found");
     }
 
 
@@ -174,6 +256,7 @@ public class AllRoutesActivity extends ExtendMeSherlockWithMenuActivity implemen
 
         adapter = new RouteAdapter(getApplicationContext(),routes);
         mListView = (ListView) findViewById(R.id.listView);
+        mListView.setEmptyView(noRoutesFound);
         mListView.setAdapter(adapter);
 
         getData();
@@ -187,9 +270,6 @@ public class AllRoutesActivity extends ExtendMeSherlockWithMenuActivity implemen
         seekingTab.setTag("seeking");
         seekingTab.setTabListener(this);
         actionBar.addTab(seekingTab);
-
-        //Time filter
-
 
 
         /*if ( com.getpillion.common.Session.packageList.size() == 0 ) {
