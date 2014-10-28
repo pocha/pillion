@@ -13,7 +13,6 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:padding="5dp"
             android:orientation="vertical">
 
             <TextView
@@ -104,8 +103,13 @@
                 android:layout_height="wrap_content">
             </ListView>
 
+            <LinearLayout
+                android:id="@+id/secButtonLayout"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical">
             <Button
-                android:id="@+id/requestRide"
+                android:id="@+id/secondaryButton"
                 android:layout_marginTop="10dp"
                 android:layout_marginLeft="2dp"
                 android:layout_marginRight="2dp"
@@ -116,26 +120,28 @@
                 android:gravity="center"
                 />
             <TextView
-                android:id="@+id/requestRideHelperMessage"
+                android:id="@+id/secButtonMsg"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 style="@style/TextViewLabel"
                 android:layout_marginTop="2dp"
                 android:gravity="center"
                 android:text="Do request ride even if it is not scheduled for today. The owner can always cancel your request if the ride is not happening."/>
+            </LinearLayout>
 
         </LinearLayout>
         
     </ScrollView>
 
     <LinearLayout
-        android:id="@+id/checkInButtonContainer"
+        android:id="@+id/primaryButtonLayout"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
         android:visibility="gone"
         android:gravity="center"
         android:layout_gravity="center"
         android:orientation="vertical"
+        android:background="#eee"
 
       >
 
@@ -145,66 +151,32 @@
             android:background="#dddddd" >
 
         </LinearLayout>
-
-        <LinearLayout
-            android:layout_width="fill_parent"
-            android:layout_height="wrap_content"
-            android:background="#f8f8f8"
-            android:gravity="center"
-            android:layout_gravity="bottom|center_horizontal">
-
-        </LinearLayout>
-
         <TextView
-            android:id="@+id/checkInMessage"
+            android:id="@+id/primaryButtonMsg"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:gravity="center"
             style="@style/TextViewLabel"
-            android:layout_marginTop="5dp"
+            android:layout_marginTop="2dp"
             android:text="Reached the pickup point? Check In to let the driver know that you are there"/>
 
-        <Button
-            android:id="@+id/checkIn"
-            android:layout_width="match_parent"
-            android:layout_weight="1"
-            android:layout_height="wrap_content"
-            android:text="Check In"
-            android:onClick="checkIn"
-            />
+            <Button
+                android:id="@+id/primaryButton"
+                android:layout_width="match_parent"
+                android:layout_weight="1"
+                android:layout_height="wrap_content"
+                android:text="Check In"
+                android:background="#ababab"
+                android:textColor="#333"
+                android:padding="10dp"
+                android:layout_margin="5dp"
+                android:shadowRadius="0"
+                />
+
 
     </LinearLayout>
 
-    <LinearLayout
-        android:id="@+id/startRideButtonContainer"
-        android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
-        android:background="@drawable/btn_blue"
-        android:gravity="center"
-        android:layout_gravity="center"
-        android:orientation="vertical"
-        android:visibility="gone">
 
-        <Button
-            android:id="@+id/startRide"
-            android:layout_width="match_parent"
-            android:layout_weight="1"
-            android:layout_height="wrap_content"
-            android:text="Start Ride"
-            android:onClick="startRide"
-            />
-        <TextView
-            android:id="@+id/startRideMessage"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:gravity="center"
-            style="@style/TextViewLabel"
-            android:textColor="#fff"
-            android:layout_marginTop="0dp"
-            android:layout_marginBottom="0dp"
-            android:text="All set to start? Pushing the button will send an intimation to co-travellers that you have started the ride"/>
-
-    </LinearLayout>
 
 </LinearLayout>
     

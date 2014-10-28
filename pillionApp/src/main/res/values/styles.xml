@@ -48,6 +48,7 @@
         <item name="android:gravity">center</item>
 	</style>
 
+
     <style name="TextViewLabel">
         <item name="android:color">#ababab</item>
         <item name="android:textSize">10sp</item>

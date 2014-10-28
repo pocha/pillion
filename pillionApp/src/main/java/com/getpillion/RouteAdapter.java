@@ -2,6 +2,7 @@ package com.getpillion;
 
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -62,6 +63,7 @@ public class RouteAdapter extends ArrayAdapter<Route> {
 		}
 
 		final Route route = values.get(position);
+        Log.d("RouteAdapter.java","Drumping route time in getView " + route.timestamp);
 /*		route.populateFromString(selectedVal);
 		
     	final CheckBox viewHolderCheckBox = viewHolder.shareCheckbox;

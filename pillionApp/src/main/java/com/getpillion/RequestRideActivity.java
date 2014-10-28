@@ -6,6 +6,7 @@ import android.view.View;
 import android.widget.Button;
 
 import com.actionbarsherlock.view.MenuItem;
+import com.getpillion.models.RouteUserMapping;
 
 
 public class RequestRideActivity extends ExtendMeSherlockWithMenuActivity {
@@ -25,8 +26,8 @@ public class RequestRideActivity extends ExtendMeSherlockWithMenuActivity {
                 Intent intent = new Intent(RequestRideActivity.this, RouteInfoActivity.class);
                 //Ride ride = new Ride(getIntent().getExtras().getLong("routeId"),Ride.Status.requested);
                 intent.putExtra("routeId",getIntent().getExtras().getLong("routeId"));
-                intent.putExtra("bookingStatus",true);
-                intent.putExtra("bookingError","");
+                intent.putExtra("isRideCreationSuccess",true);
+                intent.putExtra("rideCreationStatus", RouteUserMapping.Status.requested);
                 intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP); //this should remove the previous RouteInfoActivity from stack
                 startActivity(intent);
                 finish();

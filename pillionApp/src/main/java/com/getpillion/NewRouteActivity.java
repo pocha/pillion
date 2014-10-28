@@ -124,6 +124,10 @@ public class NewRouteActivity extends SherlockFragmentActivity  {
                 Constant.PREFS_NAME, 0);
         sharedPref.edit().putLong("thisUser",user.getId());
 
+        Log.d("NewRouteActivity","dumping intent extra offerRide " + getIntent().getBooleanExtra("offerRide",false));
+        Log.d("NewRouteActivity","dumping intent extra requestRide " + getIntent().getBooleanExtra("requestRide",false));
+
+
         if (getIntent().getBooleanExtra("offerRide",false)) {
             new Route(home.getText().toString(), office.getText().toString(),
                     Helper.formatAmPmTimetoSqlTime(homeStartTime.getText().toString()),

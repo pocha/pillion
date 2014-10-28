@@ -5,7 +5,6 @@ import android.app.AlertDialog;
 import android.app.ProgressDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.os.AsyncTask;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
@@ -13,24 +12,19 @@ import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.actionbarsherlock.view.MenuItem;
 import com.bugsense.trace.BugSenseHandler;
-import com.facebook.FacebookException;
-import com.facebook.FacebookOperationCanceledException;
-import com.facebook.Session;
-import com.facebook.widget.WebDialog;
-import com.facebook.widget.WebDialog.OnCompleteListener;
 import com.getpillion.common.Constant;
 import com.getpillion.common.Helper;
-import com.getpillion.models.Ride;
 import com.getpillion.models.Route;
 import com.getpillion.models.RouteUserMapping;
-import com.getpillion.models.User;
 
-import java.sql.Time;
 import java.util.List;
+
+import butterknife.ButterKnife;
+import butterknife.InjectView;
+import butterknife.OnClick;
 
 public class RouteInfoActivity extends ExtendMeSherlockWithMenuActivity {
 
@@ -39,10 +33,173 @@ public class RouteInfoActivity extends ExtendMeSherlockWithMenuActivity {
     private ProgressDialog progress;
     private TravellerAdapter adapter;
     private List<RouteUserMapping> travellers;
-    private Boolean bookingStatus = null;
-    private Ride.Status rideStatus = null;
+    private Boolean isRideCreationSuccess;
+    private RouteUserMapping.Status rideCreationStatus = null;
+    private RouteUserMapping myRouteStatus = null;
+    private RouteUserMapping.Status rideStatus = null;
     private AlertDialog alert;
     private Activity thisActivity;
+
+    @InjectView(R.id.from) TextView from;
+    @InjectView(R.id.to) TextView to;
+    @InjectView(R.id.status) TextView status;
+    @InjectView(R.id.vehicleInfo) LinearLayout vehicleInfo;
+    @InjectView(R.id.vehicle) TextView vehicle;
+    @InjectView(R.id.travellers) ListView travellersList;
+    @InjectView(R.id.primaryButton) Button primaryButton;
+    @InjectView(R.id.primaryButtonMsg) TextView primaryButtonMsg;
+    @InjectView(R.id.primaryButtonLayout) LinearLayout primaryButtonLayout;
+    @InjectView(R.id.secondaryButton) Button secondaryButton;
+    @InjectView(R.id.secButtonMsg) TextView secButtonMsg;
+    @InjectView(R.id.secButtonLayout) LinearLayout secButtonLayout;
+
+    @OnClick(R.id.primaryButton) void setPrimaryButtonListener(View v){
+
+        if (route.isOffered){
+            if (route.isMyRoute) {
+                if (rideStatus == null) {
+                    //TODO schedule ride activity
+                }
+                else {
+                    switch (rideStatus) {
+                        case scheduled:
+                            //button to start ride
+                            //TODO send data to server through AsyncTask & wait for completion before refreshing
+                            //update status in RouteUserMapping to cancelled. Do all below things in AsyncTask
+                            myRouteStatus.status = RouteUserMapping.Status.started;
+                            myRouteStatus.save();
+                            Intent intent = getIntent();
+                            intent.addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
+                            startActivity(intent);
+                            finish();
+                            break;
+                        case started:
+                            //nothing
+                        case cancelled:
+                            //nothing
+                    }
+                }
+            }
+            else {
+                if (rideStatus == null) {
+                    //request ride button
+                    Intent intent = new Intent(RouteInfoActivity.this, RequestRideActivity.class);
+                    intent.putExtra("routeId",route.getId());
+                    startActivity(intent);
+                }
+                else {
+                    switch (rideStatus) {
+                        case requested:
+                            //nothing
+                            break;
+                        case accepted:
+                            //checkin button
+                            //TODO send data to server through AsyncTask & wait for completion before refreshing
+                            //update status in RouteUserMapping to cancelled. Do all below things in AsyncTask
+                            myRouteStatus.status = RouteUserMapping.Status.checkedIn;
+                            myRouteStatus.save();
+                            Intent intent = getIntent();
+                            intent.addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
+                            startActivity(intent);
+                            finish();
+                            break;
+                        case rejected:
+                            //nothing
+                            break;
+                        case cancelled:
+                            //nothing
+                            break;
+                        case checkedIn:
+                            //nothing
+                    }
+                }
+            }
+        }
+    }
+    @OnClick(R.id.secondaryButton) void setSecondaryButtonListener(View v){
+        if (route.isOffered){
+            if (route.isMyRoute) {
+                if (rideStatus == null) {
+                    //nothing as schedule ride main button
+                }
+                else {
+                    switch (rideStatus) {
+                        case scheduled:
+                            //button to cancel ride
+                            AlertDialog.Builder builder = new AlertDialog.Builder(thisActivity);
+                            builder.setMessage("Want to cancel the ride ?")
+                                    .setCancelable(false)
+                                    .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+                                        public void onClick(DialogInterface dialog, int id) {
+                                            //TODO send data to server through AsyncTask & wait for completion before refreshing
+                                            //update status in RouteUserMapping to cancelled. Do all below things in AsyncTask
+                                            myRouteStatus.status = RouteUserMapping.Status.cancelled;
+                                            myRouteStatus.save();
+                                            Intent intent = getIntent();
+                                            intent.addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
+                                            startActivity(intent);
+                                            finish();
+                                        }
+                                    })
+                                    .setNegativeButton("No", new DialogInterface.OnClickListener() {
+                                        public void onClick(DialogInterface dialog, int id) {
+                                            dialog.dismiss();
+                                        }
+                                    });
+                            AlertDialog alert = builder.create();
+                            alert.show();
+                            break;
+                        case started:
+                            //nothing
+                        case cancelled:
+                            //nothing
+                    }
+                }
+            }
+            else {
+                if (rideStatus == null) {
+                    //nothing as request ride main button
+                }
+                else {
+                    switch (rideStatus) {
+                        case requested:
+                        case accepted:
+                            //cancel ride request button
+                            AlertDialog.Builder builder = new AlertDialog.Builder(thisActivity);
+                            builder.setMessage("Want to cancel the ride ?")
+                                    .setCancelable(false)
+                                    .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+                                        public void onClick(DialogInterface dialog, int id) {
+                                            //update status in RouteUserMapping to cancelled
+                                            myRouteStatus.status = RouteUserMapping.Status.cancelled;
+                                            myRouteStatus.save();
+                                            Intent intent = getIntent();
+                                            intent.addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
+                                            startActivity(intent);
+                                            finish();
+                                        }
+                                    })
+                                    .setNegativeButton("No", new DialogInterface.OnClickListener() {
+                                        public void onClick(DialogInterface dialog, int id) {
+                                            dialog.dismiss();
+                                        }
+                                    });
+                            AlertDialog alert = builder.create();
+                            alert.show();
+                            break;
+                        case rejected:
+                            //nothing
+                            break;
+                        case cancelled:
+                            //nothing
+                            break;
+                        case checkedIn:
+                            //nothing
+                    }
+                }
+            }
+        }
+    }
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -52,152 +209,175 @@ public class RouteInfoActivity extends ExtendMeSherlockWithMenuActivity {
 
         //getSupportActionBar().setHomeButtonEnabled(true);
         getSupportActionBar().setTitle("Route Info");
+        thisActivity = this;
+        final Long routeId = getIntent().getExtras().getLong("routeId");
+        route = Route.findById(Route.class,routeId);
 
-        if (getIntent().hasExtra("bookingStatus")) {
-            bookingStatus = getIntent().getExtras().getBoolean("bookingStatus");
-            Log.d("RouteInfoActivity", "Booking Status " + bookingStatus);
+        //Fill data
+        ButterKnife.inject(this);
+        from.setText(route.origin);
+        to.setText(route.dest);
+        if (route.isScheduled) {
+            status.setText("Scheduled at " + route.getAmPmTime() + " on " + Helper.niceDate(route.date));
+        }
+        else if (route.date != null ){ // not scheduled so must have happened in past
+            status.setText("Last ride happened at " + route.getAmPmTime() + " on " + Helper.niceDate(route.date) );
+        }
+        else {// no information of ride present
+            status.setText("The owner created the route but probably forgot to start his ride on the app. Hence no prior information of the ride available.");
+        }
+        if(route.vehicle != null)
+            vehicle.setText(route.vehicle.color + " " + route.vehicle.model);
+        else
+            vehicleInfo.setVisibility(View.GONE);
+
+        travellers = RouteUserMapping.find(RouteUserMapping.class,"route=?", String.valueOf(route.getId()) );
+        Log.d("RouteInfoActivity", "traveller count " + travellers.size());
+        adapter = new TravellerAdapter(getApplicationContext(),travellers);
+        travellersList.setAdapter(adapter);
+        Helper.setListViewHeightBasedOnChildren(travellersList);
+
+        try {
+            myRouteStatus = RouteUserMapping.find(RouteUserMapping.class,"route=? AND user=?",
+                    String.valueOf(route.getId()), String.valueOf(sharedPref.getLong("userId",0L))).get(0);
+            rideStatus = myRouteStatus.status;
+        }
+        catch (Exception e){
+            //nothing doing. rideStatus stays null
+        }
+
+        if (route.isOffered) {
+
+            if (route.isMyRoute) { //schedule, approve, start, cancel
+
+                if (rideStatus == null) {
+                    secButtonLayout.setVisibility(View.GONE);
+
+                    primaryButton.setVisibility(View.VISIBLE);
+                    primaryButton.setText("Schedule Ride");
+                    primaryButtonMsg.setText("Starting the ride on this route shortly? Schedule the ride on this route.");
+                }
+                else {
+                    switch (rideStatus) { //rideStatus will never be null here
+                        case scheduled: //show start ride button
+                            secondaryButton.setText("Cancel Ride");
+                            secButtonMsg.setText("");
+
+                            primaryButtonLayout.setVisibility(View.VISIBLE);
+                            primaryButton.setText("Start Ride");
+                            primaryButtonMsg.setText("Starting ride will send an update to your fellow riders that you have started");
+                        case started:
+                            secButtonLayout.setVisibility(View.GONE);
+
+                            primaryButtonLayout.setVisibility(View.VISIBLE);
+                            primaryButton.setVisibility(View.GONE);
+                            primaryButtonMsg.setText("You have started the ride");
+                            break;
+                        case cancelled:
+                            secButtonLayout.setVisibility(View.GONE);
+
+                            primaryButtonLayout.setVisibility(View.VISIBLE);
+                            primaryButton.setVisibility(View.GONE);
+                            primaryButtonMsg.setText("You have cancelled the ride");
+                            break;
+                    }
+                }
+
+            }
+            else { //request, accepted/cancelled, cancel, checkIn
+
+                if (rideStatus == null) {
+                    secButtonLayout.setVisibility(View.GONE);
+                    primaryButton.setText("Request Ride");
+                    primaryButtonMsg.setText(secButtonMsg.getText().toString());
+                    primaryButtonLayout.setVisibility(View.VISIBLE);
+                }
+                else {
+                    switch (rideStatus) {
+                        case requested:
+                        case accepted:
+                            //secondaryButton.setText("Cancel Ride");
+                            //show checkin button
+                            primaryButtonLayout.setVisibility(View.VISIBLE);
+                            break;
+                        case cancelled:
+                            secButtonLayout.setVisibility(View.GONE);
+
+                            primaryButtonLayout.setVisibility(View.VISIBLE);
+                            primaryButton.setVisibility(View.GONE);
+                            primaryButtonMsg.setText("You have cancelled the ride request");
+                            break;
+                        case rejected:
+                            secButtonLayout.setVisibility(View.GONE);
+
+                            primaryButtonLayout.setVisibility(View.VISIBLE);
+                            primaryButton.setVisibility(View.GONE);
+                            primaryButtonMsg.setText("Your ride request has been rejected by the vehicle owner. The money has been credited in your account.");
+                            break;
+                        case checkedIn:
+                            secButtonLayout.setVisibility(View.GONE);
+
+                            primaryButtonLayout.setVisibility(View.VISIBLE);
+                            primaryButton.setVisibility(View.GONE);
+                            primaryButtonMsg.setText("You have checked in at the pickup point. Wait for the ride owner to turn-up.");
+                            break;
+                    }
+                }
+            }
+        }
+        else {
+            primaryButtonLayout.setVisibility(View.GONE);
+            secButtonLayout.setVisibility(View.GONE);
+        }
+
+
+
+
+        if (getIntent().hasExtra("isRideCreationSuccess")) {
+            rideCreationStatus = (RouteUserMapping.Status)getIntent().getSerializableExtra("rideCreationStatus");
+            Log.d("RouteInfoActivity", "Booking Status " + rideCreationStatus.toString());
 
             AlertDialog.Builder builder = new AlertDialog.Builder(this);
-            builder.setTitle("Your request has been sent.")
-                    .setMessage("You can access this screen under 'My Rides' inside the top left menu. You can cancel the request anytime you like to before the driver starts the ride & the money will be refunded into your account.")
-                    .setCancelable(false)
+            isRideCreationSuccess = getIntent().getBooleanExtra("isRideCreationSuccess",false);
+
+            switch(rideCreationStatus){
+                case requested:
+                    if (isRideCreationSuccess) {
+                        builder.setTitle("Your request has been sent.")
+                                .setMessage("You can access this screen under 'My Rides' inside the top left menu. You can cancel the request anytime you like to before the driver starts the ride & the money will be refunded into your account.");
+                    }
+                    else {
+                        builder.setTitle("Your request could not be sent")
+                                .setMessage("Something unexpected happened while trying to process your request.");
+                    }
+                    break;
+                case scheduled:
+                    if (isRideCreationSuccess) {
+                        builder.setTitle("Your ride has been scheduled")
+                                .setMessage("You can access this screen under 'My Rides' inside the top left menu. You should hit 'start ride' button when you are starting the ride.");
+                    }
+                    else {
+                        builder.setTitle("Your ride could not be scheduled")
+                                .setMessage("Something unexpected happened while trying to process your request.");
+                    }
+            }
+
+            builder.setCancelable(false)
                     .setPositiveButton("OK", new DialogInterface.OnClickListener() {
                         public void onClick(DialogInterface dialog, int id) {
                             dialog.dismiss();
                         }
                     });
             alert = builder.create();
+            alert.show();
         }
 
-        thisActivity = this;
-        final Long routeId = getIntent().getExtras().getLong("routeId");
-        getRouteData(routeId);
-
+        //This isnt needed as we have the updated route data from the query in AllRoutesActivity. Hence commenting it out
+        //getRouteData(routeId);
 
     }
 
-    private void getRouteData(final Long routeId){
-        try {
-            progress = ProgressDialog.show(RouteInfoActivity.this,"",
-                    "Loading Route Info. Please wait..", true, false);
-            new AsyncTask<Void, Void, Void>() {
-                @Override
-                protected Void doInBackground(Void... params) {
-                    try {
 
-                        /*ArrayList<NameValuePair> postParams = new ArrayList<NameValuePair>();
-                        postParams.add(new BasicNameValuePair("routeId", routeId.toString()));
-                        String url = Constant.SERVER + Constant.USER_APP_VIEW;
-                        Helper.postData(url, postParams);*/
-                        Thread.sleep(3000);
-                        route = new Route("Brigade Gardenia, J P Nagar 7th Phase, RBI Layout", "Ecospace, Outer Ring Road, Kadbisnehalli", Time.valueOf("8:00:00"), true, User.returnDummyUser());
-                        rideStatus = Ride.getRandomStatus();
-                        Log.d("RouteInfoActivity","rideStatus value - " + rideStatus);
-                    } catch (Exception e) {
-
-                    }
-                    return null;
-                }
-
-                @Override
-                protected void onPostExecute(Void result) {
-                    ((TextView)findViewById(R.id.from)).setText(route.origin);
-                    ((TextView)findViewById(R.id.to)).setText(route.dest);
-
-                    if (route.isScheduled) {
-                        ((TextView)findViewById(R.id.status)).setText("Scheduled at " + route.getAmPmTime() + " on " + Helper.niceDate(route.date));
-                    }
-                    else if (route.date != null ){ // not scheduled so must have happened in past
-                        ((TextView)findViewById(R.id.status)).setText("Last ride happened at " + route.getAmPmTime() + " on " + Helper.niceDate(route.date) );
-                    }
-                    else {// no information of ride present
-                        ((TextView)findViewById(R.id.status)).setText("The owner created the route but probably forgot to start his ride on the app. Hence no prior information of the ride available.");
-                    }
-
-                    if (route.vehicle != null ){
-                        //((TextView)findViewById(R.id.vehicle)).setText(route.vehicle.color + " " + route.vehicle.model);
-                    }
-                    else {
-                        ((LinearLayout)findViewById(R.id.vehicleInfo)).setVisibility(View.GONE);
-                    }
-                    travellers.clear();
-                    travellers = RouteUserMapping.find(RouteUserMapping.class,"route=?", String.valueOf(route.getId()) );
-                    Log.d("RouteInfoActivity", "traveller count " + travellers.size());
-                    adapter = new TravellerAdapter(getApplicationContext(),travellers);
-                    ListView lv =  (ListView)findViewById(R.id.travellers);
-                    lv.setAdapter(adapter);
-
-                    Helper.setListViewHeightBasedOnChildren(lv);
-
-                    Button requestButton = (Button) findViewById(R.id.requestRide);
-                    TextView requestRideHelperMessage = (TextView) findViewById(R.id.requestRideHelperMessage);
-                    LinearLayout checkInButtonContainer = (LinearLayout) findViewById(R.id.checkInButtonContainer);
-
-                    if (rideStatus == null) {
-                        requestButton.setOnClickListener(new View.OnClickListener() {
-                            @Override
-                            public void onClick(View view) {
-                                Intent intent = new Intent(RouteInfoActivity.this, RequestRideActivity.class);
-                                intent.putExtra("routeId", routeId);
-                                startActivity(intent);
-                            }
-                        });
-                    }
-                    else {
-                        switch (rideStatus) {
-                            case requested:
-                            case accepted:
-                                requestButton.setText("Cancel Ride Request");
-                                requestRideHelperMessage.setVisibility(View.GONE);
-                                requestButton.setOnClickListener(new View.OnClickListener() {
-                                    @Override
-                                    public void onClick(View view) {
-                                        AlertDialog.Builder builder = new AlertDialog.Builder(thisActivity);
-                                        builder.setMessage("Want to cancel the ride ?")
-                                                .setCancelable(false)
-                                                .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
-                                                    public void onClick(DialogInterface dialog, int id) {
-                                                        //To-do send data to server in AsyncTask & wrap the below code in onPostExecute
-                                                        Intent intent = new Intent(RouteInfoActivity.this, RouteInfoActivity.class);
-                                                        intent.putExtra("routeId", routeId);
-                                                        startActivity(intent);
-                                                        finish();
-                                                    }
-                                                })
-                                                .setNegativeButton("No", new DialogInterface.OnClickListener() {
-                                                    public void onClick(DialogInterface dialog, int id) {
-                                                        dialog.dismiss();
-                                                    }
-                                                });
-                                        AlertDialog alert = builder.create();
-                                        alert.show();
-                                    }
-                                });
-
-                                //show checkin button
-                                checkInButtonContainer.setVisibility(View.VISIBLE);
-                                break;
-                            case cancelled:
-                                requestButton.setVisibility(View.GONE);
-                                requestRideHelperMessage.setText("You have cancelled your request");
-                                break;
-                            case rejected:
-                                requestButton.setVisibility(View.GONE);
-                                requestRideHelperMessage.setText("Your request has been rejected");
-                        }
-                    }
-
-                    progress.dismiss();
-
-                    if (bookingStatus != null) {
-                        //show alert dialog once data is populated
-                        alert.show();
-                    }
-                }
-            }.execute();
-        } catch (Exception ex) {
-        }
-    }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
@@ -208,7 +388,7 @@ public class RouteInfoActivity extends ExtendMeSherlockWithMenuActivity {
 
 
 	
-	public void sendRequestDialog(View v) {
+/*	public void sendRequestDialog(View v) {
 		try {
 			Bundle params = new Bundle();
 			params.putString("message",
@@ -329,6 +509,6 @@ public class RouteInfoActivity extends ExtendMeSherlockWithMenuActivity {
 				"Discover Apps through Friends.\n\nhttps://play.google.com/store/apps/details?id=com.appcovery.android.appcoveryapp\n\nAppCovery helps you see Apps your friends are using.");
 		startActivity(Intent.createChooser(intent, "How do you want to share?"));
 
-	}
+	}*/
 	
 }

@@ -127,22 +127,26 @@ public class AllRoutesActivity extends ExtendMeSherlockWithMenuActivity implemen
                                         "{\"globalId\":1, " +
                                             "\"origin\":\"Brigade\", " +
                                             "\"dest\":\"Ecospace\", " +
-                                            "\"timstamp\":\" " + Time.valueOf("08:00:00").getTime() + " \" ," +
-                                            "\"vehicle\":{ \"globalId\":\"1\",\"model\":\"Merc\", \"color\":\"black\", \"number\":\"KA51 Q8745\"}," +
-                                            "\"isOffered\":\"true\"," +
-                                            "\"owner\":{\"globalId\":\"1\",\"name\":\"Ashish\", \"title\":\"CEO Codelearn\"}," +
+                                            "\"timestamp\":" + Time.valueOf("08:00:00").getTime() + "," +
+                                            "\"vehicle\":{ \"globalId\":1,\"model\":\"Merc\", \"color\":\"black\", \"number\":\"KA51 Q8745\"}," +
+                                            "\"isOffered\":true," +
+                                            "\"owner\":{\"globalId\":1,\"name\":\"Ashish\", \"title\":\"CEO Codelearn\"}," +
                                             "\"date\":\""+ new Date().getTime() +"\"," +
-                                            "\"isScheduled\":\"true\"" +
+                                            "\"isScheduled\":true," +
+                                            "\"users\" : [" +
+                                                   "{\"globalId\":2,\"name\":\"Anish\", \"title\":\"CEO Codelearn\"}," +
+                                                   "{\"globalId\":3,\"name\":\"Anter\", \"title\":\"Co-founder Channelyst\"}" +
+                                                 "]" +
                                          "}," +
                                         "{\"globalId\":2, " +
                                             "\"origin\":\"Ecospace\", " +
                                             "\"dest\":\"Brigade\", " +
-                                            "\"timstamp\":\" " + Time.valueOf("17:00:00").getTime() + " \"," +
-                                            "\"vehicle\":{ \"globalId\":\"1\",\"model\":\"Merc\", \"color\":\"black\", \"number\":\"KA51 Q8745\"}," +
-                                            "\"isOffered\":\"true\"," +
-                                            "\"owner\":{\"globalId\":\"1\",\"name\":\"Ashish\", \"title\":\"CEO Codelearn\"}," +
+                                            "\"timestamp\":" + Time.valueOf("17:00:00").getTime() + "," +
+                                            "\"vehicle\":{ \"globalId\":1,\"model\":\"Merc\", \"color\":\"black\", \"number\":\"KA51 Q8745\"}," +
+                                            "\"isOffered\":true," +
+                                            "\"owner\":{\"globalId\":1,\"name\":\"Ashish\", \"title\":\"CEO Codelearn\"}," +
                                            // "\"date\":\""+ new Date() +"\"," +
-                                            "\"isScheduled\":\"false\"" +
+                                            "\"isScheduled\":false" +
                                         "}" +
                                     "]}";
                     if (Math.random() < 0.5){
@@ -150,25 +154,26 @@ public class AllRoutesActivity extends ExtendMeSherlockWithMenuActivity implemen
                                     "{\"globalId\":3, " +
                                         "\"origin\":\"Adarsh\", " +
                                         "\"dest\":\"Ecospace\", " +
-                                        "\"timstamp\":\" " + Time.valueOf("09:00:00").getTime() + " \"," +
-                                        "\"vehicle\":{ \"globalId\":\"2\",\"model\":\"Maruti\", \"color\":\"black\", \"number\":\"KA51 Q8745\"}," +
-                                        "\"isOffered\":\"true\"," +
-                                        "\"owner\":{\"globalId\":\"2\",\"name\":\"Anish\", \"title\":\"CEO Codelearn\"}," +
+                                        "\"timestamp\":" + Time.valueOf("09:00:00").getTime() + "," +
+                                        "\"vehicle\":{ \"globalId\":2,\"model\":\"Maruti\", \"color\":\"black\", \"number\":\"KA51 Q8745\"}," +
+                                        "\"isOffered\":true," +
+                                        "\"owner\":{\"globalId\":2,\"name\":\"Anish\", \"title\":\"CEO Codelearn\"}," +
                                         "\"date\":\""+ new Date().getTime() +"\"," +
-                                        "\"isScheduled\":\"true\"" +
+                                        "\"isScheduled\":true" +
                                     "}," +
                                     "{\"globalId\":4, " +
                                         "\"origin\":\"Ecospace\", " +
                                         "\"dest\":\"Adarsh\", " +
-                                        "\"timstamp\":\" " + Time.valueOf("18:00:00").getTime() + " \"," +
-                                        "\"vehicle\":{ \"globalId\":\"2\",\"model\":\"Merc\", \"color\":\"black\", \"number\":\"KA51 Q8745\"}," +
-                                        "\"isOffered\":\"true\"," +
-                                        "\"owner\":{\"globalId\":\"2\",\"name\":\"Anish\", \"title\":\"Changed title\"}," +
+                                        "\"timestamp\":" + Time.valueOf("18:00:00").getTime() + "," +
+                                        "\"vehicle\":{ \"globalId\":2,\"model\":\"Merc\", \"color\":\"black\", \"number\":\"KA51 Q8745\"}," +
+                                        "\"isOffered\":true," +
+                                        "\"owner\":{\"globalId\":2,\"name\":\"Anish\", \"title\":\"Changed title\"}," +
                                         // "\"date\":\""+ new Date() +"\"," +
-                                        "\"isScheduled\":\"false\"" +
+                                        "\"isScheduled\":false" +
                                      "}" +
                                 "]}";
                     }
+
                     Route.getRoutesFromJson(result);
                 } catch (Exception e) {
                     Log.e("ashish","exception",e);
@@ -259,8 +264,6 @@ public class AllRoutesActivity extends ExtendMeSherlockWithMenuActivity implemen
         mListView.setEmptyView(noRoutesFound);
         mListView.setAdapter(adapter);
 
-        getData();
-
         offeringTab = actionBar.newTab().setText("Rides Offered");
         offeringTab.setTag("offering");
         offeringTab.setTabListener(this);
@@ -270,6 +273,8 @@ public class AllRoutesActivity extends ExtendMeSherlockWithMenuActivity implemen
         seekingTab.setTag("seeking");
         seekingTab.setTabListener(this);
         actionBar.addTab(seekingTab);
+
+        getData();
 
 
         /*if ( com.getpillion.common.Session.packageList.size() == 0 ) {
@@ -475,7 +480,7 @@ public class AllRoutesActivity extends ExtendMeSherlockWithMenuActivity implemen
 			public void onItemClick(AdapterView<?> parent, View view,
 					int position, long id) {
                 Intent intent = new Intent(AllRoutesActivity.this, RouteInfoActivity.class);
-                intent.putExtra("routeId",routes.get(position).globalId);
+                intent.putExtra("routeId",routes.get(position).getId());
                 startActivity(intent);
                 /*
 				// publishOpenGraphAction();

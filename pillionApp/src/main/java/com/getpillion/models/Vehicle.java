@@ -8,6 +8,8 @@ import com.orm.SugarRecord;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.util.List;
+
 /**
  * Created by pocha on 25/09/14.
  */
@@ -30,16 +32,18 @@ public class Vehicle extends SugarRecord<Vehicle> {
         Vehicle vehicle = null;
         try {
             Log.d("Vehicle.java","Json Vehicle received - " + jsonVehicle.toString());
-            vehicle = Vehicle.findById(Vehicle.class,jsonVehicle.getLong("globalId"));
-            if(vehicle == null) {
+            List<Vehicle> vehicles = Vehicle.find(Vehicle.class,"global_id = ?",String.valueOf(jsonVehicle.getLong("globalId")));
+            if(vehicles.isEmpty()) {
                 vehicle = new Vehicle();
                 vehicle.globalId = jsonVehicle.getLong("globalId");
             }
+            else
+                vehicle = vehicles.get(0);
 
             Log.d("Vehicle.java","Fetching vehicle model for testing  - " + vehicle.model);
-            Helper.updateFromJsonField(vehicle.model,jsonVehicle.optString("model"));
-            Helper.updateFromJsonField(vehicle.color,jsonVehicle.optString("color"));
-            Helper.updateFromJsonField(vehicle.number,jsonVehicle.optString("number"));
+            vehicle.model = Helper.updateFromJsonField(vehicle.model,jsonVehicle.optString("model"));
+            vehicle.color = Helper.updateFromJsonField(vehicle.color,jsonVehicle.optString("color"));
+            vehicle.number = Helper.updateFromJsonField(vehicle.number,jsonVehicle.optString("number"));
             vehicle.save();
 
             return vehicle;

@@ -61,8 +61,12 @@ public class TravellerAdapter extends ArrayAdapter<RouteUserMapping> {
 */
 		viewHolder.position = position;
 		viewHolder.name.setText(user.name);
-		viewHolder.title.setText(user.title);
 
+       //Log.d("TravellerAdapter.java","routeOwner " + routeOwner.name);
+        if (routeUsers.get(position).isOwner)
+            viewHolder.title.setText("Owner");
+        else
+		    viewHolder.title.setText(user.title);
 
 /*
 		viewHolder.friendNewApp.setVisibility(LinearLayout.GONE);

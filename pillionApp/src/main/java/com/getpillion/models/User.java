@@ -11,6 +11,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Created by pocha on 29/09/14.
@@ -54,15 +55,18 @@ public class User extends SugarRecord<User> {
     public static User createOrUpdateFromJson(JSONObject jsonUser){
         User user = null;
         try {
-            user = User.findById(User.class,jsonUser.getLong("globalId"));
-            if (user == null){
+            List<User> users = User.find(User.class,"global_id = ?",String.valueOf(jsonUser.getLong("globalId")));
+            if (users.isEmpty()){
                 user = new User();
                 user.globalId = jsonUser.getLong("globalId");
             }
-            Helper.updateFromJsonField(user.name , jsonUser.optString("name"));
-            Helper.updateFromJsonField(user.title , jsonUser.optString("title"));
-            Helper.updateFromJsonField(user.fieldOfWork , jsonUser.optString("fieldOfWork"));
-            Helper.updateFromJsonField(user.phone , jsonUser.optString("phone"));
+            else
+                user = users.get(0);
+
+            user.name = Helper.updateFromJsonField(user.name , jsonUser.optString("name"));
+            user.title = Helper.updateFromJsonField(user.title , jsonUser.optString("title"));
+            user.fieldOfWork = Helper.updateFromJsonField(user.fieldOfWork , jsonUser.optString("fieldOfWork"));
+            user.phone = Helper.updateFromJsonField(user.phone , jsonUser.optString("phone"));
             user.save();
         }
         catch (JSONException e){
