@@ -12,11 +12,8 @@ import java.util.List;
 public class RouteUserMapping extends SugarRecord<RouteUserMapping> {
     public Route route;
     public User user;
-    public enum Status {
-        requested,accepted,rejected,cancelled,checkedIn, //for request ride;
-        scheduled, started //for created ride - cancelled already defined
-    }
-    public Status status = null;
+
+    public int status = 0;
     public Boolean isOwner = false;
 
     public RouteUserMapping(){}
@@ -40,14 +37,17 @@ public class RouteUserMapping extends SugarRecord<RouteUserMapping> {
         }
     }
 
-    public static void findOrCreate(Route route, User user, Boolean isOwner){
+    public static RouteUserMapping findOrCreate(Route route, User user, Boolean isOwner){
         List<RouteUserMapping> routeUserMappings = RouteUserMapping.find(RouteUserMapping.class,
                 "route = ? and user = ?", String.valueOf(route.getId()), String.valueOf(user.getId()));
         if (routeUserMappings.isEmpty()){
             //create entry
             RouteUserMapping routeUserMapping = new RouteUserMapping(route,user,isOwner);
             routeUserMapping.save();
+            return routeUserMapping;
         }
+        else
+            return routeUserMappings.get(0);
     }
 
 

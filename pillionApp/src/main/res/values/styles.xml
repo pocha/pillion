@@ -74,6 +74,8 @@
         <item name="android:textSize">10sp</item>
     </style>
 
+    <color name="BottomButton">#333</color>
+    <color name="BottomButtonDisabled">#999</color>
 
 
 </resources>

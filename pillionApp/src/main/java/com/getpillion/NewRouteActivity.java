@@ -122,7 +122,9 @@ public class NewRouteActivity extends SherlockFragmentActivity  {
         user.save();
         SharedPreferences sharedPref = getApplicationContext().getSharedPreferences(
                 Constant.PREFS_NAME, 0);
-        sharedPref.edit().putLong("thisUser",user.getId());
+        Editor sharedPrefEditor = sharedPref.edit();
+        sharedPrefEditor.putLong("userId",user.getId());
+        //sharedPrefEditor.commit();
 
         Log.d("NewRouteActivity","dumping intent extra offerRide " + getIntent().getBooleanExtra("offerRide",false));
         Log.d("NewRouteActivity","dumping intent extra requestRide " + getIntent().getBooleanExtra("requestRide",false));
@@ -148,9 +150,9 @@ public class NewRouteActivity extends SherlockFragmentActivity  {
 
 
         //send user & route data to the server through AsyncTask/SyncAdapter, get respective Ids & update the objects
-        Editor editor = sharedPref.edit();
-        editor.putBoolean("appInitialized", true);
-        editor.commit();
+
+        sharedPrefEditor.putBoolean("appInitialized", true);
+        sharedPrefEditor.commit();
 
         Intent intent = new Intent(NewRouteActivity.this, AllRoutesActivity.class);
         //clear top stack so that user cant go back
@@ -243,7 +245,7 @@ public class NewRouteActivity extends SherlockFragmentActivity  {
 						if (error != null) {
 							if (error instanceof FacebookOperationCanceledException) {
 								Toast.makeText(getApplicationContext(),
-										"Request cancelled", Toast.LENGTH_SHORT)
+										"Request CANCELLED", Toast.LENGTH_SHORT)
 										.show();
 							} else {
 								Toast.makeText(getApplicationContext(),
@@ -279,7 +281,7 @@ public class NewRouteActivity extends SherlockFragmentActivity  {
 						if (error != null) {
 							if (error instanceof FacebookOperationCanceledException) {
 								Toast.makeText(getApplicationContext(),
-										"Request cancelled", Toast.LENGTH_SHORT)
+										"Request CANCELLED", Toast.LENGTH_SHORT)
 										.show();
 							} else {
 								Toast.makeText(getApplicationContext(),

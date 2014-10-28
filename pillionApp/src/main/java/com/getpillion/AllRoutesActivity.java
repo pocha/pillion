@@ -997,7 +997,7 @@ public class AllRoutesActivity extends ExtendMeSherlockWithMenuActivity implemen
 						if (error != null) {
 							if (error instanceof FacebookOperationCanceledException) {
 								Toast.makeText(getApplicationContext(),
-										"Request cancelled", Toast.LENGTH_SHORT)
+										"Request CANCELLED", Toast.LENGTH_SHORT)
 										.show();
 							} else {
 								Toast.makeText(getApplicationContext(),
@@ -1013,7 +1013,7 @@ public class AllRoutesActivity extends ExtendMeSherlockWithMenuActivity implemen
 										Toast.LENGTH_SHORT).show();
 							} else {
 								Toast.makeText(getApplicationContext(),
-										"Request cancelled", Toast.LENGTH_SHORT)
+										"Request CANCELLED", Toast.LENGTH_SHORT)
 										.show();
 							}
 						}
@@ -1034,7 +1034,7 @@ public class AllRoutesActivity extends ExtendMeSherlockWithMenuActivity implemen
 						if (error != null) {
 							if (error instanceof FacebookOperationCanceledException) {
 								Toast.makeText(getApplicationContext(),
-										"Request cancelled", Toast.LENGTH_SHORT)
+										"Request CANCELLED", Toast.LENGTH_SHORT)
 										.show();
 							} else {
 								Toast.makeText(getApplicationContext(),

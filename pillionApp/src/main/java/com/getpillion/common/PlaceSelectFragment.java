@@ -60,7 +60,7 @@ public class PlaceSelectFragment extends DialogFragment {
             @Override
             protected Void doInBackground(Void... params) {
                 try {
-                    Thread.sleep(1000); //ensures that this asyncTask does not do http request if user is still typing as it would get cancelled
+                    Thread.sleep(1000); //ensures that this asyncTask does not do http request if user is still typing as it would get CANCELLED
                     if (!this.isCancelled()) {
                         places.clear();
                         places.addAll(autocomplete(text.toString()));

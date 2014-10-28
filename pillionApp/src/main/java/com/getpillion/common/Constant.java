@@ -20,6 +20,15 @@ public class Constant {
 	public static final String PACKAGE_FILE_NAME = "app_packages_file";
 	
 	public static final String BUGSENSE_API_KEY = "7e67e321";
+
+    public static final int NO_STATUS = 0;
+    public static final int  REQUESTED = 1;
+    public static final int  ACCEPTED = 2;
+    public static final int  REJECTED = 3;
+    public static final int  CANCELLED = 4;
+    public static final int  CHECKED_IN = 5;
+    public static final int  SCHEDULED = 6;
+    public static final int  STARTED = 7;
 	
 }
 
