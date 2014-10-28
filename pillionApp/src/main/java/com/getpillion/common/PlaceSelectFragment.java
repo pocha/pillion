@@ -149,6 +149,7 @@ public class PlaceSelectFragment extends DialogFragment {
             return resultList;
         } catch (IOException e) {
             Log.e(LOG_TAG, "Error connecting to Places API", e);
+            e.printStackTrace();
             return resultList;
         } finally {
             if (conn != null) {
