@@ -43,16 +43,28 @@ public class RequestRideActivity extends ExtendMeSherlockWithMenuActivity {
         sharedPrefEditor.putString("seekerDistance", distance.getText().toString());
         sharedPrefEditor.commit();
 
-        route = Route.findById(Route.class, getIntent().getExtras().getLong("routeId"));
+        //check if user data is there - take him to MyProfileActivity if not
         User user = User.findById(User.class,sharedPref.getLong("userId",0L));
+        Log.d("RequestRideActivity","dumping user id - " + user.getId());
+        Log.d("RequestRideActivity","dumping user name - " + user.name);
+
+        if (user.name == null){
+            Log.d("RequestRideActivity","Launching ProfileActivity as no user data found");
+            Intent intent = new Intent(RequestRideActivity.this, MyProfileActivity.class);
+            startActivity(intent);
+            return;
+        }
+
+
+        //TODO move the code below to payment gateway
+        route = Route.findById(Route.class, getIntent().getExtras().getLong("routeId"));
         Log.d("RequestRideActivity","dumping route id - " + route.getId());
-        Log.d("RequestRideActivity","dumping position id - " + user.getId());
         //TODO send request to the server
         RouteUserMapping routeUserMapping = RouteUserMapping.findOrCreate(route,user,false);
         routeUserMapping.status = Constant.REQUESTED;
         routeUserMapping.save();
 
-        Intent intent = new Intent(RequestRideActivity.this, MyProfileActivity.class);
+        Intent intent = new Intent(RequestRideActivity.this, RouteInfoActivity.class);
         intent.putExtra("routeId", route.getId());
         intent.putExtra("isRideCreationSuccess",true);
         intent.putExtra("rideCreationStatus", Constant.REQUESTED);

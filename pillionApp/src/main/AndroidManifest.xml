@@ -33,7 +33,11 @@
             android:icon="@drawable/ic_icon"
             android:label="Pillion"
             android:screenOrientation="portrait" >
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
 
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
 
         </activity>
 
@@ -100,11 +104,7 @@
             android:name="com.getpillion.MyProfileActivity"
             android:label="My Profile"
             android:logo="@drawable/list">
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
 
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
         </activity>
         <activity
             android:name="com.getpillion.MyRoutesActivity"
