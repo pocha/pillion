@@ -236,7 +236,7 @@ public class RouteInfoActivity extends ExtendMeSherlockWithMenuActivity {
         Helper.setListViewHeightBasedOnChildren(travellersList);
 
         try {
-            myRouteStatus = RouteUserMapping.find(RouteUserMapping.class,"route=? AND user=?",
+            myRouteStatus = RouteUserMapping.find(RouteUserMapping.class,"route=? AND position=?",
                     String.valueOf(route.getId()), String.valueOf(sharedPref.getLong("userId",0L))).get(0);
             rideStatus = myRouteStatus.status;
         }

@@ -87,7 +87,7 @@ public class GCMIntentService extends GCMBaseIntentService {
 		Log.i(TAG, "Received deleted messages notification");
 		String message = getString(R.string.gcm_deleted, total);
 		displayMessage(context, message);
-		// notifies user
+		// notifies position
 		generateNotification(context, message, "", "", "");
 	}
 
@@ -110,7 +110,7 @@ public class GCMIntentService extends GCMBaseIntentService {
 	}
 
 	/**
-	 * Issues a notification to inform the user that server has sent a message.
+	 * Issues a notification to inform the position that server has sent a message.
 	 */
 	public static void generateNotification(Context context, String message,
 			String assetID, String groupID, String type) {

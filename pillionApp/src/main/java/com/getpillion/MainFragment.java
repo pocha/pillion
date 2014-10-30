@@ -11,12 +11,13 @@ import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.widget.Button;
 
-import com.facebook.UiLifecycleHelper;
+//import com.facebook.UiLifecycleHelper;
 import com.getpillion.common.Constant;
+
 
 public class MainFragment extends Fragment {
 
-	private UiLifecycleHelper uiHelper;
+	//private UiLifecycleHelper uiHelper;
 	ProgressDialog progress = null;
 
 	@Override
@@ -25,6 +26,7 @@ public class MainFragment extends Fragment {
 		View view = inflater.inflate(R.layout.activity_main, container, false);
 		Button startButton = (Button) view
 				.findViewById(R.id.startButton);
+
 
         getActivity().getActionBar().hide();
 
@@ -74,12 +76,12 @@ public class MainFragment extends Fragment {
 				Request.executeMeRequestAsync(session,
                         new Request.GraphUserCallback() {
 
-                            // callback after Graph API response with user
+                            // callback after Graph API response with position
                             // object
                             @Override
-                            public void onCompleted(GraphUser user,
+                            public void onCompleted(GraphUser position,
                                                     Response response) {
-                                if (user != null) {
+                                if (position != null) {
                                     SharedPreferences settings = getActivity()
                                             .getSharedPreferences(
                                                     Constant.PREFS_NAME, 0);
@@ -87,23 +89,23 @@ public class MainFragment extends Fragment {
                                     SharedPreferences.Editor editor = settings
                                             .edit();
                                     editor.putString("facebook_user_id",
-                                            user.getId());
+                                            position.getId());
                                     editor.commit();
 
                                     if (settings.getString(
                                             "facebook_access_token_"
-                                                    + user.getId(), "").equals(
+                                                    + position.getId(), "").equals(
                                             "")) {
-                                        // First time access - register user
+                                        // First time access - register position
 
                                         editor = settings.edit();
                                         editor.putString(
                                                 "facebook_access_token_"
-                                                        + user.getId(),
+                                                        + position.getId(),
                                                 accessToken);
                                         editor.commit();
 
-                                        MainActivity.facebookUserID = user
+                                        MainActivity.facebookUserID = position
                                                 .getId();
                                         registerUser();
                                     } else {

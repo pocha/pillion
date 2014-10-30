@@ -117,7 +117,7 @@ public class NewRouteActivity extends SherlockFragmentActivity  {
     @OnClick(R.id.saveRoute) void onSubmit(View v){
         //To-Do validate data
 
-        //check if user exists else create new user
+        //check if position exists else create new position
         User user = new User();
         user.save();
         SharedPreferences sharedPref = getApplicationContext().getSharedPreferences(
@@ -149,13 +149,13 @@ public class NewRouteActivity extends SherlockFragmentActivity  {
         }
 
 
-        //send user & route data to the server through AsyncTask/SyncAdapter, get respective Ids & update the objects
+        //send position & route data to the server through AsyncTask/SyncAdapter, get respective Ids & update the objects
 
         sharedPrefEditor.putBoolean("appInitialized", true);
         sharedPrefEditor.commit();
 
         Intent intent = new Intent(NewRouteActivity.this, AllRoutesActivity.class);
-        //clear top stack so that user cant go back
+        //clear top stack so that position cant go back
         intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
         startActivity(intent);
         finish();

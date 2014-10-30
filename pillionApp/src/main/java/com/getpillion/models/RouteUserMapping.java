@@ -39,7 +39,7 @@ public class RouteUserMapping extends SugarRecord<RouteUserMapping> {
 
     public static RouteUserMapping findOrCreate(Route route, User user, Boolean isOwner){
         List<RouteUserMapping> routeUserMappings = RouteUserMapping.find(RouteUserMapping.class,
-                "route = ? and user = ?", String.valueOf(route.getId()), String.valueOf(user.getId()));
+                "route = ? and position = ?", String.valueOf(route.getId()), String.valueOf(user.getId()));
         if (routeUserMappings.isEmpty()){
             //create entry
             RouteUserMapping routeUserMapping = new RouteUserMapping(route,user,isOwner);

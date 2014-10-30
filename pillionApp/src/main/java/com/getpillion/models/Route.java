@@ -3,7 +3,6 @@ package com.getpillion.models;
 import android.util.Log;
 
 import com.getpillion.common.Helper;
-import com.google.gson.Gson;
 import com.orm.SugarRecord;
 import com.orm.dsl.Ignore;
 
@@ -73,7 +72,6 @@ public class Route extends SugarRecord<Route> {
         try {
             JSONObject json = new JSONObject(jsonString);
             JSONArray routes = json.getJSONArray("routes");
-            Gson gson = new Gson();
             for (int i=0; i < routes.length(); i++){
                 Log.d("Route.java","creating route " + routes.getJSONObject(i).toString());
 

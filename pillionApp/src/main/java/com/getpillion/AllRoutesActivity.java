@@ -23,7 +23,6 @@ import com.getpillion.common.ConnectionDetector;
 import com.getpillion.common.Constant;
 import com.getpillion.common.TimeDateFilterFragment;
 import com.getpillion.models.Route;
-import com.google.ads.AdView;
 import com.jeremyfeinstein.slidingmenu.lib.SlidingMenu;
 
 import java.sql.Time;
@@ -39,7 +38,7 @@ import uk.co.senab.bitmapcache.BitmapLruCache;
 
 public class AllRoutesActivity extends ExtendMeSherlockWithMenuActivity implements ActionBar.TabListener {
 
-	private AdView adView;
+	//private AdView adView;
 	AlarmManager am;
 	int startIndex = 0;
 
@@ -84,7 +83,7 @@ public class AllRoutesActivity extends ExtendMeSherlockWithMenuActivity implemen
     //TODO implement time filtering
 
     private void updateRoutes(CharSequence text){
-        if (text.length() < 3 && text.length() != 0) //2nd condition takes care of clearing filter if user has cleared the input field
+        if (text.length() < 3 && text.length() != 0) //2nd condition takes care of clearing filter if position has cleared the input field
             return;
         getData();
     }

@@ -46,13 +46,13 @@ public class RequestRideActivity extends ExtendMeSherlockWithMenuActivity {
         route = Route.findById(Route.class, getIntent().getExtras().getLong("routeId"));
         User user = User.findById(User.class,sharedPref.getLong("userId",0L));
         Log.d("RequestRideActivity","dumping route id - " + route.getId());
-        Log.d("RequestRideActivity","dumping user id - " + user.getId());
+        Log.d("RequestRideActivity","dumping position id - " + user.getId());
         //TODO send request to the server
         RouteUserMapping routeUserMapping = RouteUserMapping.findOrCreate(route,user,false);
         routeUserMapping.status = Constant.REQUESTED;
         routeUserMapping.save();
 
-        Intent intent = new Intent(RequestRideActivity.this, RouteInfoActivity.class);
+        Intent intent = new Intent(RequestRideActivity.this, MyProfileActivity.class);
         intent.putExtra("routeId", route.getId());
         intent.putExtra("isRideCreationSuccess",true);
         intent.putExtra("rideCreationStatus", Constant.REQUESTED);
@@ -93,9 +93,9 @@ public class RequestRideActivity extends ExtendMeSherlockWithMenuActivity {
             @Override
             protected JSONObject doInBackground(Void... params) {
                 try {
-                    Thread.sleep(1000); //ensures that this asyncTask does not do http request if user is still typing as it would get CANCELLED
+                    Thread.sleep(1000); //ensures that this asyncTask does not do http request if position is still typing as it would get CANCELLED
                     if (!this.isCancelled()) {
-                        return autocomplete(pickUp.getText().toString(),drop.getText().toString());
+                        return getDistanceFromGoogle(pickUp.getText().toString(), drop.getText().toString());
                     }
                 } catch (Exception e) {
                     Log.e("ashish","exception",e);
@@ -109,7 +109,7 @@ public class RequestRideActivity extends ExtendMeSherlockWithMenuActivity {
                     try {
                         Log.d(LOG_TAG, "Got data from google - " + result.toString());
                         distance.setText(result.getString("text"));
-                        cost.setText( "INR " + (result.getInt("value")/1000 * 3) );
+                        cost.setText( "INR " + (Math.round(result.getInt("value") / 1000) * 3) );
                     }
                     catch (JSONException e){
                         Log.e(LOG_TAG,"JSON Error in onPostExecute ",e);
@@ -164,7 +164,7 @@ public class RequestRideActivity extends ExtendMeSherlockWithMenuActivity {
 
     private static final String API_KEY = "AIzaSyBc2jwTqRGdQaVfAaOEueX8hYO7FK_za4k";
 
-    private JSONObject autocomplete(String origin, String destination) {
+    private JSONObject getDistanceFromGoogle(String origin, String destination) {
         ArrayList<String> resultList = null;
 
         HttpURLConnection conn = null;

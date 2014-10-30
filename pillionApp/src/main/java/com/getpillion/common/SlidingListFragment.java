@@ -15,7 +15,6 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.getpillion.AllRoutesActivity;
-import com.getpillion.MyRidesActivity;
 import com.getpillion.MyRoutesActivity;
 import com.getpillion.R;
 
@@ -162,7 +161,7 @@ public class SlidingListFragment extends ListFragment {
 				}*/ else if ( arg2 == 2) {
 					/*intent.putExtra("type", "my_apps");
 					intent.putExtra("title", "Select Apps to Share");*/
-                    intent = new Intent(getActivity(),MyRidesActivity.class);
+                    //intent = new Intent(getActivity(),MyRidesActivity.class);
 				}
 				startActivity(intent);
 			}
