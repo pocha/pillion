@@ -11,11 +11,13 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.ScrollView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.bugsense.trace.BugSenseHandler;
 import com.getpillion.common.Constant;
@@ -48,6 +50,9 @@ public class MyProfileActivity extends ExtendMeSherlockWithMenuActivity implemen
 
     private User user = null;
 
+    @InjectView(R.id.done)
+    Button done;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
 
@@ -56,6 +61,9 @@ public class MyProfileActivity extends ExtendMeSherlockWithMenuActivity implemen
                 Constant.BUGSENSE_API_KEY);
         setContentView(R.layout.activity_my_profile);
         ButterKnife.inject(this);
+        if (getCallingActivity() != null){
+            done.setVisibility(View.VISIBLE);
+        }
 
         //get user data
         user = User.findById(User.class, sharedPref.getLong("userId",0L));
@@ -255,5 +263,11 @@ public class MyProfileActivity extends ExtendMeSherlockWithMenuActivity implemen
             public TextView main;
             public TextView secondary;
         }
+    }
+
+    @OnClick(R.id.done) void takeUserBack(View v){
+        Toast.makeText(getApplicationContext(),"Profile successfully updated",Toast.LENGTH_LONG);
+        setResult(getIntent().getIntExtra("requestCode", 0));
+        finish();
     }
 }

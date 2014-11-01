@@ -53,7 +53,7 @@ public class MainFragment extends Fragment {
         SharedPreferences sharedPref = getActivity().getSharedPreferences(
                 Constant.PREFS_NAME, 0);
         if (sharedPref.getBoolean("appInitialized",false)) { //app already initialized. Take to all routes page
-            Intent intent = new Intent(getActivity(),AllRoutesActivity.class);
+            Intent intent = new Intent(getActivity(),AllRidesActivity.class);
             startActivity(intent);
             getActivity().finish();
         }

@@ -17,7 +17,6 @@
         <!-- All customizations that are NOT specific to a particular API-level can go here. -->
         <item name="android:editTextStyle">@style/EditTextStyle</item>
         <item name="android:buttonStyle">@style/ButtonStyle</item>
-        <item name="android:scrollViewStyle">@style/ScrollViewStyle</item>
     </style>
 
     <style name="EditTextStyle" parent="android:Widget.EditText">

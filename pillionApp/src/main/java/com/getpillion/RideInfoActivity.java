@@ -17,8 +17,8 @@ import com.actionbarsherlock.view.MenuItem;
 import com.bugsense.trace.BugSenseHandler;
 import com.getpillion.common.Constant;
 import com.getpillion.common.Helper;
-import com.getpillion.models.Route;
-import com.getpillion.models.RouteUserMapping;
+import com.getpillion.models.Ride;
+import com.getpillion.models.RideUserMapping;
 
 import java.util.List;
 
@@ -26,16 +26,16 @@ import butterknife.ButterKnife;
 import butterknife.InjectView;
 import butterknife.OnClick;
 
-public class RouteInfoActivity extends ExtendMeSherlockWithMenuActivity {
+public class RideInfoActivity extends ExtendMeSherlockWithMenuActivity {
 
 	//private SlidingMenu menu = null;
-    private Route route;
+    private Ride ride;
     private ProgressDialog progress;
     private TravellerAdapter adapter;
-    private List<RouteUserMapping> travellers;
+    private List<RideUserMapping> travellers;
     private Boolean isRideCreationSuccess;
     private int rideCreationStatus = Constant.NO_STATUS;
-    private RouteUserMapping myRouteStatus = null;
+    private RideUserMapping myRouteStatus = null;
     private int rideStatus = Constant.NO_STATUS;
     private AlertDialog alert;
     private Activity thisActivity;
@@ -55,8 +55,8 @@ public class RouteInfoActivity extends ExtendMeSherlockWithMenuActivity {
 
     @OnClick(R.id.primaryButton) void setPrimaryButtonListener(View v){
 
-        if (route.isOffered){
-            if (route.isMyRoute) {
+        if (ride.route.isOffered){
+            if (ride.route.owner.getId() == sharedPref.getLong("userId",0L)) {
 
                 switch (rideStatus) {
                     case Constant.NO_STATUS:
@@ -85,8 +85,8 @@ public class RouteInfoActivity extends ExtendMeSherlockWithMenuActivity {
                     switch (rideStatus) {
                         case Constant.NO_STATUS:
                             //request ride button
-                            Intent intent = new Intent(RouteInfoActivity.this, RequestRideActivity.class);
-                            intent.putExtra("routeId",route.getId());
+                            Intent intent = new Intent(RideInfoActivity.this, RequestRideActivity.class);
+                            intent.putExtra("rideId", ride.getId());
                             startActivity(intent);
                             break;
                         case Constant.REQUESTED:
@@ -98,7 +98,7 @@ public class RouteInfoActivity extends ExtendMeSherlockWithMenuActivity {
                             //update status in RouteUserMapping to Constant.CANCELLED. Do all below things in AsyncTask
                             myRouteStatus.status = Constant.CHECKED_IN;
                             myRouteStatus.save();
-                            startActivity(new Intent(RouteInfoActivity.this, RouteInfoActivity.class).addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION));
+                            startActivity(new Intent(RideInfoActivity.this, RideInfoActivity.class).addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION));
                             finish();
                             break;
                         case Constant.REJECTED:
@@ -115,8 +115,8 @@ public class RouteInfoActivity extends ExtendMeSherlockWithMenuActivity {
         }
     }
     @OnClick(R.id.secondaryButton) void setSecondaryButtonListener(View v){
-        if (route.isOffered){
-            if (route.isMyRoute) {
+        if (ride.route.isOffered){
+            if (ride.route.owner.getId() == sharedPref.getLong("userId",0L)) {
 
                     switch (rideStatus) {
                         case Constant.NO_STATUS:
@@ -203,51 +203,50 @@ public class RouteInfoActivity extends ExtendMeSherlockWithMenuActivity {
 	protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         BugSenseHandler.initAndStartSession(getApplicationContext(), Constant.BUGSENSE_API_KEY);
-        setContentView(R.layout.activity_route_info);
+        setContentView(R.layout.activity_ride_info);
 
         //getSupportActionBar().setHomeButtonEnabled(true);
         getSupportActionBar().setTitle("Route Info");
         thisActivity = this;
-        final Long routeId = getIntent().getExtras().getLong("routeId");
-        route = Route.findById(Route.class,routeId);
+        final Long rideId = getIntent().getExtras().getLong("rideId");
+        ride = Ride.findById(Ride.class, rideId);
 
         //Fill data
         ButterKnife.inject(this);
-        from.setText(route.origin);
-        to.setText(route.dest);
-        if (route.isScheduled) {
-            status.setText("SCHEDULED at " + route.getAmPmTime() + " on " + Helper.niceDate(route.date));
+        from.setText(ride.route.origin);
+        to.setText(ride.route.dest);
+        if (ride.isScheduled) {
+            status.setText("SCHEDULED at " + ride.getAmPmTime() + " on " + Helper.niceDate(ride.date));
         }
-        else if (route.date != null ){ // not Constant.SCHEDULED so must have happened in past
-            status.setText("Last ride happened at " + route.getAmPmTime() + " on " + Helper.niceDate(route.date) );
+        else if (ride.date != null ){ // not Constant.SCHEDULED so must have happened in past
+            status.setText("Last ride happened at " + ride.getAmPmTime() + " on " + Helper.niceDate(ride.date) );
         }
         else {// no information of ride present
             status.setText("The owner created the route but probably forgot to start his ride on the app. Hence no prior information of the ride available.");
         }
-        if(route.vehicle != null)
-            vehicle.setText(route.vehicle.color + " " + route.vehicle.model);
+        if(ride.vehicle != null)
+            vehicle.setText(ride.vehicle.color + " " + ride.vehicle.model);
         else
             vehicleInfo.setVisibility(View.GONE);
 
-        travellers = RouteUserMapping.find(RouteUserMapping.class,"route=?", String.valueOf(route.getId()) );
+        travellers = RideUserMapping.find(RideUserMapping.class, "ride=?", String.valueOf(ride.getId()));
         Log.d("RouteInfoActivity", "traveller count " + travellers.size());
         adapter = new TravellerAdapter(getApplicationContext(),travellers);
         travellersList.setAdapter(adapter);
         Helper.setListViewHeightBasedOnChildren(travellersList);
 
         try {
-            myRouteStatus = RouteUserMapping.find(RouteUserMapping.class,"route=? AND user=?",
-                    String.valueOf(route.getId()), String.valueOf(sharedPref.getLong("userId",0L))).get(0);
+            myRouteStatus = RideUserMapping.find(RideUserMapping.class, "ride=? AND user=?",
+                    String.valueOf(ride.getId()), String.valueOf(sharedPref.getLong("userId", 0L))).get(0);
             rideStatus = myRouteStatus.status;
         }
         catch (Exception e){
             //nothing doing. rideStatus stays null
         }
 
-        if (route.isOffered) {
+        if (ride.route.isOffered) {
 
-            if (route.isMyRoute) { //schedule, approve, start, cancel
-
+            if (ride.route.owner.getId() == sharedPref.getLong("userId",0L)) { //schedule, approve, start, cancel
 
                     switch (rideStatus) {
                         case Constant.NO_STATUS:
@@ -378,7 +377,7 @@ public class RouteInfoActivity extends ExtendMeSherlockWithMenuActivity {
         }
 
         //This isnt needed as we have the updated route data from the query in AllRoutesActivity. Hence commenting it out
-        //getRouteData(routeId);
+        //getRouteData(rideId);
 
     }
 

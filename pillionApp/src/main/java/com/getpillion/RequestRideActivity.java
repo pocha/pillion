@@ -11,8 +11,8 @@ import android.widget.TextView;
 import com.actionbarsherlock.view.MenuItem;
 import com.getpillion.common.Constant;
 import com.getpillion.common.PlaceSelectFragment;
-import com.getpillion.models.Route;
-import com.getpillion.models.RouteUserMapping;
+import com.getpillion.models.Ride;
+import com.getpillion.models.RideUserMapping;
 import com.getpillion.models.User;
 
 import org.json.JSONException;
@@ -34,7 +34,7 @@ import butterknife.OnTouch;
 
 
 public class RequestRideActivity extends ExtendMeSherlockWithMenuActivity {
-    private Route route = null;
+    private Ride ride = null;
 
     @OnClick(R.id.requestRide) void redirectBackToRouteInfoActivity(View V){
         //store pickup & drop point in sharedPref so that it can be populated on next load
@@ -57,15 +57,15 @@ public class RequestRideActivity extends ExtendMeSherlockWithMenuActivity {
 
 
         //TODO move the code below to payment gateway
-        route = Route.findById(Route.class, getIntent().getExtras().getLong("routeId"));
-        Log.d("RequestRideActivity","dumping route id - " + route.getId());
+        ride = Ride.findById(Ride.class, getIntent().getExtras().getLong("rideId"));
+        Log.d("RequestRideActivity","dumping route id - " + ride.getId());
         //TODO send request to the server
-        RouteUserMapping routeUserMapping = RouteUserMapping.findOrCreate(route,user,false);
-        routeUserMapping.status = Constant.REQUESTED;
-        routeUserMapping.save();
+        RideUserMapping rideUserMapping = RideUserMapping.findOrCreate(ride, user, false);
+        rideUserMapping.status = Constant.REQUESTED;
+        rideUserMapping.save();
 
-        Intent intent = new Intent(RequestRideActivity.this, RouteInfoActivity.class);
-        intent.putExtra("routeId", route.getId());
+        Intent intent = new Intent(RequestRideActivity.this, RideInfoActivity.class);
+        intent.putExtra("rideId", ride.getId());
         intent.putExtra("isRideCreationSuccess",true);
         intent.putExtra("rideCreationStatus", Constant.REQUESTED);
         intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP); //this should remove the previous RouteInfoActivity from stack

@@ -19,7 +19,7 @@ import com.bugsense.trace.BugSenseHandler;
 import com.getpillion.common.Constant;
 import com.getpillion.common.Helper;
 import com.getpillion.common.PlaceSelectFragment;
-import com.getpillion.models.Route;
+import com.getpillion.models.Ride;
 import com.getpillion.models.User;
 
 import java.util.regex.Matcher;
@@ -30,7 +30,7 @@ import butterknife.InjectView;
 import butterknife.OnClick;
 import butterknife.OnTouch;
 
-public class NewRouteActivity extends SherlockFragmentActivity  {
+public class NewRouteActivityOnStart extends SherlockFragmentActivity  {
 
 
 	//private SlidingMenu menu = null;
@@ -131,19 +131,19 @@ public class NewRouteActivity extends SherlockFragmentActivity  {
 
 
         if (getIntent().getBooleanExtra("offerRide",false)) {
-            new Route(home.getText().toString(), office.getText().toString(),
+            new Ride(home.getText().toString(), office.getText().toString(),
                     Helper.formatAmPmTimetoSqlTime(homeStartTime.getText().toString()),
                     true, user);
-            new Route(office.getText().toString(), home.getText().toString(),
+            new Ride(office.getText().toString(), home.getText().toString(),
                     Helper.formatAmPmTimetoSqlTime(officeStartTime.getText().toString()),
                     true, user);
         }
 
         if (getIntent().getBooleanExtra("requestRide",false)) {
-            new Route(home.getText().toString(), office.getText().toString(),
+            new Ride(home.getText().toString(), office.getText().toString(),
                     Helper.formatAmPmTimetoSqlTime(homeStartTime.getText().toString()),
                     false, user);
-            new Route(office.getText().toString(), home.getText().toString(),
+            new Ride(office.getText().toString(), home.getText().toString(),
                     Helper.formatAmPmTimetoSqlTime(officeStartTime.getText().toString()),
                     false, user);
         }
@@ -154,7 +154,7 @@ public class NewRouteActivity extends SherlockFragmentActivity  {
         sharedPrefEditor.putBoolean("appInitialized", true);
         sharedPrefEditor.commit();
 
-        Intent intent = new Intent(NewRouteActivity.this, AllRoutesActivity.class);
+        Intent intent = new Intent(NewRouteActivityOnStart.this, AllRidesActivity.class);
         //clear top stack so that position cant go back
         intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
         startActivity(intent);
@@ -166,7 +166,7 @@ public class NewRouteActivity extends SherlockFragmentActivity  {
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		BugSenseHandler.initAndStartSession(getApplicationContext(), Constant.BUGSENSE_API_KEY);
-		setContentView(R.layout.activity_new_route);
+		setContentView(R.layout.activity_new_route_on_start);
         ButterKnife.inject(this);
 
 		getSupportActionBar().setHomeButtonEnabled(false);

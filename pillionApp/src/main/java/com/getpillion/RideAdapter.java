@@ -10,13 +10,13 @@ import android.widget.ArrayAdapter;
 import android.widget.CheckBox;
 import android.widget.TextView;
 
-import com.getpillion.models.Route;
+import com.getpillion.models.Ride;
 
 import java.util.ArrayList;
 
-public class RouteAdapter extends ArrayAdapter<Route> {
+public class RideAdapter extends ArrayAdapter<Ride> {
 	private final Context context;
-	private ArrayList<Route> values;
+	private ArrayList<Ride> values;
 	
 	private String appName;
 	private String appPackage;
@@ -25,7 +25,7 @@ public class RouteAdapter extends ArrayAdapter<Route> {
 	private String FB_USER_ID;
 	SharedPreferences settings = null;
 
-	public RouteAdapter(Context context, ArrayList<Route> values) {
+	public RideAdapter(Context context, ArrayList<Ride> values) {
 		super(context, R.layout.route, values);
 		this.context = context;
 		this.values = values;
@@ -43,6 +43,7 @@ public class RouteAdapter extends ArrayAdapter<Route> {
 */
 	@Override
 	public View getView(int position, View convertView, ViewGroup parent) {
+        Log.d("RideAdapter","inside RideAdapter getView " + position);
 		/*if ( position == (values.length - 1) ) {
 			//Toast.makeText(context, "Reached bottom", Toast.LENGTH_SHORT).show();
 		}*/
@@ -62,8 +63,8 @@ public class RouteAdapter extends ArrayAdapter<Route> {
 			viewHolder = (RouteViewHolder) convertView.getTag();
 		}
 
-		final Route route = values.get(position);
-        Log.d("RouteAdapter.java","Drumping route time in getView " + route.timestamp);
+		Ride ride = values.get(position);
+        Log.d("RouteAdapter.java","Drumping route time in getView " + ride.timestamp);
 /*		route.populateFromString(selectedVal);
 		
     	final CheckBox viewHolderCheckBox = viewHolder.shareCheckbox;
@@ -85,9 +86,9 @@ public class RouteAdapter extends ArrayAdapter<Route> {
 		});
 */
 		viewHolder.position = position;
-		viewHolder.from.setText(route.origin);
-		viewHolder.to.setText(route.dest);
-		viewHolder.time.setText(route.getAmPmTime());
+		viewHolder.from.setText(ride.route.origin);
+		viewHolder.to.setText(ride.route.dest);
+		viewHolder.time.setText(ride.getAmPmTime());
 
 /*
 		viewHolder.friendNewApp.setVisibility(LinearLayout.GONE);
@@ -160,7 +161,7 @@ public class RouteAdapter extends ArrayAdapter<Route> {
 		return convertView;
 	}
 
-	public class RouteViewHolder {
+	private class RouteViewHolder {
         public int position;
 		public TextView from;
         public TextView to;

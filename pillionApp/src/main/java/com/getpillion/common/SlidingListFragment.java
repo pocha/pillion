@@ -14,9 +14,11 @@ import android.widget.ArrayAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.getpillion.AllRoutesActivity;
+import com.getpillion.AllRidesActivity;
 import com.getpillion.MyProfileActivity;
+import com.getpillion.MyRidesActivity;
 import com.getpillion.MyRoutesActivity;
+import com.getpillion.MyVehiclesActivity;
 import com.getpillion.R;
 
 public class SlidingListFragment extends ListFragment {
@@ -83,6 +85,7 @@ public class SlidingListFragment extends ListFragment {
 					viewHolder = new FeedViewHolder();
 					viewHolder.title = (TextView) convertView.findViewById(R.id.row_title);
 					viewHolder.icon = (ImageView) convertView.findViewById(R.id.row_icon);
+                    viewHolder.icon.setVisibility(View.VISIBLE);
 					convertView.setTag(viewHolder);
 				} else {
 					viewHolder = (FeedViewHolder) convertView.getTag();
@@ -144,24 +147,25 @@ public class SlidingListFragment extends ListFragment {
 				*/
 				
 				
-				Intent intent = new Intent(getActivity(),AllRoutesActivity.class);
+				Intent intent = new Intent(getActivity(),AllRidesActivity.class);
 				if (arg2 == 0) {
 					/*intent.putExtra("type", "friend_app");
 					intent.putExtra("title", "Friends");
 					intent.putExtra("show_right_arrow", "1");*/
-                    intent = new Intent(getActivity(),AllRoutesActivity.class);
+                    intent = new Intent(getActivity(),AllRidesActivity.class);
 				} else if (arg2 == 1) {
 					/*intent.putExtra("type", "all");
 					intent.putExtra("title", "Top Friends Apps");*/
                     intent = new Intent(getActivity(),MyRoutesActivity.class);
-				} /*else if (arg2 == 3) {
-					intent = new Intent(Intent.ACTION_VIEW, Uri.parse("http://www.facebook.com/appcovery"));
-				} */else if ( arg2 == 4 ) {
+				} else if (arg2 == 3) {
+					//intent = new Intent(Intent.ACTION_VIEW, Uri.parse("http://www.facebook.com/appcovery"));
+                    intent = new Intent(getActivity(), MyVehiclesActivity.class);
+				} else if ( arg2 == 4 ) {
 					intent = new Intent(getActivity(), MyProfileActivity.class);
 				} else if ( arg2 == 2) {
 					/*intent.putExtra("type", "my_apps");
 					intent.putExtra("title", "Select Apps to Share");*/
-                    //intent = new Intent(getActivity(),MyRidesActivity.class);
+                    intent = new Intent(getActivity(),MyRidesActivity.class);
 				}
 				startActivity(intent);
 			}

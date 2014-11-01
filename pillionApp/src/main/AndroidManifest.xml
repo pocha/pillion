@@ -54,7 +54,7 @@
             android:label="Like AppCovery" >
         </activity> -->
         <activity
-            android:name="com.getpillion.AllRoutesActivity"
+            android:name=".AllRidesActivity"
             android:label="@string/title_activity_home"
             android:logo="@drawable/list" >
         </activity>
@@ -67,7 +67,7 @@
         <receiver android:name="com.getpillion.TimeAlarm" />
 -->
         <activity
-            android:name="com.getpillion.NewRouteActivity"
+            android:name=".NewRouteActivityOnStart"
             android:label="Step 2/2: Location &amp; Timing"
             android:logo="@drawable/ic_launcher" >
         </activity>
@@ -78,10 +78,10 @@
 
         </activity>
         <activity
-            android:name="com.getpillion.RouteInfoActivity"
+            android:name=".RideInfoActivity"
             android:label="@string/title_activity_invite_friend"
             android:logo="@drawable/ic_launcher"
-            android:parentActivityName="com.getpillion.AllRoutesActivity" >
+            android:parentActivityName=".AllRidesActivity" >
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="com.getpillion.AllRoutesActivity" />
@@ -95,7 +95,7 @@
             android:name="com.getpillion.RequestRideActivity"
             android:label="@string/title_activity_request_ride"
             android:logo="@drawable/ic_launcher"
-            android:parentActivityName="com.getpillion.RouteInfoActivity" >
+            android:parentActivityName=".RideInfoActivity" >
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="com.getpillion.RouteInfoActivity" />
@@ -109,6 +109,31 @@
         <activity
             android:name="com.getpillion.MyRoutesActivity"
             android:label="My Routes"
+            android:logo="@drawable/list">
+        </activity>
+        <activity
+            android:name="com.getpillion.MyRouteInfoActivity"
+            android:label="Route Detail"
+            android:logo="@drawable/list">
+        </activity>
+        <activity
+            android:name="com.getpillion.ScheduleRideActivity"
+            android:label="Schedule Ride"
+            android:logo="@drawable/list">
+        </activity>
+        <activity
+            android:name="com.getpillion.MyVehiclesActivity"
+            android:label="My Vehicles"
+            android:logo="@drawable/list">
+        </activity>
+        <activity
+            android:name="com.getpillion.VehicleInfoActivity"
+            android:label="Vehicle Detail"
+            android:logo="@drawable/list">
+        </activity>
+        <activity
+            android:name="com.getpillion.MyRidesActivity"
+            android:label="My Rides"
             android:logo="@drawable/list">
         </activity>
     </application>

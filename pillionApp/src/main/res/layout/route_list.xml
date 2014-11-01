@@ -5,13 +5,15 @@
     android:id="@+id/app_layout"
     android:orientation="vertical" >
 
-    
+   <ScrollView
+       android:layout_width="match_parent"
+       android:layout_height="0dp"
+       android:layout_weight="1">
     <LinearLayout
         android:layout_width="fill_parent"
-        android:layout_height="0dp"
-        android:layout_weight="1"
-        android:layout_gravity="bottom|center_horizontal"
-        android:orientation="vertical">
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:background="#f7f7f7">
 
       <!--  <org.lucasr.smoothie.AsyncListView xmlns:android="http://schemas.android.com/apk/res/android"
                                    android:id="@+id/offeringList"
@@ -26,7 +28,6 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:scaleType="fitXY"
-            android:background="#f7f7f7"
             />
         <TextView
             android:id="@+id/noRoutesFound"
@@ -36,10 +37,15 @@
             android:text="No Routes Found"
             android:visibility="gone"
             style="@style/TextViewLabel"/>
-
-
+        <Button
+            android:id="@+id/scheduleRide"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="10dp"
+            android:text="Schedule Ride"/>
         
     </LinearLayout>
+   </ScrollView>
 
     <LinearLayout android:orientation="horizontal"
         android:layout_width="fill_parent"

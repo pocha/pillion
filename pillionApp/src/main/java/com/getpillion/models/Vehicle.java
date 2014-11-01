@@ -18,17 +18,30 @@ public class Vehicle extends SugarRecord<Vehicle> {
     public String model;
     public String color;
     public String number;
+    public User user = null; //indicates which user this vehicle belongs to
 
     public Vehicle(){}
 
     public Vehicle (String model, String color, String number) {
+        //TODO pass user information
+
         this.model = model;
         this.color = color;
         this.number = number;
         this.save();
     }
 
+    public Vehicle (String model, String color, String number, User user) {
+        this.model = model;
+        this.color = color;
+        this.number = number;
+        this.user = user;
+        this.save();
+    }
+
     public static Vehicle createOrUpdateFromJson(JSONObject jsonVehicle){
+        //TODO pass user information
+
         Vehicle vehicle = null;
         try {
             Log.d("Vehicle.java","Json Vehicle received - " + jsonVehicle.toString());

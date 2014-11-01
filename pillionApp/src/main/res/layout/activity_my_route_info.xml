@@ -1,0 +1,137 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:float="http://schemas.android.com/apk/res-auto"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    android:orientation="vertical" >
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="6"
+        android:padding="10dp">
+
+        <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+            android:layout_width="fill_parent"
+            android:layout_height="fill_parent"
+            android:orientation="vertical">
+
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                style="@style/TextViewLabel"
+                android:text="Start Location"/>
+            <View
+                android:layout_width="fill_parent"
+                android:layout_height="1dp"
+                style="@style/TextViewLabelDivider"/>
+            <EditText
+                android:id="@+id/from"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                style="@style/EditTextDialog"
+                android:hint="Enter Route Start location"
+                />
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                style="@style/TextViewLabel"
+                android:text="End Location"/>
+            <View
+                android:layout_width="fill_parent"
+                android:layout_height="1dp"
+                style="@style/TextViewLabelDivider"/>
+            <EditText
+                android:id="@+id/to"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                style="@style/EditTextDialog"
+                android:hint="Enter Route End location"
+                />
+
+
+            <CheckBox
+                android:id="@+id/isOffered"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Check the box if you bringing your vehicle"/>
+
+            <Button
+                android:id="@+id/saveRoute"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_margin="10dp"
+                android:text="Save/Update Route"/>
+            <Button
+                android:id="@+id/deleteRoute"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_margin="10dp"
+                android:background="#A00"
+                android:padding="10dp"
+                android:text="Delete Route"/>
+
+        </LinearLayout>
+
+    </ScrollView>
+    <LinearLayout
+        android:id="@+id/primaryButtonLayout"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:layout_gravity="center"
+        android:orientation="vertical"
+        android:background="#eee">
+
+        <LinearLayout android:orientation="horizontal"
+            android:layout_width="fill_parent"
+            android:layout_height="3dp"
+            android:background="#dddddd" >
+
+        </LinearLayout>
+        <TextView
+            android:id="@+id/primaryButtonMsg"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            style="@style/TextViewLabel"
+            android:layout_marginTop="2dp"
+            android:visibility="gone"
+            android:text="No Rides scheduled on this route"/>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+            <Button
+                android:id="@+id/viewScheduledRide"
+                android:layout_width="match_parent"
+                android:visibility="gone"
+                android:layout_weight="1"
+                android:layout_height="wrap_content"
+                android:text="View Scheduled Ride"
+                android:layout_margin="5dp"
+                android:shadowRadius="0"
+                />
+
+            <Button
+                android:id="@+id/scheduleRide"
+                android:layout_width="match_parent"
+                android:layout_weight="1"
+                android:layout_height="wrap_content"
+                android:text="Schedule New Ride on this Route"
+                android:background="#333"
+                android:padding="10dp"
+                android:layout_margin="5dp"
+                android:shadowRadius="0"
+                />
+        </LinearLayout>
+
+
+    </LinearLayout>
+
+</LinearLayout>
+
+

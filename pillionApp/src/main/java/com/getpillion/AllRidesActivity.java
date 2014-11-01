@@ -12,6 +12,7 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.TextView;
@@ -21,8 +22,9 @@ import com.actionbarsherlock.app.ActionBar.Tab;
 import com.bugsense.trace.BugSenseHandler;
 import com.getpillion.common.ConnectionDetector;
 import com.getpillion.common.Constant;
+import com.getpillion.common.Helper;
 import com.getpillion.common.TimeDateFilterFragment;
-import com.getpillion.models.Route;
+import com.getpillion.models.Ride;
 import com.jeremyfeinstein.slidingmenu.lib.SlidingMenu;
 
 import java.sql.Time;
@@ -32,11 +34,12 @@ import java.util.List;
 
 import butterknife.ButterKnife;
 import butterknife.InjectView;
+import butterknife.OnClick;
 import butterknife.OnTextChanged;
 import butterknife.OnTouch;
 import uk.co.senab.bitmapcache.BitmapLruCache;
 
-public class AllRoutesActivity extends ExtendMeSherlockWithMenuActivity implements ActionBar.TabListener {
+public class AllRidesActivity extends ExtendMeSherlockWithMenuActivity implements ActionBar.TabListener {
 
 	//private AdView adView;
 	AlarmManager am;
@@ -47,7 +50,6 @@ public class AllRoutesActivity extends ExtendMeSherlockWithMenuActivity implemen
 	ConnectionDetector cd;
 
 //	private AsyncListView mListView;
-    private ListView mListView;
 	private BitmapLruCache mCache;
 
 	private String FB_USER_ID = "";
@@ -60,8 +62,8 @@ public class AllRoutesActivity extends ExtendMeSherlockWithMenuActivity implemen
     private ActionBar.Tab offeringTab, seekingTab;
 
 
-    private RouteAdapter adapter;
-    private ArrayList<Route> routes;
+    private RideAdapter adapter;
+    private ArrayList<Ride> rides;
     private Tab selectedTab = null;
 
     @OnTouch(R.id.filterTime) boolean launchFilterTimeDialog(View v, MotionEvent event){
@@ -91,6 +93,13 @@ public class AllRoutesActivity extends ExtendMeSherlockWithMenuActivity implemen
     @InjectView(R.id.noRoutesFound)
     TextView noRoutesFound;
     //@InjectView(R.id.loading) TextView loading;
+    @InjectView(R.id.scheduleRide)
+    Button scheduleRide;
+    @OnClick(R.id.scheduleRide) void takeUserToMyRoutes(View v){
+        Intent intent = new Intent(AllRidesActivity.this,MyRoutesActivity.class);
+        startActivity(intent);
+    }
+    @InjectView(R.id.listView) ListView mListView;
 
 
     private AsyncTask asyncTask;
@@ -102,7 +111,7 @@ public class AllRoutesActivity extends ExtendMeSherlockWithMenuActivity implemen
 
         //loading.setVisibility(View.VISIBLE);
         noRoutesFound.setText("Loading routes ..");
-        routes.clear(); // so that Loading routes become visible
+        rides.clear(); // so that Loading routes become visible
         adapter.notifyDataSetChanged();
 
         asyncTask = new AsyncTask<Void, Void, Void>() {
@@ -124,11 +133,15 @@ public class AllRoutesActivity extends ExtendMeSherlockWithMenuActivity implemen
                     //send filter data to server through Helper.postData
                     String result = "{\"routes\":[" +
                                         "{\"globalId\":1, " +
-                                            "\"origin\":\"Brigade\", " +
-                                            "\"dest\":\"Ecospace\", " +
+                                            "\"route\": {" +
+                                                "\"globalId\": 1," +
+                                                "\"origin\":\"Brigade\", " +
+                                                "\"dest\":\"Ecospace\", " +
+                                                "\"isOffered\":true" +
+                                            "}," +
                                             "\"timestamp\":" + Time.valueOf("08:00:00").getTime() + "," +
                                             "\"vehicle\":{ \"globalId\":1,\"model\":\"Merc\", \"color\":\"black\", \"number\":\"KA51 Q8745\"}," +
-                                            "\"isOffered\":true," +
+
                                             "\"owner\":{\"globalId\":1,\"name\":\"Ashish\", \"title\":\"CEO Codelearn\"}," +
                                             "\"date\":\""+ new Date().getTime() +"\"," +
                                             "\"isScheduled\":true," +
@@ -138,11 +151,14 @@ public class AllRoutesActivity extends ExtendMeSherlockWithMenuActivity implemen
                                                  "]" +
                                          "}," +
                                         "{\"globalId\":2, " +
-                                            "\"origin\":\"Ecospace\", " +
-                                            "\"dest\":\"Brigade\", " +
+                                            "\"route\": {" +
+                                                "\"globalId\": 2," +
+                                                "\"origin\":\"Ecospace\", " +
+                                                "\"dest\":\"Adarsh\", " +
+                                                "\"isOffered\":true" +
+                                            "}," +
                                             "\"timestamp\":" + Time.valueOf("17:00:00").getTime() + "," +
                                             "\"vehicle\":{ \"globalId\":1,\"model\":\"Merc\", \"color\":\"black\", \"number\":\"KA51 Q8745\"}," +
-                                            "\"isOffered\":true," +
                                             "\"owner\":{\"globalId\":1,\"name\":\"Ashish\", \"title\":\"CEO Codelearn\"}," +
                                            // "\"date\":\""+ new Date() +"\"," +
                                             "\"isScheduled\":false" +
@@ -151,21 +167,27 @@ public class AllRoutesActivity extends ExtendMeSherlockWithMenuActivity implemen
                     if (Math.random() < 0.5){
                         result = "{\"routes\":[" +
                                     "{\"globalId\":3, " +
-                                        "\"origin\":\"Adarsh\", " +
-                                        "\"dest\":\"Ecospace\", " +
+                                        "\"route\": {" +
+                                            "\"globalId\": 3," +
+                                            "\"origin\":\"Brigade\", " +
+                                            "\"dest\":\"Ecospace\", " +
+                                            "\"isOffered\":true" +
+                                        "}," +
                                         "\"timestamp\":" + Time.valueOf("09:00:00").getTime() + "," +
                                         "\"vehicle\":{ \"globalId\":2,\"model\":\"Maruti\", \"color\":\"black\", \"number\":\"KA51 Q8745\"}," +
-                                        "\"isOffered\":true," +
                                         "\"owner\":{\"globalId\":2,\"name\":\"Anish\", \"title\":\"CEO Codelearn\"}," +
                                         "\"date\":\""+ new Date().getTime() +"\"," +
                                         "\"isScheduled\":true" +
                                     "}," +
                                     "{\"globalId\":4, " +
-                                        "\"origin\":\"Ecospace\", " +
-                                        "\"dest\":\"Adarsh\", " +
+                                        "\"route\": {" +
+                                            "\"globalId\": 4," +
+                                            "\"origin\":\"Brigade\", " +
+                                            "\"dest\":\"Ecospace\", " +
+                                            "\"isOffered\":true" +
+                                        "}," +
                                         "\"timestamp\":" + Time.valueOf("18:00:00").getTime() + "," +
                                         "\"vehicle\":{ \"globalId\":2,\"model\":\"Merc\", \"color\":\"black\", \"number\":\"KA51 Q8745\"}," +
-                                        "\"isOffered\":true," +
                                         "\"owner\":{\"globalId\":2,\"name\":\"Anish\", \"title\":\"Changed title\"}," +
                                         // "\"date\":\""+ new Date() +"\"," +
                                         "\"isScheduled\":false" +
@@ -173,7 +195,7 @@ public class AllRoutesActivity extends ExtendMeSherlockWithMenuActivity implemen
                                 "]}";
                     }
 
-                    Route.getRoutesFromJson(result);
+                    Ride.getRoutesFromJson(result);
                 } catch (Exception e) {
                     Log.e("ashish","exception",e);
                 }
@@ -192,21 +214,31 @@ public class AllRoutesActivity extends ExtendMeSherlockWithMenuActivity implemen
     }
 
     public void showRoutes(){
-        routes.clear();
+        rides.clear();
 
-        String whereString = "";
+        String whereString = "WHERE " + (
+                        (selectedTab.getTag() == "offering")
+                                ? "Route.is_offered = 1"
+                                : "Route.is_offered = 0"
+        );
+
         if (!from.getText().toString().isEmpty())
-            whereString += "origin like '%"+ from.getText().toString() +"%' AND ";
+            whereString += "AND Route.origin like '%"+ from.getText().toString() +"%'";
         if (!to.getText().toString().isEmpty())
-            whereString += "dest like '%"+ to.getText().toString() +"%' AND ";
+            whereString += "AND Route.dest like '%"+ to.getText().toString() +"%'";
 
-        if (selectedTab.getTag() == "offering") {
-            routes.addAll(Route.find(Route.class, whereString + " is_offered = 1 order by timestamp"));
-        }
-        else {
-            routes.addAll(Route.find(Route.class, whereString + " is_offered = 0 order by timestamp"));
-        }
+        rides.addAll(Ride.findWithQuery(Ride.class,
+                        "SELECT * FROM Ride JOIN Route ON Ride.route = Route.id " +
+                                whereString +
+                                " order by Ride.timestamp")
+        );
+
+        /*for (Ride ride : rides){
+            Log.d("AllRidesActivity","Route info of ride - " + ride.route.origin + " " + ride.route.dest + " " + ride.timestamp );
+        }*/
         adapter.notifyDataSetChanged();
+        Log.d("AllRoutesActivity", "Data count in adapter - " + adapter.getCount());
+        Helper.setListViewHeightBasedOnChildren(mListView);
 
         noRoutesFound.setText("No Routes Found");
     }
@@ -256,10 +288,9 @@ public class AllRoutesActivity extends ExtendMeSherlockWithMenuActivity implemen
         actionBar.setTitle("All Routes");
         actionBar.setNavigationMode(ActionBar.NAVIGATION_MODE_TABS);
 
-        routes = new ArrayList<Route>();
+        rides = new ArrayList<Ride>();
 
-        adapter = new RouteAdapter(getApplicationContext(),routes);
-        mListView = (ListView) findViewById(R.id.listView);
+        adapter = new RideAdapter(this, rides);
         mListView.setEmptyView(noRoutesFound);
         mListView.setAdapter(adapter);
 
@@ -478,8 +509,8 @@ public class AllRoutesActivity extends ExtendMeSherlockWithMenuActivity implemen
 			@Override
 			public void onItemClick(AdapterView<?> parent, View view,
 					int position, long id) {
-                Intent intent = new Intent(AllRoutesActivity.this, RouteInfoActivity.class);
-                intent.putExtra("routeId",routes.get(position).getId());
+                Intent intent = new Intent(AllRidesActivity.this, RideInfoActivity.class);
+                intent.putExtra("rideId", rides.get(position).getId());
                 startActivity(intent);
                 /*
 				// publishOpenGraphAction();

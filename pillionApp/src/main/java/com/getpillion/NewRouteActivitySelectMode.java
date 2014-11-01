@@ -25,7 +25,7 @@ public class NewRouteActivitySelectMode extends SherlockFragmentActivity {
 
     @OnClick(R.id.button) void onSubmit(View v){
         Log.d("NewRouteActivity","inside onclick");
-        Intent intent = new Intent(NewRouteActivitySelectMode.this, NewRouteActivity.class);
+        Intent intent = new Intent(NewRouteActivitySelectMode.this, NewRouteActivityOnStart.class);
         if (both.isChecked() || onlyOfferRide.isChecked())
             intent.putExtra("offerRide", true);
 

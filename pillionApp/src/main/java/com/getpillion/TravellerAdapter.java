@@ -7,16 +7,16 @@ import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.TextView;
 
-import com.getpillion.models.RouteUserMapping;
+import com.getpillion.models.RideUserMapping;
 import com.getpillion.models.User;
 
 import java.util.List;
 
-public class TravellerAdapter extends ArrayAdapter<RouteUserMapping> {
+public class TravellerAdapter extends ArrayAdapter<RideUserMapping> {
 	private final Context context;
-    private List<RouteUserMapping> routeUsers;
+    private List<RideUserMapping> routeUsers;
 
-	public TravellerAdapter(Context context, List<RouteUserMapping> users) {
+	public TravellerAdapter(Context context, List<RideUserMapping> users) {
         super(context, R.layout.route, users);
         this.context = context;
         this.routeUsers = users;
