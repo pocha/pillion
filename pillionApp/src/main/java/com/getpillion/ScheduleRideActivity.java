@@ -200,7 +200,7 @@ public class ScheduleRideActivity extends ExtendMeSherlockWithMenuActivity imple
     }
 
     @OnClick(R.id.addVehicle) void addVehicle(View v){
-        Intent intent = new Intent(ScheduleRideActivity.this,MyProfileActivity.class);
+        Intent intent = new Intent(ScheduleRideActivity.this,VehicleInfoActivity.class);
         intent.putExtra("requestCode",2);
         startActivityForResult(intent,2);
     }

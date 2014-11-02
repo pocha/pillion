@@ -7,11 +7,13 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
+import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TextView;
 
 import com.bugsense.trace.BugSenseHandler;
 import com.getpillion.common.Constant;
+import com.getpillion.common.Helper;
 import com.getpillion.models.Route;
 
 import java.util.ArrayList;
@@ -25,6 +27,8 @@ public class MyRoutesActivity extends ExtendMeSherlockWithMenuActivity {
 
     private ArrayList<Route> oRoutes = new ArrayList<Route>();
     private ArrayList<Route> rRoutes = new ArrayList<Route>();
+    private RouteAdapter oRouteAdapter;
+    private RouteAdapter rRouteAdapter;
 
     @InjectView(R.id.offeredRoutes)
     ListView offeredRoutes;
@@ -34,6 +38,8 @@ public class MyRoutesActivity extends ExtendMeSherlockWithMenuActivity {
     ListView requestedRoutes;
     @InjectView(R.id.emptyRequestedRoutes)
     TextView emptyRequestedRoutes;
+    @InjectView(R.id.primaryButtonLayout)
+    LinearLayout primaryButtonLayout;
 
     @OnItemClick(R.id.offeredRoutes) void onOfferedRouteItemClick(int position){
         showRouteDetail(offeredRoutes,position);
@@ -45,12 +51,28 @@ public class MyRoutesActivity extends ExtendMeSherlockWithMenuActivity {
     private void showRouteDetail(ListView parent, int position){
         Intent intent = new Intent(MyRoutesActivity.this, MyRouteInfoActivity.class);
         intent.putExtra("routeId",((Route)parent.getAdapter().getItem(position)).getId());
-        startActivity(intent);
+        startActivityForResult(intent, 1);
     }
 
     @OnClick(R.id.addRoute) void fireNewRouteIntent(View v){
         Intent intent = new Intent(MyRoutesActivity.this, MyRouteInfoActivity.class);
-        startActivity(intent);
+        startActivityForResult(intent, 0);
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data){
+
+        oRoutes.clear();
+        oRoutes.addAll(Route.find(Route.class, "owner = ? AND is_offered = 1", String.valueOf(sharedPref.getLong("userId", 0L))));
+        oRouteAdapter.notifyDataSetChanged();
+        Helper.setListViewHeightBasedOnChildren(offeredRoutes);
+
+
+        rRoutes.clear();
+        rRoutes.addAll(Route.find(Route.class, "owner = ? AND is_offered = 0", String.valueOf(sharedPref.getLong("userId",0L)) ));
+        rRouteAdapter.notifyDataSetChanged();
+        Helper.setListViewHeightBasedOnChildren(requestedRoutes);
+
     }
 
     @Override
@@ -61,14 +83,20 @@ public class MyRoutesActivity extends ExtendMeSherlockWithMenuActivity {
         setContentView(R.layout.activity_my_routes);
         ButterKnife.inject(this);
 
+
         oRoutes.addAll(Route.find(Route.class, "owner = ? AND is_offered = 1", String.valueOf(sharedPref.getLong("userId",0L)) ));
         rRoutes.addAll(Route.find(Route.class, "owner = ? AND is_offered = 0", String.valueOf(sharedPref.getLong("userId",0L)) ));
 
         offeredRoutes.setEmptyView(emptyOfferedRoutes);
         requestedRoutes.setEmptyView(emptyRequestedRoutes);
 
-        offeredRoutes.setAdapter(new RouteAdapter(getApplicationContext(), oRoutes));
-        requestedRoutes.setAdapter(new RouteAdapter(getApplicationContext(), rRoutes));
+        oRouteAdapter = new RouteAdapter(getApplicationContext(), oRoutes);
+        offeredRoutes.setAdapter(oRouteAdapter);
+        Helper.setListViewHeightBasedOnChildren(offeredRoutes);
+
+        rRouteAdapter = new RouteAdapter(getApplicationContext(), rRoutes);
+        requestedRoutes.setAdapter(rRouteAdapter);
+        Helper.setListViewHeightBasedOnChildren(requestedRoutes);
     }
 
     private class RouteAdapter extends ArrayAdapter<Route> {

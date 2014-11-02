@@ -53,7 +53,6 @@ public class Ride extends SugarRecord<Ride> {
         this.timestamp = (time == null) ? Time.valueOf("09:00:00").getTime() : time.getTime();
 
         //this.owner = owner;
-        RideUserMapping.findOrCreate(this, owner, true);
 
         /*this.date = new Date();
         this.isScheduled = Math.random() < 0.5;
@@ -67,6 +66,7 @@ public class Ride extends SugarRecord<Ride> {
 
         Log.d("ashish","New ride created - " + this.toString());
         this.save();
+        RideUserMapping.findOrCreate(this, owner, true);
     }
 
     public Time getSqlTime(){

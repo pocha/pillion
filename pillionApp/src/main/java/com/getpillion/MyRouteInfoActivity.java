@@ -10,10 +10,13 @@ import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.Toast;
 
+import com.actionbarsherlock.view.MenuItem;
 import com.bugsense.trace.BugSenseHandler;
 import com.getpillion.common.Constant;
+import com.getpillion.common.Helper;
 import com.getpillion.common.PlaceSelectFragment;
 import com.getpillion.models.Route;
+import com.getpillion.models.User;
 
 import butterknife.ButterKnife;
 import butterknife.InjectView;
@@ -45,6 +48,7 @@ public class MyRouteInfoActivity extends ExtendMeSherlockWithMenuActivity {
         route.origin = from.getText().toString();
         route.dest = to.getText().toString();
         route.isOffered = isOffered.isChecked();
+        route.owner = User.findById(User.class, sharedPref.getLong("userId", 0L));
 
         if (route.getId() == null) {        
             route.save();
@@ -57,26 +61,19 @@ public class MyRouteInfoActivity extends ExtendMeSherlockWithMenuActivity {
             return;          
         }
         route.save();
-        //TODO send data to server
-        Intent intent = new Intent(MyRouteInfoActivity.this,MyVehiclesActivity.class);
-        startActivity(intent);
-        finish();
+        Helper.returnControlToCallingActivity(this);
     }
 
     @OnClick(R.id.deleteRoute) void deleteRoute(View v){
         route.delete();
         //TODO send data to server
-        Intent intent = new Intent(MyRouteInfoActivity.this,MyVehiclesActivity.class);
-        startActivity(intent);
-        finish();
+        Helper.returnControlToCallingActivity(this);
     }
 
     @OnClick(R.id.scheduleRide) void scheduleRide(View v){
-        
-            Intent intent = new Intent(MyRouteInfoActivity.this,ScheduleRideActivity.class);
-            intent.putExtra("routeId", route.getId());
-            startActivity(intent);
-       
+        Intent intent = new Intent(MyRouteInfoActivity.this,ScheduleRideActivity.class);
+        intent.putExtra("routeId", route.getId());
+        startActivity(intent);
     }
 
 
@@ -125,6 +122,12 @@ public class MyRouteInfoActivity extends ExtendMeSherlockWithMenuActivity {
         p.setArguments(bundle);
         p.show(getSupportFragmentManager(),"not sure what this tag suppose to do");
         return true; //indicating this function consumed the event & it will not be propagated further
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        finish();
+        return true;
     }
 
 

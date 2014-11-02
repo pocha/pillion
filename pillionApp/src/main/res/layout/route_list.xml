@@ -55,7 +55,7 @@
     </LinearLayout>
     
     <LinearLayout 
-        android:id="@+id/invite_friend_div"
+        android:id="@+id/filterBottomBar"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
         android:gravity="center"

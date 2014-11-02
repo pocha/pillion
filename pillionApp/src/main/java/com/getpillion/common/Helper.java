@@ -1,6 +1,7 @@
 package com.getpillion.common;
 
 
+import android.app.Activity;
 import android.text.InputType;
 import android.view.MotionEvent;
 import android.view.View;
@@ -261,5 +262,9 @@ public class Helper {
             return classField;
     }
 
+    public static void returnControlToCallingActivity(Activity activity){
+        activity.setResult(activity.getIntent().getIntExtra("requestCode",0));
+        activity.finish();
+    }
 
 }

@@ -13,7 +13,7 @@ public class RideUserMapping extends SugarRecord<RideUserMapping> {
     public Ride ride;
     public User user;
 
-    public int status = 0;
+    public int status = 0; // User status for this ride (requested, cancelled etc) check possible status value in Constants.java
     public Boolean isOwner = false;
 
     public RideUserMapping(){}

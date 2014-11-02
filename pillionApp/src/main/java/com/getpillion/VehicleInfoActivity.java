@@ -1,13 +1,14 @@
 package com.getpillion;
 
-import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 
+import com.actionbarsherlock.view.MenuItem;
 import com.bugsense.trace.BugSenseHandler;
 import com.getpillion.common.Constant;
+import com.getpillion.common.Helper;
 import com.getpillion.models.User;
 import com.getpillion.models.Vehicle;
 
@@ -29,9 +30,7 @@ public class VehicleInfoActivity extends ExtendMeSherlockWithMenuActivity {
     @OnClick(R.id.deleteVehicle) void deleteVehicle(View v){
         vehicle.delete();
         //TODO send data to server
-        Intent intent = new Intent(VehicleInfoActivity.this, MyVehiclesActivity.class);
-        startActivity(intent);
-        finish();
+        Helper.returnControlToCallingActivity(this);
     }
     @OnClick(R.id.saveVehicle) void saveVehicle(View v){
         if (vehicle == null) {
@@ -44,14 +43,7 @@ public class VehicleInfoActivity extends ExtendMeSherlockWithMenuActivity {
         vehicle.save();
         //TODO send data to server
 
-        if (getCallingActivity() == null) {  //Take user to MyVehiclesActivity if not called from ScheduleRide Activity
-            Intent intent = new Intent(VehicleInfoActivity.this, MyVehiclesActivity.class);
-            startActivity(intent);
-        }
-        else {
-            setResult(getIntent().getIntExtra("requestCode",0));
-        }
-        finish();
+        Helper.returnControlToCallingActivity(this);
     }
 
     @Override
@@ -77,7 +69,10 @@ public class VehicleInfoActivity extends ExtendMeSherlockWithMenuActivity {
 
     }
 
-
-
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        finish();
+        return true;
+    }
 
 }

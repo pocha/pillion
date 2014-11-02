@@ -14,12 +14,12 @@ import java.util.List;
 
 public class TravellerAdapter extends ArrayAdapter<RideUserMapping> {
 	private final Context context;
-    private List<RideUserMapping> routeUsers;
+    private List<RideUserMapping> rideUsers;
 
 	public TravellerAdapter(Context context, List<RideUserMapping> users) {
         super(context, R.layout.route, users);
         this.context = context;
-        this.routeUsers = users;
+        this.rideUsers = users;
     }
 	@Override
 	public View getView(int position, View convertView, ViewGroup parent) {
@@ -38,7 +38,7 @@ public class TravellerAdapter extends ArrayAdapter<RideUserMapping> {
 			viewHolder = (ViewHolder) convertView.getTag();
 		}
 
-		final User user = routeUsers.get(position).user;
+		final User user = rideUsers.get(position).user;
 /*		route.populateFromString(selectedVal);
 		
     	final CheckBox viewHolderCheckBox = viewHolder.shareCheckbox;
@@ -63,7 +63,7 @@ public class TravellerAdapter extends ArrayAdapter<RideUserMapping> {
 		viewHolder.name.setText(user.name);
 
        //Log.d("TravellerAdapter.java","routeOwner " + routeOwner.name);
-        if (routeUsers.get(position).isOwner)
+        if (rideUsers.get(position).isOwner)
             viewHolder.title.setText("Owner");
         else
 		    viewHolder.title.setText(user.title);

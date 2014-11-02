@@ -42,7 +42,7 @@ public class SlidingListFragment extends ListFragment {
 		adapter.add(new SampleItem("Invite friends", R.drawable.invite_friend));
 		*/
 		
-		adapter.add(new SampleItem("All Routes", R.drawable.office));
+		adapter.add(new SampleItem("All Rides", R.drawable.office));
 		adapter.add(new SampleItem("My Routes", R.drawable.all_friends));
 		//adapter.add(new SampleItem("New Apps", R.drawable.new_app1));
 		adapter.add(new SampleItem("My Rides", R.drawable.my_apps));

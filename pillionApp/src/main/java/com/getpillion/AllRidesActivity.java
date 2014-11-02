@@ -223,9 +223,9 @@ public class AllRidesActivity extends ExtendMeSherlockWithMenuActivity implement
         );
 
         if (!from.getText().toString().isEmpty())
-            whereString += "AND Route.origin like '%"+ from.getText().toString() +"%'";
+            whereString += " AND Route.origin like '%"+ from.getText().toString() +"%'";
         if (!to.getText().toString().isEmpty())
-            whereString += "AND Route.dest like '%"+ to.getText().toString() +"%'";
+            whereString += " AND Route.dest like '%"+ to.getText().toString() +"%'";
 
         rides.addAll(Ride.findWithQuery(Ride.class,
                         "SELECT * FROM Ride JOIN Route ON Ride.route = Route.id " +
@@ -285,7 +285,6 @@ public class AllRidesActivity extends ExtendMeSherlockWithMenuActivity implement
 		}*/
         ActionBar actionBar = getSupportActionBar();
         actionBar.setHomeButtonEnabled(true);
-        actionBar.setTitle("All Routes");
         actionBar.setNavigationMode(ActionBar.NAVIGATION_MODE_TABS);
 
         rides = new ArrayList<Ride>();

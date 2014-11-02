@@ -81,18 +81,22 @@ public class MyProfileActivity extends ExtendMeSherlockWithMenuActivity implemen
     public void postLoginCallback(Person p) {
         //delete any previous data
         WorkHistory.deleteAll(WorkHistory.class,"user = ?", String.valueOf(user.getId()));
-        User.findById(User.class,user.getId()).delete();
+        /*Long id = user.getId();
+        User.findById(User.class,id).delete();
 
         user = new User();
         user.save();
-        sharedPrefEditor.putLong("userId",user.getId());
-        sharedPrefEditor.commit();
+        user.setId(id); // reset the same id so that all previous user records are still linked
+        user.save();*/
+
+        /*sharedPrefEditor.putLong("userId",user.getId());
+        sharedPrefEditor.commit();*/
 
         //store data in db - try catch block to keep continuing execution as you aint sure what fields are present in user profile
-        try {user.name = p.getFirstName() + " " + p.getLastName(); } catch (Exception e){}
-        try {user.title = p.getHeadline();} catch (Exception e){}
-        try {user.profilePicUrl = p.getPictureUrl();} catch (Exception e){}
-        try {user.fieldOfWork = p.getIndustry();} catch (Exception e){}
+        try {user.name = p.getFirstName() + " " + p.getLastName(); } catch (Exception e){ user.name = null;}
+        try {user.title = p.getHeadline();} catch (Exception e){ user.title = null;}
+        try {user.profilePicUrl = p.getPictureUrl();} catch (Exception e){ user.profilePicUrl = null;}
+        try {user.fieldOfWork = p.getIndustry();} catch (Exception e){user.fieldOfWork = null;}
 
         try {
             for (Position position : p.getPositions().getPositionList()) {
@@ -116,9 +120,9 @@ public class MyProfileActivity extends ExtendMeSherlockWithMenuActivity implemen
                 languages.add(l.getLanguage().getName());
             }
             user.languages = languages.toString().replaceAll("(^\\[|\\]$)", "").replace(", ", ",");
-        }catch (Exception e){}
+        }catch (Exception e){ user.languages = null;}
         
-        try{user.interests = p.getInterests();}catch(Exception e){}
+        try{user.interests = p.getInterests();}catch(Exception e){ user.interests = null;}
         
         user.save();
         //TODO send user data to the server

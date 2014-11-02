@@ -55,7 +55,7 @@
         </activity> -->
         <activity
             android:name=".AllRidesActivity"
-            android:label="@string/title_activity_home"
+            android:label="All Rides"
             android:logo="@drawable/list" >
         </activity>
 
@@ -79,7 +79,7 @@
         </activity>
         <activity
             android:name=".RideInfoActivity"
-            android:label="@string/title_activity_invite_friend"
+            android:label="Ride Details"
             android:logo="@drawable/ic_launcher"
             android:parentActivityName=".AllRidesActivity" >
             <meta-data
@@ -98,7 +98,7 @@
             android:parentActivityName=".RideInfoActivity" >
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value="com.getpillion.RouteInfoActivity" />
+                android:value="com.getpillion.RideInfoActivity" />
         </activity>
         <activity
             android:name="com.getpillion.MyProfileActivity"
@@ -114,7 +114,11 @@
         <activity
             android:name="com.getpillion.MyRouteInfoActivity"
             android:label="Route Detail"
-            android:logo="@drawable/list">
+            android:logo="@drawable/ic_launcher"
+            android:parentActivityName=".MyRoutesActivity" >
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="com.getpillion.MyRoutesActivity" />
         </activity>
         <activity
             android:name="com.getpillion.ScheduleRideActivity"
@@ -129,7 +133,11 @@
         <activity
             android:name="com.getpillion.VehicleInfoActivity"
             android:label="Vehicle Detail"
-            android:logo="@drawable/list">
+            android:logo="@drawable/ic_launcher"
+            android:parentActivityName=".MyVehiclesActivity" >
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="com.getpillion.MyVehiclesActivity" />
         </activity>
         <activity
             android:name="com.getpillion.MyRidesActivity"

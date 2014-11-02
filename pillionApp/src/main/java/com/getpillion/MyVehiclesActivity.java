@@ -33,16 +33,30 @@ public class MyVehiclesActivity extends ExtendMeSherlockWithMenuActivity {
    Button addVehicle;
 
    private ArrayList<Vehicle> vehiclesData = new ArrayList<Vehicle>();
+   private VehicleAdapter vehicleAdapter;
 
    @OnClick(R.id.addVehicle) void createVehicle(View v){
        Intent intent = new Intent(MyVehiclesActivity.this, VehicleInfoActivity.class);
-       startActivity(intent);
+       startActivityForResult(intent,0);
    }
    @OnItemClick(R.id.vehicles) void navigateToVehicleInfo(int position){
        Intent intent = new Intent(MyVehiclesActivity.this, VehicleInfoActivity.class);
        intent.putExtra("vehicleId",vehiclesData.get(position).getId());
-       startActivity(intent);
+       startActivityForResult(intent,1);
    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data){
+
+        vehiclesData.clear();
+        vehiclesData.addAll(
+                Vehicle.find(Vehicle.class,"user = ?",
+                        String.valueOf(sharedPref.getLong("userId",0L))
+                )
+        );
+        vehicleAdapter.notifyDataSetChanged();
+
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -56,7 +70,8 @@ public class MyVehiclesActivity extends ExtendMeSherlockWithMenuActivity {
         vehiclesData.addAll(Vehicle.find(
                 Vehicle.class, "user = ?", String.valueOf(sharedPref.getLong("userId", 0L))
         ));
-        vehicles.setAdapter(new VehicleAdapter(getApplicationContext(),vehiclesData));
+        vehicleAdapter = new VehicleAdapter(getApplicationContext(),vehiclesData);
+        vehicles.setAdapter(vehicleAdapter);
     }
 
     private class VehicleAdapter extends ArrayAdapter<Vehicle> {
