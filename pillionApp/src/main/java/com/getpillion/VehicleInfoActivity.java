@@ -6,8 +6,6 @@ import android.widget.Button;
 import android.widget.EditText;
 
 import com.actionbarsherlock.view.MenuItem;
-import com.bugsense.trace.BugSenseHandler;
-import com.getpillion.common.Constant;
 import com.getpillion.common.Helper;
 import com.getpillion.models.User;
 import com.getpillion.models.Vehicle;
@@ -49,8 +47,7 @@ public class VehicleInfoActivity extends ExtendMeSherlockWithMenuActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        BugSenseHandler.initAndStartSession(getApplicationContext(),
-                Constant.BUGSENSE_API_KEY);
+
         setContentView(R.layout.activity_vehicle_info);
         ButterKnife.inject(this);
 

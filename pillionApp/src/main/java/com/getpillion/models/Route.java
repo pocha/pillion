@@ -3,7 +3,6 @@ package com.getpillion.models;
 import android.util.Log;
 
 import com.getpillion.common.Helper;
-import com.orm.SugarRecord;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -13,7 +12,7 @@ import java.util.List;
 /**
  * Created by pocha on 31/10/14.
  */
-public class Route extends SugarRecord<Route> {
+public class Route extends SyncSugarRecord<Route> {
     public Long globalId = null;
     public String origin;
     public String dest;

@@ -11,8 +11,6 @@ import android.widget.Button;
 import android.widget.ListView;
 import android.widget.TextView;
 
-import com.bugsense.trace.BugSenseHandler;
-import com.getpillion.common.Constant;
 import com.getpillion.models.Vehicle;
 
 import java.util.ArrayList;
@@ -61,8 +59,7 @@ public class MyVehiclesActivity extends ExtendMeSherlockWithMenuActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        BugSenseHandler.initAndStartSession(getApplicationContext(),
-                Constant.BUGSENSE_API_KEY);
+
         setContentView(R.layout.activity_my_vehicles);
         ButterKnife.inject(this);
 

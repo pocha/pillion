@@ -1,9 +1,5 @@
 package com.getpillion;
 
-import android.app.AlertDialog;
-import android.app.AlertDialog.Builder;
-import android.content.DialogInterface;
-import android.content.DialogInterface.OnClickListener;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
@@ -12,18 +8,15 @@ import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
 import android.widget.EditText;
-import android.widget.TimePicker;
 
 import com.actionbarsherlock.app.SherlockFragmentActivity;
-import com.bugsense.trace.BugSenseHandler;
 import com.getpillion.common.Constant;
-import com.getpillion.common.Helper;
 import com.getpillion.common.PlaceSelectFragment;
+import com.getpillion.common.TimePickerFragment;
 import com.getpillion.models.Ride;
 import com.getpillion.models.User;
 
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
+import java.sql.Time;
 
 import butterknife.ButterKnife;
 import butterknife.InjectView;
@@ -36,9 +29,7 @@ public class NewRouteActivityOnStart extends SherlockFragmentActivity  {
 	//private SlidingMenu menu = null;
     @InjectView(R.id.office) EditText office;
     @InjectView(R.id.home) EditText home;
-    @InjectView(R.id.homeStartTime)
-    EditText homeStartTime;
-    @InjectView(R.id.officeStartTime) EditText officeStartTime;
+
 
     @OnTouch(R.id.home) boolean setHomeLocation(View v, MotionEvent event){
         return setLocation(R.id.home,event);
@@ -60,59 +51,7 @@ public class NewRouteActivityOnStart extends SherlockFragmentActivity  {
 
     }
 
-    @OnTouch(R.id.homeStartTime) boolean setHomeStartTime(View v, MotionEvent event) {
-        setTime(homeStartTime,event);
-        return true;
-    }
 
-    @OnTouch(R.id.officeStartTime) boolean setOfficeStartTime(View v, MotionEvent event){
-        setTime(officeStartTime,event);
-        return true;
-    }
-
-    private Builder timeDialog;
-    private TimePicker timePicker;
-
-    private void setTime(final EditText clickedView, MotionEvent event){
-        if (event.getAction() != MotionEvent.ACTION_UP)
-            return;
-
-        timePicker = new TimePicker(this);
-        timePicker.setIs24HourView(false);
-        Log.d("TimePicker",clickedView.getText().toString());
-        Matcher matcher = Pattern.compile("^(\\d+):(\\d+)(A|P)M$").matcher(clickedView.getText().toString());
-        matcher.find();
-        Log.d("TimePicker","3rd group value " + matcher.group(3));
-        timePicker.setCurrentHour( (matcher.group(3).equals("P")) ? Integer.parseInt(matcher.group(1)) + 12 : Integer.parseInt(matcher.group(1)) );
-        timePicker.setCurrentMinute(Integer.parseInt(matcher.group(2)));
-        
-        timeDialog = new AlertDialog.Builder(this)
-                .setTitle("Select Time")
-                .setMessage("Touch on hour/minute field to launch keyboard")
-                .setPositiveButton(android.R.string.ok, new OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        Log.d("Picker", timePicker.getCurrentHour() + ":"
-                                + timePicker.getCurrentMinute());
-                        int hour = timePicker.getCurrentHour();
-                        int minute = timePicker.getCurrentMinute();
-                        if (hour > 12) {
-                            clickedView.setText((hour - 12) + ":" + ((minute < 10) ? "0" + minute : minute) + "PM");
-                        } else {
-                            clickedView.setText(hour + ":" + ((minute < 10) ? "0" + minute : minute) + "AM");
-                        }
-                    }
-                })
-                .setNegativeButton(android.R.string.cancel,
-                        new OnClickListener() {
-                            @Override
-                            public void onClick(DialogInterface dialog,
-                                                int which) {
-                                Log.d("Picker", "Cancelled!");
-                            }
-                        });
-        timeDialog.setView(timePicker).show();
-    }
 
     @OnClick(R.id.saveRoute) void onSubmit(View v){
         //To-Do validate data
@@ -129,22 +68,25 @@ public class NewRouteActivityOnStart extends SherlockFragmentActivity  {
         Log.d("NewRouteActivity","dumping intent extra offerRide " + getIntent().getBooleanExtra("offerRide",false));
         Log.d("NewRouteActivity","dumping intent extra requestRide " + getIntent().getBooleanExtra("requestRide",false));
 
+        Time homeStartTime = ((TimePickerFragment)getSupportFragmentManager().findFragmentById(R.id.homeStartTime)).time;
+        Time officeStartTime = ((TimePickerFragment)getSupportFragmentManager().findFragmentById(R.id.officeStartTime)).time;
+
 
         if (getIntent().getBooleanExtra("offerRide",false)) {
             new Ride(home.getText().toString(), office.getText().toString(),
-                    Helper.formatAmPmTimetoSqlTime(homeStartTime.getText().toString()),
+                    homeStartTime,
                     true, user);
             new Ride(office.getText().toString(), home.getText().toString(),
-                    Helper.formatAmPmTimetoSqlTime(officeStartTime.getText().toString()),
+                    officeStartTime,
                     true, user);
         }
 
         if (getIntent().getBooleanExtra("requestRide",false)) {
             new Ride(home.getText().toString(), office.getText().toString(),
-                    Helper.formatAmPmTimetoSqlTime(homeStartTime.getText().toString()),
+                    homeStartTime,
                     false, user);
             new Ride(office.getText().toString(), home.getText().toString(),
-                    Helper.formatAmPmTimetoSqlTime(officeStartTime.getText().toString()),
+                    officeStartTime,
                     false, user);
         }
 
@@ -165,7 +107,7 @@ public class NewRouteActivityOnStart extends SherlockFragmentActivity  {
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		BugSenseHandler.initAndStartSession(getApplicationContext(), Constant.BUGSENSE_API_KEY);
+
 		setContentView(R.layout.activity_new_route_on_start);
         ButterKnife.inject(this);
 

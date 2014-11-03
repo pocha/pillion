@@ -19,9 +19,7 @@ import android.widget.TextView;
 
 import com.actionbarsherlock.app.ActionBar;
 import com.actionbarsherlock.app.ActionBar.Tab;
-import com.bugsense.trace.BugSenseHandler;
 import com.getpillion.common.ConnectionDetector;
-import com.getpillion.common.Constant;
 import com.getpillion.common.Helper;
 import com.getpillion.common.TimeDateFilterFragment;
 import com.getpillion.models.Ride;
@@ -266,8 +264,7 @@ public class AllRidesActivity extends ExtendMeSherlockWithMenuActivity implement
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		BugSenseHandler.initAndStartSession(getApplicationContext(),
-				Constant.BUGSENSE_API_KEY);
+
 		setContentView(R.layout.route_list);
         ButterKnife.inject(this);
 

@@ -1,7 +1,10 @@
 package com.getpillion.common;
 
 
+import android.accounts.Account;
+import android.accounts.AccountManager;
 import android.app.Activity;
+import android.content.Context;
 import android.text.InputType;
 import android.view.MotionEvent;
 import android.view.View;
@@ -265,6 +268,43 @@ public class Helper {
     public static void returnControlToCallingActivity(Activity activity){
         activity.setResult(activity.getIntent().getIntExtra("requestCode",0));
         activity.finish();
+    }
+
+    public static Account mAccount = null;
+
+    public static void createSyncAccount(Context context) {
+
+        if (mAccount != null)
+            return; //if at all static values persist across Activities
+
+        // Create the account type and default account
+        mAccount = new Account(
+                Constant.ACCOUNT, Constant.ACCOUNT_TYPE);
+        // Get an instance of the Android account manager
+        AccountManager accountManager =
+                (AccountManager) context.getSystemService(
+                        context.ACCOUNT_SERVICE);
+
+
+            /*
+             * Add the account and account type, no password or user data
+             * If successful, return the Account object, otherwise report an error.
+             */
+        if (accountManager.addAccountExplicitly(mAccount, null, null)) {
+                /*
+                 * If you don't set android:syncable="true" in
+                 * in your <provider> element in the manifest,
+                 * then call context.setIsSyncable(account, AUTHORITY, 1)
+                 * here.
+                 */
+            //return mAccount;
+        } else {
+                /*
+                 * The account exists or some other error occurred. Log this, report it,
+                 * or handle it internally.
+                 */
+            //return null;
+        }
     }
 
 }

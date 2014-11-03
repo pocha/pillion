@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="fill_parent"
     android:layout_height="fill_parent"
     android:orientation="vertical">
@@ -19,11 +20,12 @@
                 style="@style/TextViewLabel"
                 android:text="Start Time"/>
 
-            <EditText
-                android:id="@+id/time"
+            <fragment
+                android:name="com.getpillion.common.TimePickerFragment"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:hint="Set current time"/>
+                android:id="@+id/timePicker"
+                tools:layout="@layout/picker_edittext" />
 
             <TextView
                 android:layout_width="match_parent"
@@ -31,11 +33,12 @@
                 style="@style/TextViewLabel"
                 android:text="Ride Date"/>
 
-            <EditText
-                android:id="@+id/date"
+            <fragment
+                android:name="com.getpillion.common.DatePickerFragment"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:hint="Set today's date"/>
+                android:id="@+id/datePicker"
+                tools:layout="@layout/picker_edittext" />
 
             <TextView
                 android:layout_width="match_parent"
@@ -52,14 +55,6 @@
                android:layout_width="match_parent"
                android:layout_height="wrap_content"></Spinner>
 
-            <TextView
-                android:id="@+id/noVehicleFound"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                style="@style/TextViewLabel"
-                android:gravity="center"
-                android:text="No Vehicle Found"
-                android:visibility="gone"/>
             <Button
                 android:id="@+id/addVehicle"
                 android:layout_width="match_parent"

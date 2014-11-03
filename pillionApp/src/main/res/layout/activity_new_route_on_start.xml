@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:float="http://schemas.android.com/apk/res-auto"
+    xmlns:sw="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="fill_parent"
     android:layout_height="fill_parent"
     android:orientation="vertical" >
@@ -45,7 +46,7 @@
                         android:id="@+id/home"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        style="@style/EditTextDialog"
+                        style="@style/EditTextDialogSmall"
                         android:hint="Enter home location"
                         />
 
@@ -58,14 +59,13 @@
                         android:layout_width="fill_parent"
                         android:layout_height="1dp"
                         style="@style/TextViewLabelDivider"/>
-                    <EditText
-                        android:id="@+id/homeStartTime"
+                    <fragment
+                        android:name="com.getpillion.common.TimePickerFragment"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        style="@style/EditTextDialog"
-                        android:textSize="30sp"
-                        android:text="9:00AM"
-                       />
+                        android:id="@+id/homeStartTime"
+                        sw:value="09:00:00"
+                        tools:layout="@layout/picker_edittext" />
 
                 </LinearLayout>
                 <LinearLayout
@@ -109,7 +109,7 @@
                         android:id="@+id/office"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        style="@style/EditTextDialog"
+                        style="@style/EditTextDialogSmall"
                         android:hint="Enter office location"
                        />
 
@@ -122,14 +122,13 @@
                         android:layout_width="fill_parent"
                         android:layout_height="1dp"
                         style="@style/TextViewLabelDivider"/>
-                    <EditText
-                        android:id="@+id/officeStartTime"
+                    <fragment
+                        android:name="com.getpillion.common.TimePickerFragment"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        style="@style/EditTextDialog"
-                        android:textSize="30sp"
-                        android:text="5:00PM"
-                        />
+                        android:id="@+id/officeStartTime"
+                        sw:value="17:00:00"
+                        tools:layout="@layout/picker_edittext" />
 
                 </LinearLayout>
 

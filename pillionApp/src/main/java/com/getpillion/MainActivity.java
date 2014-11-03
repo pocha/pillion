@@ -3,8 +3,6 @@ package com.getpillion;
 import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
 
-import com.bugsense.trace.BugSenseHandler;
-import com.getpillion.common.Constant;
 import com.google.analytics.tracking.android.EasyTracker;
 
 
@@ -17,7 +15,7 @@ public class MainActivity extends FragmentActivity {
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 	    super.onCreate(savedInstanceState);
-	    BugSenseHandler.initAndStartSession(getApplicationContext(), Constant.BUGSENSE_API_KEY);
+	    // BugSenseHandler.initAndStartSession(getApplicationContext(), Constant.BUGSENSE_API_KEY);
 	    /*getSupportActionBar().setHomeButtonEnabled(false);
 		getSupportActionBar().setTitle("Login");
 		

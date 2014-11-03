@@ -7,8 +7,6 @@ import android.view.View;
 import android.widget.RadioButton;
 
 import com.actionbarsherlock.app.SherlockFragmentActivity;
-import com.bugsense.trace.BugSenseHandler;
-import com.getpillion.common.Constant;
 
 import butterknife.ButterKnife;
 import butterknife.InjectView;
@@ -38,8 +36,7 @@ public class NewRouteActivitySelectMode extends SherlockFragmentActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        BugSenseHandler.initAndStartSession(getApplicationContext(),
-                Constant.BUGSENSE_API_KEY);
+
         setContentView(R.layout.activity_new_route_select_mode);
         ButterKnife.inject(this);
     }

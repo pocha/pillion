@@ -11,8 +11,6 @@ import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TextView;
 
-import com.bugsense.trace.BugSenseHandler;
-import com.getpillion.common.Constant;
 import com.getpillion.common.Helper;
 import com.getpillion.models.Route;
 
@@ -78,8 +76,7 @@ public class MyRoutesActivity extends ExtendMeSherlockWithMenuActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        BugSenseHandler.initAndStartSession(getApplicationContext(),
-                Constant.BUGSENSE_API_KEY);
+
         setContentView(R.layout.activity_my_routes);
         ButterKnife.inject(this);
 

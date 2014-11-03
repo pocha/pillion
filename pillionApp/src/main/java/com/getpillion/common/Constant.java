@@ -29,6 +29,13 @@ public class Constant {
     public static final int  CHECKED_IN = 5;
     public static final int  SCHEDULED = 6;
     public static final int  STARTED = 7;
+
+    // The authority for the sync adapter's content provider
+    public static final String AUTHORITY = "com.getpillion.provider";
+    // An account type, in the form of a domain name
+    public static final String ACCOUNT_TYPE = "getpillion.com";
+    // The account name
+    public static final String ACCOUNT = "dummyaccount";
 	
 }
 

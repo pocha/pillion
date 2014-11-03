@@ -70,7 +70,13 @@
     <style name="EditTextDialog" parent="EditTextStyle">
         <item name="android:focusable">false</item>
         <item name="android:cursorVisible">false</item>
+    </style>
+
+    <style name="EditTextDialogSmall" parent="EditTextDialog">
         <item name="android:textSize">10sp</item>
+    </style>
+    <style name="EditTextDialogBig" parent="EditTextDialog">
+        <item name="android:textSize">30sp</item>
     </style>
 
     <style name="TextViewBig">

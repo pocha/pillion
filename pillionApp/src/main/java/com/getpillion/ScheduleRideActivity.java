@@ -4,28 +4,20 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.LayoutInflater;
-import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
-import android.widget.EditText;
 import android.widget.Spinner;
 import android.widget.TextView;
 
-import com.bugsense.trace.BugSenseHandler;
-import com.fourmob.datetimepicker.date.DatePickerDialog;
-import com.fourmob.datetimepicker.date.DatePickerDialog.OnDateSetListener;
-import com.getpillion.common.Constant;
+import com.getpillion.common.DatePickerFragment;
+import com.getpillion.common.TimePickerFragment;
 import com.getpillion.models.Ride;
 import com.getpillion.models.Route;
 import com.getpillion.models.Vehicle;
-import com.sleepbot.datetimepicker.time.RadialPickerLayout;
-import com.sleepbot.datetimepicker.time.TimePickerDialog;
 
 import java.sql.Time;
-import java.text.DateFormatSymbols;
 import java.util.ArrayList;
-import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
@@ -33,71 +25,24 @@ import butterknife.ButterKnife;
 import butterknife.InjectView;
 import butterknife.OnClick;
 import butterknife.OnItemSelected;
-import butterknife.OnTouch;
 
-public class ScheduleRideActivity extends ExtendMeSherlockWithMenuActivity implements OnDateSetListener, TimePickerDialog.OnTimeSetListener {
-    @InjectView(R.id.date)
-    EditText date;
-    @InjectView(R.id.time)
-    EditText time;
+public class ScheduleRideActivity extends ExtendMeSherlockWithMenuActivity  {
+
     @InjectView(R.id.vehicles)
     Spinner vehicleView;
 
-    Calendar calendar;
-
-    @OnTouch(R.id.date) boolean launchDateDialog(View v, MotionEvent event){
-        if (event.getAction() != MotionEvent.ACTION_UP)
-            return true;
-        DatePickerDialog datePickerDialog = DatePickerDialog.newInstance(this, calendar.get(Calendar.YEAR), calendar.get(Calendar.MONTH), calendar.get(Calendar.DAY_OF_MONTH), false);
-        datePickerDialog.setYearRange(1985, 2028);
-        datePickerDialog.setCloseOnSingleTapDay(/*isCloseOnSingleTapDay()*/true);
-        datePickerDialog.show(getSupportFragmentManager(), "some_date_picker_tag");
-        return true;
-    }
-
-    private Date userDate;
-    @Override
-    public void onDateSet(DatePickerDialog datePickerDialog, int year, int month, int day) {
-        //Toast.makeText(getActivity(), "new date:" + year + "-" + month + "-" + day, Toast.LENGTH_LONG).show();
-        date.setText(day + " " + new DateFormatSymbols().getMonths()[month-1] + " " + year);
-        userDate = new Date(year,month,day);
-    }
-
-    @OnTouch(R.id.time) boolean launchTimeDialog(View v, MotionEvent event){
-        if (event.getAction() != MotionEvent.ACTION_UP)
-            return true;
-        final TimePickerDialog timePickerDialog = TimePickerDialog.newInstance(this, calendar.get(Calendar.HOUR_OF_DAY) ,calendar.get(Calendar.MINUTE), false, false);
-        timePickerDialog.setVibrate(true);
-        timePickerDialog.setCloseOnSingleTapMinute(true);
-        timePickerDialog.show(getSupportFragmentManager(), "some_time_picker_tag");
-        return true;
-    }
-
+    public Date userDate;
     private Time userTime;
-    @Override
-    public void onTimeSet(RadialPickerLayout view, int hourOfDay, int minute) {
-        //Toast.makeText(MainActivity.this, "new time:" + hourOfDay + "-" + minute, Toast.LENGTH_LONG).show();
-        time.setText(hourOfDay + ":" + minute);
-        userTime = Time.valueOf(hourOfDay+":"+minute+":00");
-    }
 
-    @InjectView(R.id.noVehicleFound) TextView noVehicleFound;
     private Vehicle selectedVehicle = null;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+
         super.onCreate(savedInstanceState);
-        BugSenseHandler.initAndStartSession(getApplicationContext(),
-                Constant.BUGSENSE_API_KEY);
+
         setContentView(R.layout.activity_schedule_ride);
         ButterKnife.inject(this);
-
-        calendar = Calendar.getInstance();
-        date.setText(calendar.get(Calendar.YEAR) + " " + calendar.get(Calendar.MONTH)+ " " + calendar.get(Calendar.DAY_OF_MONTH));
-        time.setText(calendar.get(Calendar.HOUR_OF_DAY) +":"+ calendar.get(Calendar.MINUTE));
-
-        userDate = new Date();
-        userTime = Time.valueOf(time.getText().toString()+":00");
 
         vehicles.addAll(
                 Vehicle.find(Vehicle.class,"user = ?",
@@ -105,7 +50,6 @@ public class ScheduleRideActivity extends ExtendMeSherlockWithMenuActivity imple
                 )
         );
         vehicleAdapter = new VehicleAdapter(getApplicationContext(),vehicles);
-        vehicleView.setEmptyView(noVehicleFound);
         vehicleView.setAdapter(vehicleAdapter);
     }
 
@@ -115,6 +59,11 @@ public class ScheduleRideActivity extends ExtendMeSherlockWithMenuActivity imple
 
     @OnClick(R.id.scheduleRide) void scheduleRide(View v){
         //create new Ride
+        DatePickerFragment d = (DatePickerFragment) getSupportFragmentManager().findFragmentById(R.id.datePicker);
+        userDate = d.date;
+        TimePickerFragment t = (TimePickerFragment) getSupportFragmentManager().findFragmentById(R.id.timePicker);
+        userTime = t.time;
+
         Route route = Route.findById(Route.class, getIntent().getExtras().getLong("routeId"));
         Ride ride = new Ride(route,userDate,userTime,selectedVehicle);
         ride.save();

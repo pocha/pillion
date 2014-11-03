@@ -23,12 +23,14 @@ public class ExtendMeSherlockWithMenuActivity extends SherlockFragmentActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        //BugSenseHandler.initAndStartSession(getApplicationContext(), Constant.BUGSENSE_API_KEY);
         sharedPref = getApplicationContext().getSharedPreferences(
                 Constant.PREFS_NAME, 0);
         sharedPrefEditor = sharedPref.edit();
         menu = new SlidingMenu(this);
         Helper.createMenu(menu,this);
         getSupportActionBar().setHomeButtonEnabled(true);
+        Helper.createSyncAccount(this);
     }
 
     public boolean onCreateOptionsMenu(Menu menu) {

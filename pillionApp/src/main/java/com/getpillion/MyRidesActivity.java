@@ -11,8 +11,6 @@ import android.widget.ListView;
 import android.widget.TextView;
 
 import com.actionbarsherlock.app.ActionBar;
-import com.bugsense.trace.BugSenseHandler;
-import com.getpillion.common.Constant;
 import com.getpillion.common.Helper;
 import com.getpillion.models.Ride;
 
@@ -56,8 +54,7 @@ public class MyRidesActivity extends ExtendMeSherlockWithMenuActivity implements
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        BugSenseHandler.initAndStartSession(getApplicationContext(),
-                Constant.BUGSENSE_API_KEY);
+
         setContentView(R.layout.route_list);
         ButterKnife.inject(this);
 

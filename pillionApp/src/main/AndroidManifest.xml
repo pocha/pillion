@@ -9,10 +9,16 @@
         android:minSdkVersion="8"
         android:targetSdkVersion="19" />
 
-    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
-    <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
+    <!--<uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" /> -->
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+    <uses-permission
+        android:name="android.permission.READ_SYNC_SETTINGS"/>
+    <uses-permission
+        android:name="android.permission.WRITE_SYNC_SETTINGS"/>
+    <uses-permission
+        android:name="android.permission.AUTHENTICATE_ACCOUNTS"/>
 
 <!--     <android:uses-permission android:name="android.permission.READ_PHONE_STATE" /> -->
     <application
@@ -23,7 +29,7 @@
         android:name="com.orm.SugarApp"
         tools:replace="android:icon">
 
-        <meta-data android:name="DATABASE" android:value="sugar_example.db" />
+        <meta-data android:name="DATABASE" android:value="main.db" />
         <meta-data android:name="VERSION" android:value="2" />
         <meta-data android:name="QUERY_LOG" android:value="true" />
         <meta-data android:name="DOMAIN_PACKAGE_NAME" android:value="com.getpillion" />
@@ -84,7 +90,7 @@
             android:parentActivityName=".AllRidesActivity" >
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value="com.getpillion.AllRoutesActivity" />
+                android:value="com.getpillion.AllRidesActivity" />
         </activity>
         <activity
             android:name="com.getpillion.SettingActivity"
@@ -144,6 +150,34 @@
             android:label="My Rides"
             android:logo="@drawable/list">
         </activity>
+
+        <provider
+            android:name=".sync.StubContentProvider"
+            android:authorities="com.getpillion.provider"
+            android:exported="false"
+            android:syncable="true"/>
+        <service
+            android:name=".sync.StubAuthenticatorService">
+            <intent-filter>
+                <action android:name="android.accounts.AccountAuthenticator"/>
+            </intent-filter>
+            <meta-data
+                android:name="android.accounts.AccountAuthenticator"
+                android:resource="@xml/authenticator" />
+        </service>
+        <service
+            android:name=".sync.GlobalSyncService"
+            android:exported="true">
+            <intent-filter>
+                <action android:name="android.content.SyncAdapter" />
+            </intent-filter>
+            <meta-data
+                android:name="android.content.SyncAdapter"
+                android:resource="@xml/sync_adapter" />
+        </service>
+
+
+
     </application>
 
 </manifest>

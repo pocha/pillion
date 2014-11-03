@@ -19,8 +19,6 @@ import android.widget.ScrollView;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.bugsense.trace.BugSenseHandler;
-import com.getpillion.common.Constant;
 import com.getpillion.common.Helper;
 import com.getpillion.common.LinkedinDialog;
 import com.getpillion.models.User;
@@ -57,8 +55,7 @@ public class MyProfileActivity extends ExtendMeSherlockWithMenuActivity implemen
     protected void onCreate(Bundle savedInstanceState) {
 
         super.onCreate(savedInstanceState);
-        BugSenseHandler.initAndStartSession(getApplicationContext(),
-                Constant.BUGSENSE_API_KEY);
+
         setContentView(R.layout.activity_my_profile);
         ButterKnife.inject(this);
         if (getCallingActivity() != null){

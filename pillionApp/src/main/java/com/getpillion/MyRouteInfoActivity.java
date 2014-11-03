@@ -11,8 +11,6 @@ import android.widget.LinearLayout;
 import android.widget.Toast;
 
 import com.actionbarsherlock.view.MenuItem;
-import com.bugsense.trace.BugSenseHandler;
-import com.getpillion.common.Constant;
 import com.getpillion.common.Helper;
 import com.getpillion.common.PlaceSelectFragment;
 import com.getpillion.models.Route;
@@ -82,8 +80,7 @@ public class MyRouteInfoActivity extends ExtendMeSherlockWithMenuActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        BugSenseHandler.initAndStartSession(getApplicationContext(),
-                Constant.BUGSENSE_API_KEY);
+
         setContentView(R.layout.activity_my_route_info);
         ButterKnife.inject(this);
 
