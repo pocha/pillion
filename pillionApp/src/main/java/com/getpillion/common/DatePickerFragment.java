@@ -56,7 +56,7 @@ public class DatePickerFragment extends Fragment implements OnDateSetListener {
                        false);
 
                datePickerDialog.setYearRange(1985, 2028);
-               datePickerDialog.setCloseOnSingleTapDay(/*isCloseOnSingleTapDay()*/true);
+               datePickerDialog.setCloseOnSingleTapDay(/*isCloseOnSingleTapDay()*/false);
                //datePickerDialog.show(parentActivity.getSupportFragmentManager(),"some_tag");
                datePickerDialog.show(getFragmentManager(),"some_tag");
                return true;

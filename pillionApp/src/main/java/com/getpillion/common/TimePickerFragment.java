@@ -86,7 +86,7 @@ public class TimePickerFragment extends Fragment implements TimePickerDialog.OnT
                final TimePickerDialog timePickerDialog = TimePickerDialog.newInstance(TimePickerFragment.this,
                        time.getHours() , time.getMinutes(),
                        false, false);
-               timePickerDialog.setCloseOnSingleTapMinute(true);
+               timePickerDialog.setCloseOnSingleTapMinute(false);
                timePickerDialog.show(getFragmentManager(), "some_time_picker_tag");
                return true;
            }
