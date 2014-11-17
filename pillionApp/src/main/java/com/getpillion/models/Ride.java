@@ -2,140 +2,143 @@ package com.getpillion.models;
 
 import android.util.Log;
 
-import com.getpillion.common.Helper;
-import com.orm.SugarRecord;
+import com.getpillion.common.Constant;
+import com.google.gson.annotations.SerializedName;
 import com.orm.dsl.Ignore;
-
-import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
 
 import java.sql.Time;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
 /**
  * Created by pocha on 25/09/14.
  */
-public class Ride extends SugarRecord<Ride> {
-    public Long globalId = null;
-
-    @Ignore
-    public Date time = null; //field not supported in SugarORM
+public class Ride extends SyncSugarRecord<Ride> {
 
     //this is for storing the time in db as java.sql.Time is not supported by SugarORM
-    public Long timestamp; //will never be null
+    @SerializedName("time_long")
+    public Long timeLong; //will never be null
+    @Ignore
+    public String time_stamp = null;
 
     public Vehicle vehicle = null;
+    @Ignore
+    private Long vehicle_id = null;
 
-    //public User owner;
-    public Long date = null; //declaring date as Long because SugarRecord does not seem to take null for date
+    @SerializedName("date_long")
+    public Long dateLong = null; //declaring date as Long because SugarRecord does not seem to take null for date
+    @Ignore
+    public String ride_date = null;
+
+    @SerializedName("is_scheduled")
     public boolean isScheduled = false;
+
     public Route route;
+    @Ignore
+    private Long route_id = null;
+
+    @Ignore
+    @SerializedName("ride_user_mappings")
+    public ArrayList<RideUserMapping> rideUserMappings = new ArrayList<RideUserMapping>();
+
 
     public Ride(){}
 
-    public Ride (Route route, Date date, Time time, Vehicle vehicle){
+    public Ride (Route route, Date date, Time time, Vehicle vehicle, User owner){
+        Log.d("Ride.java","Inside constructor, creating ride with time " + time.toString());
         this.route = route;
-        this.date = date.getTime();
-        this.timestamp = time.getTime();
+        this.dateLong = date.getTime();
+        this.timeLong = time.getTime();
         this.vehicle = vehicle;
         this.isScheduled = true;
         this.save();
+        RideUserMapping.findOrCreate(this, owner, true, Constant.SCHEDULED);
     }
 
     public Ride(String from, String to, Time time, boolean isOffered, User owner) {
         Log.d("ashish","Entered new route creation");
+        Log.d("Ride.java","Inside constructor, creating ride with time " + time.toString() + " which will be converted to " + time.getTime());
 
         this.route = new Route(from,to,isOffered,owner);
 
-        this.timestamp = (time == null) ? Time.valueOf("09:00:00").getTime() : time.getTime();
-
-        //this.owner = owner;
-
-        /*this.date = new Date();
-        this.isScheduled = Math.random() < 0.5;
-        if (Math.random() < 0.5) {
-            this.vehicle = new Vehicle("Mercedez","black","KA51 Q8745");
-        }
-        for (int i=0; i < Math.random()*3; i++){
-            //this.users.add(User.returnDummyUser());
-            new RouteUserMapping(this,User.returnDummyUser());
-        }*/
+        this.timeLong = (time == null) ? Time.valueOf("09:00:00").getTime() : time.getTime();
 
         Log.d("ashish","New ride created - " + this.toString());
         this.save();
-        RideUserMapping.findOrCreate(this, owner, true);
+
+        RideUserMapping.findOrCreate(this, owner, true, Constant.CREATED);
     }
 
-    public Time getSqlTime(){
-        return new Time(this.timestamp);
-    }
     public String getAmPmTime(){
-        return new SimpleDateFormat("hh:mm a").format(new Date(this.timestamp));
+        Log.d("Ride.java","Timestamp found for conversion to AM PM - " + this.timeLong +
+                " Time converted value - " + new Time(this.timeLong) +
+                " Time shown - " +  new SimpleDateFormat("hh:mm a").format(new Time(this.timeLong)));
+        return new SimpleDateFormat("hh:mm a").format(new Time(this.timeLong));
     }
 
-    public static void getRoutesFromJson(String jsonString){
-        try {
-            JSONObject json = new JSONObject(jsonString);
-            JSONArray routes = json.getJSONArray("routes");
-            for (int i=0; i < routes.length(); i++){
-                Log.d("Route.java","creating route " + routes.getJSONObject(i).toString());
+    public static Ride updateFromUpstream(Ride upstreamRide) throws Exception{
+        //get from db
+        List<Ride> rides = Ride.find(Ride.class, "global_id = ?", String.valueOf(upstreamRide.globalId));
 
-                createOrUpdateFromJson(routes.getJSONObject(i));
-            }
-        }catch (JSONException e){
-            Log.d("Route.java","getRoutesFromJson() " + jsonString.toString() );
-            e.printStackTrace();
-        }
-    }
-
-    public static void createOrUpdateFromJson(JSONObject jsonRoute){
         Ride ride = null;
-        try {
-            List<Ride> rides = Ride.find(Ride.class, "global_id = ?", String.valueOf(jsonRoute.getLong("globalId")));
-            if (rides.isEmpty()) {//create new route
-                ride = new Ride();
-                ride.globalId = jsonRoute.getLong("globalId");
-            }
-            else {
-                ride = rides.get(0);
-            }
-
-            ride.route = Route.createOrUpdateFromJson(jsonRoute.getJSONObject("route"));
-
-            ride.timestamp = Helper.updateFromJsonField(ride.timestamp,jsonRoute.optLong("timestamp"));
-            Log.d("Route.java","updated route timestamp " + ride.timestamp + " route timestamp " + jsonRoute.optLong("timestamp"));
-            if (jsonRoute.getJSONObject("vehicle") != null){
-                ride.vehicle = Vehicle.createOrUpdateFromJson(jsonRoute.getJSONObject("vehicle"));
-            }
-            ride.isScheduled = Helper.updateFromJsonField(ride.isScheduled,jsonRoute.optBoolean("isScheduled"));
-            ride.date = Helper.updateFromJsonField(ride.date,jsonRoute.optLong("date"));
-
-            ride.save();
-
-            if (jsonRoute.optJSONObject("owner") != null) {
-                //add owner to RouteUserMapping if not already added
-                User user = User.createOrUpdateFromJson(jsonRoute.getJSONObject("owner"));
-                if (ride.route.owner == null ){
-                    ride.route.owner = user;
-                    ride.route.save();
-                }
-                RideUserMapping.findOrCreate(ride, user, true);
-            }
-
-            if (jsonRoute.optJSONArray("users") != null) {//parse users for the ride, can only do after route.save else route id wont be there
-                JSONArray users = jsonRoute.getJSONArray("users");
-                for (int i=0; i < users.length(); i++)
-                    RideUserMapping.createOrUpdateFromJson(ride, users.getJSONObject(i));
-            }
-
+        if (rides.isEmpty()) {
+            ride = upstreamRide;
+        } else {//update values
+            ride = rides.get(0);
+            ride.updatedAt = upstreamRide.updatedAt;
+            ride.isScheduled = upstreamRide.isScheduled;
         }
-        catch (JSONException e){
-            Log.d("Route.java","Error extracting json in createOrUpdateRouteFromJSON " + e.toString() + "\n jsonRoute - " + jsonRoute.toString());
-            e.printStackTrace();
+        ride.timeLong = Time.valueOf(upstreamRide.time_stamp).getTime();
+        Log.d("Ride.java","updated time from upstream " + ride.timeLong);
+        if (!upstreamRide.ride_date.isEmpty())
+            ride.dateLong = new SimpleDateFormat("yyyy-MM-dd").parse(upstreamRide.ride_date).getTime();
+
+        ride.saveWithoutSync(); // we need ride.getId() in RideUserMapping.findOrCreate
+
+        if (upstreamRide.route != null) { //null check is done as if only a few params in ride are updating, the rest may remain empty
+            ride.route = Route.updateFromUpstream(upstreamRide.route);
+            //no need to create RideUserMapping as it is being taken care in the travellers array below
         }
+
+        if (upstreamRide.vehicle != null) {
+            ride.vehicle = Vehicle.updateFromUpstream(upstreamRide.vehicle, ride.route.owner);
+        }
+
+        if (upstreamRide.rideUserMappings != null)
+            for (RideUserMapping rideUserMapping:upstreamRide.rideUserMappings){
+                RideUserMapping.updateFromUpstream(ride, rideUserMapping);
+            }
+
+        ride.saveWithoutSync();
+        return ride;
     }
+
+    @Override
+    public String toJson(){
+        //these values will be used on the server for the time & date
+        Time time = new Time(this.timeLong);
+        this.time_stamp = time.toString();
+        if (dateLong != null) {
+            Date date = new Date(this.dateLong);
+            this.ride_date = new SimpleDateFormat("yyyy-MM-dd").format(date);
+        }
+        this.route_id = this.route.globalId;
+        if (vehicle != null)
+            this.vehicle_id = this.vehicle.globalId;
+
+        excludeFields.add("timeLong");
+        excludeFields.add("dateLong");
+        excludeFields.add("route");
+        excludeFields.add("vehicle");
+        excludeFields.add("users");
+
+
+        return super.toJson();
+    }
+
+
+
 
 }

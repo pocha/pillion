@@ -38,7 +38,7 @@ public class TravellerAdapter extends ArrayAdapter<RideUserMapping> {
 			viewHolder = (ViewHolder) convertView.getTag();
 		}
 
-		final User user = rideUsers.get(position).user;
+		final User user = User.findById(User.class,rideUsers.get(position).userId);
 /*		route.populateFromString(selectedVal);
 		
     	final CheckBox viewHolderCheckBox = viewHolder.shareCheckbox;

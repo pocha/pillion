@@ -9,9 +9,7 @@ import android.content.SyncResult;
 import android.os.Bundle;
 import android.util.Log;
 
-import com.getpillion.models.Route;
-
-import java.util.List;
+import com.getpillion.models.SyncSugarRecord;
 
 /**
  * Created by pocha on 03/11/14.
@@ -32,15 +30,11 @@ public class GlobalSyncAdapter  extends AbstractThreadedSyncAdapter {
                               ContentProviderClient provider, SyncResult syncResult) {
         Log.d("udinic", "onPerformSync for account[" + account.name + "]");
         try {
-            List<Route> routes = Route.find(Route.class,"is_synced = 0");
-            Log.d("udinic","Send data to server");
-            for (Route route:routes){
-                route.isSynced = true;
-                route.save(true);
-            }
-            Log.d("udinic","Done syncing");
+            SyncSugarRecord.doSync(extras);
         } catch (Exception e) {
             e.printStackTrace();
+            Log.d("udinic","Error count " + syncResult.stats.numParseExceptions);
+            syncResult.stats.numParseExceptions++;
         }
     }
 }

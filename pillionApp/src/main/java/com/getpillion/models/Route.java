@@ -1,11 +1,7 @@
 package com.getpillion.models;
 
-import android.util.Log;
-
-import com.getpillion.common.Helper;
-
-import org.json.JSONException;
-import org.json.JSONObject;
+import com.google.gson.annotations.SerializedName;
+import com.orm.dsl.Ignore;
 
 import java.util.List;
 
@@ -13,11 +9,16 @@ import java.util.List;
  * Created by pocha on 31/10/14.
  */
 public class Route extends SyncSugarRecord<Route> {
-    public Long globalId = null;
     public String origin;
     public String dest;
+
+    @SerializedName("is_offered")
     public boolean isOffered = true;
+
+    @SerializedName("user_attributes")
     public User owner = null;
+    @Ignore
+    public Long user_id = null;
 
     public Route(){}
 
@@ -29,29 +30,36 @@ public class Route extends SyncSugarRecord<Route> {
         this.save();
     }
 
-    public static Route createOrUpdateFromJson(JSONObject jsonRoute){
+    public static Route updateFromUpstream(Route upstreamRoute){
+        List<Route> routes = Route.find(Route.class,"global_id = ?",String.valueOf(upstreamRoute.globalId));
+
         Route route = null;
-        try {
-            List<Route> routes = Route.find(Route.class, "global_id = ?", String.valueOf(jsonRoute.getLong("globalId")));
-            if (routes.isEmpty()) {//create new route
-                route = new Route();
-                route.globalId = jsonRoute.getLong("globalId");
-            }
-            else {
-                route = routes.get(0);
-            }
-            route.origin = Helper.updateFromJsonField(route.origin, jsonRoute.optString("origin"));
-            route.dest = Helper.updateFromJsonField(route.dest,jsonRoute.optString("dest"));
-
-            route.isOffered = Helper.updateFromJsonField(route.isOffered,jsonRoute.optBoolean("isOffered"));
-
-            route.save();
+        if (routes.isEmpty()){
+            route = upstreamRoute;
         }
-        catch (JSONException e){
-            Log.d("Route.java","Error extracting json in createOrUpdateRouteFromJSON " + e.toString() + "\n jsonRoute - " + jsonRoute.toString());
-            e.printStackTrace();
+        else {
+            route = routes.get(0);
+            route.origin = upstreamRoute.origin;
+            route.dest = upstreamRoute.dest;
+            route.isOffered = upstreamRoute.isOffered;
+            route.updatedAt = upstreamRoute.updatedAt;
         }
+        if (upstreamRoute.owner != null)
+            route.owner = User.updateFromUpstream(upstreamRoute.owner);
+
+        route.saveWithoutSync();
+
         return route;
+    }
+
+    @Override
+    public String toJson(){
+        //these values will be used on the server for the time & date
+        this.user_id = this.owner.globalId;
+
+        excludeFields.add("owner");
+
+        return super.toJson();
     }
 
 }

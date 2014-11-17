@@ -27,7 +27,7 @@ dependencies {
     compile files('libs/disklrucache-1.3.0.jar')
 //    compile files('libs/GoogleAdMobAdsSdk-6.4.1.jar')
     compile files('libs/libGoogleAnalyticsV2.jar')
-    compile files('libs/gcm.jar')
+//    compile files('libs/gcm.jar')
     compile 'com.actionbarsherlock:actionbarsherlock:4.4.0@aar'
     compile 'com.android.support:support-v4:20.0.0'
     compile 'org.ocpsoft.prettytime:prettytime:3.2.5.Final'
@@ -36,7 +36,7 @@ dependencies {
     compile 'com.github.satyan:sugar:1.3'
   //  compile 'com.doomonafireball.betterpickers:library:1.5.2'
     compile 'com.github.flavienlaurent.datetimepicker:library:0.0.2'
-  //  compile 'com.google.code.gson:gson:2.2.+'
+    compile 'com.google.code.gson:gson:2.2.+'
     //compile('com.googlecode.linkedin-j:linkedin-j-core:1.0.416');
 
    /* compile('com.github.androidsocialnetworks:library:0.3.7@aar'){
@@ -46,6 +46,5 @@ dependencies {
     compile files('libs/signpost-core-1.2.1.1.jar')
     compile files('libs/commons-codec-1.3.jar')
 
-    //compile files('libs/commons-codec-1.3.jar')
-
+    compile "com.google.android.gms:play-services:3.1.+"
 }

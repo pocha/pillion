@@ -1,24 +1,21 @@
 package com.getpillion.models;
 
-import android.util.Log;
-
-import com.getpillion.common.Helper;
-import com.orm.SugarRecord;
-
-import org.json.JSONException;
-import org.json.JSONObject;
+import com.google.gson.annotations.SerializedName;
+import com.orm.dsl.Ignore;
 
 import java.util.List;
 
 /**
  * Created by pocha on 25/09/14.
  */
-public class Vehicle extends SugarRecord<Vehicle> {
-    public Long globalId;
+public class Vehicle extends SyncSugarRecord<Vehicle> {
     public String model;
     public String color;
     public String number;
+    @SerializedName("user_attributes")
     public User user = null; //indicates which user this vehicle belongs to
+    @Ignore
+    public Long user_id = null;
 
     public Vehicle(){}
 
@@ -39,31 +36,33 @@ public class Vehicle extends SugarRecord<Vehicle> {
         this.save();
     }
 
-    public static Vehicle createOrUpdateFromJson(JSONObject jsonVehicle){
-        //TODO pass user information
+    public static Vehicle updateFromUpstream(Vehicle upstreamVehicle, User user){
+        List<Vehicle> vehicles = Vehicle.find(Vehicle.class,"global_id = ?",String.valueOf(upstreamVehicle.globalId));
 
         Vehicle vehicle = null;
-        try {
-            Log.d("Vehicle.java","Json Vehicle received - " + jsonVehicle.toString());
-            List<Vehicle> vehicles = Vehicle.find(Vehicle.class,"global_id = ?",String.valueOf(jsonVehicle.getLong("globalId")));
-            if(vehicles.isEmpty()) {
-                vehicle = new Vehicle();
-                vehicle.globalId = jsonVehicle.getLong("globalId");
-            }
-            else
-                vehicle = vehicles.get(0);
-
-            Log.d("Vehicle.java","Fetching vehicle model for testing  - " + vehicle.model);
-            vehicle.model = Helper.updateFromJsonField(vehicle.model,jsonVehicle.optString("model"));
-            vehicle.color = Helper.updateFromJsonField(vehicle.color,jsonVehicle.optString("color"));
-            vehicle.number = Helper.updateFromJsonField(vehicle.number,jsonVehicle.optString("number"));
-            vehicle.save();
-
-            return vehicle;
+        if (vehicles.isEmpty()){
+            vehicle = upstreamVehicle;
+            vehicle.user = user;
         }
-        catch (JSONException e){
-            e.printStackTrace();
+        else {
+            vehicle = vehicles.get(0);
+            vehicle.model = upstreamVehicle.model;
+            vehicle.color = upstreamVehicle.color;
+            vehicle.number = upstreamVehicle.number;
+            vehicle.updatedAt = upstreamVehicle.updatedAt;
         }
-        return null;
+
+        vehicle.saveWithoutSync();
+
+        return vehicle;
+    }
+    @Override
+    public String toJson(){
+        //these values will be used on the server for the time & date
+        this.user_id = this.user.globalId;
+
+        excludeFields.add("user");
+
+        return super.toJson();
     }
 }

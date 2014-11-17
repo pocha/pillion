@@ -16,18 +16,22 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.actionbarsherlock.app.ActionBar;
 import com.actionbarsherlock.app.ActionBar.Tab;
 import com.getpillion.common.ConnectionDetector;
+import com.getpillion.common.Constant;
 import com.getpillion.common.Helper;
 import com.getpillion.common.TimeDateFilterFragment;
 import com.getpillion.models.Ride;
+import com.google.gson.Gson;
 import com.jeremyfeinstein.slidingmenu.lib.SlidingMenu;
 
-import java.sql.Time;
+import org.apache.http.NameValuePair;
+import org.apache.http.message.BasicNameValuePair;
+
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 
 import butterknife.ButterKnife;
@@ -63,13 +67,14 @@ public class AllRidesActivity extends ExtendMeSherlockWithMenuActivity implement
     private RideAdapter adapter;
     private ArrayList<Ride> rides;
     private Tab selectedTab = null;
+    private TimeDateFilterFragment p;
 
     @OnTouch(R.id.filterTime) boolean launchFilterTimeDialog(View v, MotionEvent event){
         if (event.getAction() != MotionEvent.ACTION_UP)
             return true;
-        TimeDateFilterFragment p = TimeDateFilterFragment.newInstance((EditText)v);
-        p.show(getSupportFragmentManager(),"not sure what this tag suppose to do");
-
+        /*p = TimeDateFilterFragment.newInstance((EditText)v);
+        p.show(getSupportFragmentManager(),"not sure what this tag suppose to do");*/
+        Toast.makeText(AllRidesActivity.this,"Feature not yet implemented",Toast.LENGTH_SHORT).show();
         return true;
     }
     @InjectView(R.id.fromFilter) EditText from;
@@ -112,21 +117,36 @@ public class AllRidesActivity extends ExtendMeSherlockWithMenuActivity implement
         rides.clear(); // so that Loading routes become visible
         adapter.notifyDataSetChanged();
 
-        asyncTask = new AsyncTask<Void, Void, Void>() {
+        asyncTask = new AsyncTask<Void, Void, Boolean>() {
             @Override
-            protected Void doInBackground(Void... params) {
+            protected Boolean doInBackground(Void... params) {
                 try {
                     Thread.sleep(1000);
                     if (isCancelled())
                         return null;
 
-                    /*ArrayList<NameValuePair> postParams = new ArrayList<NameValuePair>();
-                    postParams.add(new BasicNameValuePair("facebookUserID",
-                            FB_USER_ID));
-                    postParams.add(new BasicNameValuePair("app_id", appID));
-                    String url = Constant.SERVER + Constant.USER_APP_VIEW;
-                    Helper.postData(url, postParams);*/
-                    Thread.sleep(2000);
+                    ArrayList<NameValuePair> postParams = new ArrayList<NameValuePair>();
+                    postParams.add(
+                            new BasicNameValuePair("from_filter",from.getText().toString())
+                    );
+                    postParams.add(
+                            new BasicNameValuePair("to_filter",to.getText().toString())
+                    );
+                    //TODO implement time filtering
+                    /*postParams.add(
+                            new BasicNameValuePair("start_time", String.valueOf(p.startTimeLong))
+                    );
+                    postParams.add(
+                            new BasicNameValuePair("end_time", String.valueOf(p.endTimeLong))
+                    );
+                    postParams.add(
+                            new BasicNameValuePair("date", String.valueOf(p.dateLong))
+                    );*/
+
+                    String result = Helper.postData(Constant.GET_RECORD_URL + "/Ride.json", postParams);
+                    Log.d("AllRidesActivity","Ride query result from server (json) " + result);
+
+                    /*Thread.sleep(2000);
 
                     //send filter data to server through Helper.postData
                     String result = "{\"routes\":[" +
@@ -137,7 +157,7 @@ public class AllRidesActivity extends ExtendMeSherlockWithMenuActivity implement
                                                 "\"dest\":\"Ecospace\", " +
                                                 "\"isOffered\":true" +
                                             "}," +
-                                            "\"timestamp\":" + Time.valueOf("08:00:00").getTime() + "," +
+                                            "\"timeLong\":" + Time.valueOf("08:00:00").getTime() + "," +
                                             "\"vehicle\":{ \"globalId\":1,\"model\":\"Merc\", \"color\":\"black\", \"number\":\"KA51 Q8745\"}," +
 
                                             "\"owner\":{\"globalId\":1,\"name\":\"Ashish\", \"title\":\"CEO Codelearn\"}," +
@@ -155,7 +175,7 @@ public class AllRidesActivity extends ExtendMeSherlockWithMenuActivity implement
                                                 "\"dest\":\"Adarsh\", " +
                                                 "\"isOffered\":true" +
                                             "}," +
-                                            "\"timestamp\":" + Time.valueOf("17:00:00").getTime() + "," +
+                                            "\"timeLong\":" + Time.valueOf("17:00:00").getTime() + "," +
                                             "\"vehicle\":{ \"globalId\":1,\"model\":\"Merc\", \"color\":\"black\", \"number\":\"KA51 Q8745\"}," +
                                             "\"owner\":{\"globalId\":1,\"name\":\"Ashish\", \"title\":\"CEO Codelearn\"}," +
                                            // "\"date\":\""+ new Date() +"\"," +
@@ -171,7 +191,7 @@ public class AllRidesActivity extends ExtendMeSherlockWithMenuActivity implement
                                             "\"dest\":\"Ecospace\", " +
                                             "\"isOffered\":true" +
                                         "}," +
-                                        "\"timestamp\":" + Time.valueOf("09:00:00").getTime() + "," +
+                                        "\"timeLong\":" + Time.valueOf("09:00:00").getTime() + "," +
                                         "\"vehicle\":{ \"globalId\":2,\"model\":\"Maruti\", \"color\":\"black\", \"number\":\"KA51 Q8745\"}," +
                                         "\"owner\":{\"globalId\":2,\"name\":\"Anish\", \"title\":\"CEO Codelearn\"}," +
                                         "\"date\":\""+ new Date().getTime() +"\"," +
@@ -184,28 +204,35 @@ public class AllRidesActivity extends ExtendMeSherlockWithMenuActivity implement
                                             "\"dest\":\"Ecospace\", " +
                                             "\"isOffered\":true" +
                                         "}," +
-                                        "\"timestamp\":" + Time.valueOf("18:00:00").getTime() + "," +
+                                        "\"timeLong\":" + Time.valueOf("18:00:00").getTime() + "," +
                                         "\"vehicle\":{ \"globalId\":2,\"model\":\"Merc\", \"color\":\"black\", \"number\":\"KA51 Q8745\"}," +
                                         "\"owner\":{\"globalId\":2,\"name\":\"Anish\", \"title\":\"Changed title\"}," +
                                         // "\"date\":\""+ new Date() +"\"," +
                                         "\"isScheduled\":false" +
                                      "}" +
                                 "]}";
-                    }
+                    }*/
 
-                    Ride.getRoutesFromJson(result);
+                    Gson gson = new Gson();
+                    for (Ride nestedRide: gson.fromJson(result,Ride[].class))
+                        Ride.updateFromUpstream(nestedRide);
+
                 } catch (Exception e) {
                     Log.e("ashish","exception",e);
+                    return false;
                 }
-                return null;
+                return true;
             }
 
             @Override
-            protected void onPostExecute(Void result) {
+            protected void onPostExecute(Boolean result) {
                 if (!isCancelled()) {
                     showRoutes();
                     //progress.hide();
                     //loading.setVisibility(View.GONE);
+                }
+                if (result == false){
+                    Toast.makeText(AllRidesActivity.this,"Could not fetch Rides. Check your internet connection",Toast.LENGTH_LONG).show();
                 }
             }
         }.execute();
@@ -226,19 +253,29 @@ public class AllRidesActivity extends ExtendMeSherlockWithMenuActivity implement
             whereString += " AND Route.dest like '%"+ to.getText().toString() +"%'";
 
         rides.addAll(Ride.findWithQuery(Ride.class,
-                        "SELECT * FROM Ride JOIN Route ON Ride.route = Route.id " +
+                        "SELECT Ride.* FROM Ride JOIN Route ON Ride.route = Route.id " +
                                 whereString +
-                                " order by Ride.timestamp")
+                                " order by Ride.time_long")
         );
 
         /*for (Ride ride : rides){
-            Log.d("AllRidesActivity","Route info of ride - " + ride.route.origin + " " + ride.route.dest + " " + ride.timestamp );
+            Log.d("AllRidesActivity","Route info of ride - " + ride.route.origin + " " + ride.route.dest + " " + ride.timeLong );
         }*/
         adapter.notifyDataSetChanged();
         Log.d("AllRoutesActivity", "Data count in adapter - " + adapter.getCount());
         Helper.setListViewHeightBasedOnChildren(mListView);
 
         noRoutesFound.setText("No Routes Found");
+
+
+        Log.d("AllRidesActivity","Dumping all ride objects after rendering");
+        /*for (Ride ride:Ride.findWithQuery(Ride.class,
+                "SELECT Ride.* FROM Ride JOIN Route ON Ride.route = Route.id " +
+                        whereString +
+                        " order by Ride.time_long")){*/
+        for (Ride ride: rides){
+            Log.d("AllRidesActivity","ride dump - " + ride.getId() );
+        }
     }
 
 
@@ -506,7 +543,8 @@ public class AllRidesActivity extends ExtendMeSherlockWithMenuActivity implement
 			public void onItemClick(AdapterView<?> parent, View view,
 					int position, long id) {
                 Intent intent = new Intent(AllRidesActivity.this, RideInfoActivity.class);
-                intent.putExtra("rideId", rides.get(position).getId());
+                intent.putExtra("rideId", rides.get(position).getId() );
+                Log.d("AllRidesActivity","Starting RideInfoActivity with rideId " + rides.get(position).getId() + " at position " + position);
                 startActivity(intent);
                 /*
 				// publishOpenGraphAction();

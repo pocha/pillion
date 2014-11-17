@@ -12,9 +12,9 @@ import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.actionbarsherlock.view.MenuItem;
-import com.bugsense.trace.BugSenseHandler;
 import com.getpillion.common.Constant;
 import com.getpillion.common.Helper;
 import com.getpillion.models.Ride;
@@ -34,9 +34,9 @@ public class RideInfoActivity extends ExtendMeSherlockWithMenuActivity {
     private TravellerAdapter adapter;
     private List<RideUserMapping> travellers;
     private Boolean isRideCreationSuccess;
-    private int rideCreationStatus = Constant.NO_STATUS;
+    private int rideCreationStatus = Constant.CREATED;
     private RideUserMapping rideUserMapping = null;
-    private int myRideStatus = Constant.NO_STATUS;
+    private int myRideStatus = Constant.CREATED;
     private boolean amIOwner = false;
     private AlertDialog alert;
     private Activity thisActivity;
@@ -61,7 +61,7 @@ public class RideInfoActivity extends ExtendMeSherlockWithMenuActivity {
             if (ride.route.isOffered){
 
                 switch (myRideStatus) {
-                    case Constant.NO_STATUS: //Schedule Ride primary button
+                    case Constant.CREATED: //Schedule Ride primary button
                         intent = new Intent(RideInfoActivity.this,ScheduleRideActivity.class);
                         intent.putExtra("routeId",ride.route.getId());
                         startActivity(intent);
@@ -91,7 +91,7 @@ public class RideInfoActivity extends ExtendMeSherlockWithMenuActivity {
             if (ride.route.isOffered){
 
                 switch (myRideStatus) {
-                    case Constant.NO_STATUS: //Request Ride primary button
+                    case Constant.CREATED: //Request Ride primary button
                         //request ride button
                         intent = new Intent(RideInfoActivity.this, RequestRideActivity.class);
                         intent.putExtra("rideId", ride.getId());
@@ -129,7 +129,7 @@ public class RideInfoActivity extends ExtendMeSherlockWithMenuActivity {
         if (amIOwner){
             if (ride.route.isOffered){
                 switch (myRideStatus) {
-                    case Constant.NO_STATUS: //nothing as primary button to schedule ride & sec is hidden
+                    case Constant.CREATED: //nothing as primary button to schedule ride & sec is hidden
                         break;
                     case Constant.SCHEDULED: //cancel ride button
                         AlertDialog.Builder builder = new AlertDialog.Builder(thisActivity);
@@ -193,7 +193,7 @@ public class RideInfoActivity extends ExtendMeSherlockWithMenuActivity {
         else {
             if (ride.route.isOffered){
                 switch (myRideStatus) {
-                    case Constant.NO_STATUS:
+                    case Constant.CREATED:
                         //nothing as request ride main button
                         break;
                     case Constant.REQUESTED:
@@ -240,12 +240,12 @@ public class RideInfoActivity extends ExtendMeSherlockWithMenuActivity {
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        BugSenseHandler.initAndStartSession(getApplicationContext(), Constant.BUGSENSE_API_KEY);
         setContentView(R.layout.activity_ride_info);
 
         //getSupportActionBar().setHomeButtonEnabled(true);
         thisActivity = this;
         final Long rideId = getIntent().getExtras().getLong("rideId");
+        Log.d("RideInfoActivity","Ride id " + rideId);
         ride = Ride.findById(Ride.class, rideId);
 
 
@@ -255,25 +255,24 @@ public class RideInfoActivity extends ExtendMeSherlockWithMenuActivity {
         from.setText(ride.route.origin);
         to.setText(ride.route.dest);
 
-        int rideStatus = RideUserMapping.find(RideUserMapping.class, "ride=? AND user=?",
-                        String.valueOf(ride.getId()),
-                        String.valueOf(ride.route.owner.getId())
+        int ownerRideStatus = RideUserMapping.find(RideUserMapping.class, "ride_id =? AND is_owner = 1",
+                        String.valueOf(ride.getId())
                     ).get(0).status;
 
         if (ride.route.isOffered) {
             if (ride.isScheduled) {
-                status.setText("SCHEDULED at " + ride.getAmPmTime() + " on " + Helper.niceDate(ride.date));
-            } else if (ride.date != null) { // not Constant.SCHEDULED so must have happened in past
-                status.setText("Last ride happened at " + ride.getAmPmTime() + " on " + Helper.niceDate(ride.date));
-            } else if (rideStatus == Constant.CANCELLED) {
+                status.setText("SCHEDULED at " + ride.getAmPmTime() + " on " + Helper.niceDate(ride.dateLong));
+            } else if (ride.dateLong != null) { // not Constant.SCHEDULED so must have happened in past
+                status.setText("Last ride happened at " + ride.getAmPmTime() + " on " + Helper.niceDate(ride.dateLong));
+            } else if (ownerRideStatus == Constant.CANCELLED) {
                 status.setText("The owner has cancelled the ride");
             } else {// no information of ride present
                 status.setText("Ride scheduled at " + ride.getAmPmTime() + " daily but the owner probably never 'started' the ride on the app in the past.");
             }
         }
         else {
-            if (rideStatus == Constant.CANCELLED) {
-                status.setText("The owner has cancelled the ride");
+            if (ownerRideStatus == Constant.CANCELLED) {
+                status.setText("The seeker is no more seeking ride on this route");
             }
             else {
                 status.setText("Seeking ride at " + ride.getAmPmTime());
@@ -285,28 +284,30 @@ public class RideInfoActivity extends ExtendMeSherlockWithMenuActivity {
         else
             vehicleInfo.setVisibility(View.GONE);
 
-        travellers = RideUserMapping.find(RideUserMapping.class, "ride=?", String.valueOf(ride.getId()));
+        travellers = RideUserMapping.find(RideUserMapping.class, "ride_id=?", String.valueOf(ride.getId()));
         Log.d("RouteInfoActivity", "traveller count " + travellers.size());
         adapter = new TravellerAdapter(getApplicationContext(),travellers);
         travellersList.setAdapter(adapter);
         Helper.setListViewHeightBasedOnChildren(travellersList);
 
         try {
-            rideUserMapping = RideUserMapping.find(RideUserMapping.class, "ride=? AND user=?",
+            rideUserMapping = RideUserMapping.find(RideUserMapping.class, "ride_id =? AND user_id =?",
                     String.valueOf(ride.getId()),
                     String.valueOf(sharedPref.getLong("userId", 0L))
             ).get(0);
+            Toast.makeText(this,"global_id of this ride " + rideUserMapping.globalId, Toast.LENGTH_SHORT).show();
             myRideStatus = rideUserMapping.status;
             amIOwner = rideUserMapping.isOwner;
         }
         catch (Exception e){ //user not associated with the ride
+            Log.d("RideInfoActivity","Boss you are not part of this ride");
             //both myRideStatus & amIOwner stays the default value so nothing doing.
         }
 
         if (amIOwner) {
             if (ride.route.isOffered) { //I am owner & I am offering ride. Option to accept requests
                 switch (myRideStatus) {
-                    case Constant.NO_STATUS:
+                    case Constant.CREATED:
                         secButtonLayout.setVisibility(View.GONE);
 
                         primaryButton.setVisibility(View.VISIBLE);
@@ -354,7 +355,7 @@ public class RideInfoActivity extends ExtendMeSherlockWithMenuActivity {
         else {
             if (ride.route.isOffered) { //I am not owner & ride is offered. Option to send request
                 switch (myRideStatus) {
-                    case Constant.NO_STATUS:
+                    case Constant.CREATED:
                         secButtonLayout.setVisibility(View.GONE);
                         primaryButton.setText("Request Ride");
                         primaryButtonMsg.setText("You will be taken to payment page. Your money will get refunded if you/vehicle owner cancel your request or if the ride does not happen.");

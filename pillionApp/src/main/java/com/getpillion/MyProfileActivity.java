@@ -36,7 +36,7 @@ import butterknife.ButterKnife;
 import butterknife.InjectView;
 import butterknife.OnClick;
 
-public class MyProfileActivity extends ExtendMeSherlockWithMenuActivity implements IPostLoginCallback{
+public class MyProfileActivity extends ExtendMeSherlockWithMenuActivity implements IPostExecuteCallback {
 
 
     @OnClick(R.id.loginButton) void SocialNwManagerTakeCharge(View v){
@@ -75,7 +75,7 @@ public class MyProfileActivity extends ExtendMeSherlockWithMenuActivity implemen
     }
 
     @Override
-    public void postLoginCallback(Person p) {
+    public void onPostExecute(Person p) {
         //delete any previous data
         WorkHistory.deleteAll(WorkHistory.class,"user = ?", String.valueOf(user.getId()));
         /*Long id = user.getId();

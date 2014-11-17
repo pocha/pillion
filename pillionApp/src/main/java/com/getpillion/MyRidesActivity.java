@@ -106,8 +106,8 @@ public class MyRidesActivity extends ExtendMeSherlockWithMenuActivity implements
         if (selectedTab.getTag() == "upcoming") {
             rides.addAll(
                     Ride.findWithQuery(Ride.class,
-                            "SELECT * FROM Ride JOIN Route ON Ride.route = Route.id " +
-                                    "WHERE Route.owner = ? AND Ride.date >= ? AND Ride.timestamp > ?",
+                            "SELECT Ride.* FROM Ride JOIN Route ON Ride.route = Route.id " +
+                                    "WHERE Route.owner = ? AND Ride.date_long >= ? AND Ride.time_long > ?",
                             String.valueOf(sharedPref.getLong("userId", 0L)),
                             String.valueOf(today),
                             String.valueOf(now)
@@ -117,8 +117,8 @@ public class MyRidesActivity extends ExtendMeSherlockWithMenuActivity implements
         else {
             rides.addAll(
                     Ride.findWithQuery(Ride.class,
-                            "SELECT * FROM Ride JOIN Route ON Ride.route = Route.id " +
-                                    "WHERE Route.owner = ? AND Ride.date <= ? OR Ride.timestamp <= ?",
+                            "SELECT Ride.* FROM Ride JOIN Route ON Ride.route = Route.id " +
+                                    "WHERE Route.owner = ? AND Ride.date_long <= ? AND Ride.time_long <= ?",
                             String.valueOf(sharedPref.getLong("userId", 0L)),
                             String.valueOf(today),
                             String.valueOf(now)

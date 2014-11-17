@@ -14,6 +14,7 @@ import com.getpillion.common.DatePickerFragment;
 import com.getpillion.common.TimePickerFragment;
 import com.getpillion.models.Ride;
 import com.getpillion.models.Route;
+import com.getpillion.models.User;
 import com.getpillion.models.Vehicle;
 
 import java.sql.Time;
@@ -65,7 +66,8 @@ public class ScheduleRideActivity extends ExtendMeSherlockWithMenuActivity  {
         userTime = t.time;
 
         Route route = Route.findById(Route.class, getIntent().getExtras().getLong("routeId"));
-        Ride ride = new Ride(route,userDate,userTime,selectedVehicle);
+        User user = User.findById(User.class, sharedPref.getLong("userId",0L));
+        Ride ride = new Ride(route,userDate,userTime,selectedVehicle, user);
         ride.save();
         //TODO send data to server
         Intent intent = new Intent(ScheduleRideActivity.this,RideInfoActivity.class);

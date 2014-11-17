@@ -61,4 +61,8 @@ public class StubContentProvider extends ContentProvider {
             String[] selectionArgs) {
         return 0;
     }
+
+    public void syncCallback(){
+
+    }
 }

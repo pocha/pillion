@@ -25,6 +25,7 @@ import org.apache.http.client.HttpClient;
 import org.apache.http.client.entity.UrlEncodedFormEntity;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.client.methods.HttpPost;
+import org.apache.http.entity.StringEntity;
 import org.apache.http.impl.client.DefaultHttpClient;
 
 import java.io.BufferedReader;
@@ -38,8 +39,35 @@ import java.util.List;
 
 public class Helper {
 
+    public static String postData(String url, String json) throws Exception {
+        // Create a new HttpClient and Post Header
+        HttpClient httpclient = new DefaultHttpClient();
+        HttpPost httppost = new HttpPost(url);
+        httppost.setHeader("Content-type", "application/json");
+        StringBuilder stringBuilder = null;
+        String str = null;
+        try {
+            // Add your data
+            httppost.setEntity(new StringEntity(json,"UTF-8"));
+            // Execute HTTP Post Request
+            HttpResponse response = httpclient.execute(httppost);
+            stringBuilder = inputStreamToString(response.getEntity().getContent());
+            str = stringBuilder.toString();
 
-	public static String postData(String url, List<NameValuePair> nameValuePairs) {
+	    /*} catch (ClientProtocolException e) {
+	    	e.printStackTrace();
+	        // TODO Auto-generated catch block
+	    } catch (IOException e) {
+	    	e.printStackTrace();
+	        // TODO Auto-generated catch block*/
+        }catch(Exception e){
+            e.printStackTrace();
+            throw new Exception("Could not send data to server. Check your internet connection & try again.");
+        }
+        return str;
+    }
+
+	public static String postData(String url, List<NameValuePair> nameValuePairs) throws Exception {
 	    // Create a new HttpClient and Post Header
 	    HttpClient httpclient = new DefaultHttpClient();
 	    HttpPost httppost = new HttpPost(url);
@@ -54,14 +82,15 @@ public class Helper {
 	        stringBuilder = inputStreamToString(response.getEntity().getContent());
 	        str = stringBuilder.toString();
 	        
-	    } catch (ClientProtocolException e) {
+	    /*} catch (ClientProtocolException e) {
 	    	e.printStackTrace();
 	        // TODO Auto-generated catch block
 	    } catch (IOException e) {
 	    	e.printStackTrace();
-	        // TODO Auto-generated catch block
+	        // TODO Auto-generated catch block*/
 	    }catch(Exception e){
 	    	e.printStackTrace();
+            throw new Exception("Could not send data to server. Check your internet connection & try again.");
 	    }
 	    return str;
 	}
@@ -306,5 +335,6 @@ public class Helper {
             //return null;
         }
     }
+
 
 }

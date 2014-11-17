@@ -48,21 +48,19 @@ public class RequestRideActivity extends ExtendMeSherlockWithMenuActivity {
         Log.d("RequestRideActivity","dumping user id - " + user.getId());
         Log.d("RequestRideActivity","dumping user name - " + user.name);
 
-        if (user.name == null){
+        /*if (user.name == null){
             Log.d("RequestRideActivity","Launching ProfileActivity as no user data found");
             Intent intent = new Intent(RequestRideActivity.this, MyProfileActivity.class);
             startActivity(intent);
             return;
-        }
+        }*/
 
 
         //TODO move the code below to payment gateway
         ride = Ride.findById(Ride.class, getIntent().getExtras().getLong("rideId"));
         Log.d("RequestRideActivity","dumping route id - " + ride.getId());
         //TODO send request to the server
-        RideUserMapping rideUserMapping = RideUserMapping.findOrCreate(ride, user, false);
-        rideUserMapping.status = Constant.REQUESTED;
-        rideUserMapping.save();
+        RideUserMapping rideUserMapping = RideUserMapping.findOrCreate(ride, user, false, Constant.REQUESTED);
 
         Intent intent = new Intent(RequestRideActivity.this, RideInfoActivity.class);
         intent.putExtra("rideId", ride.getId());

@@ -17,6 +17,8 @@ import com.fourmob.datetimepicker.date.DatePickerDialog;
 import com.fourmob.datetimepicker.date.DatePickerDialog.OnDateSetListener;
 import com.getpillion.R;
 
+import java.sql.Time;
+import java.text.DateFormatSymbols;
 import java.util.Calendar;
 
 import butterknife.ButterKnife;
@@ -36,6 +38,11 @@ public class TimeDateFilterFragment extends DialogFragment implements OnDateSetL
     public static final String DATEPICKER_TAG = "datepicker";
     public static final String TIMEPICKER_TAG = "timepicker";
 
+    public Long startTimeLong = null;
+    public Long endTimeLong = null;
+    public Long dateLong = null;
+
+    private Calendar calendar = Calendar.getInstance();
 
     private DatePickerDialog datePickerDialog;
     //final TimePickerDialog timePickerDialog = TimePickerDialog.newInstance(this, calendar.get(Calendar.HOUR_OF_DAY), calendar.get(Calendar.MINUTE), false, false);
@@ -43,14 +50,16 @@ public class TimeDateFilterFragment extends DialogFragment implements OnDateSetL
     @OnClick(R.id.date) void onDateFieldClick(View v) {
             //datePickerDialog.setVibrate(/*isVibrate()*/ true);
             datePickerDialog.setYearRange(1985, 2028);
-            datePickerDialog.setCloseOnSingleTapDay(/*isCloseOnSingleTapDay()*/true);
+            datePickerDialog.setCloseOnSingleTapDay(/*isCloseOnSingleTapDay()*/false);
             datePickerDialog.show(getFragmentManager(), DATEPICKER_TAG);
     }
 
     @Override
     public void onDateSet(DatePickerDialog datePickerDialog, int year, int month, int day) {
         //Toast.makeText(getActivity(), "new date:" + year + "-" + month + "-" + day, Toast.LENGTH_LONG).show();
-        date.setText(day + " " + month + " " + year);
+        date.setText(day + " " + new DateFormatSymbols().getMonths()[calendar.get(Calendar.MONTH)] + " " + year);
+        calendar.set(year,month,day);
+        dateLong = calendar.getTime().getTime();
     }
 
 
@@ -86,6 +95,25 @@ public class TimeDateFilterFragment extends DialogFragment implements OnDateSetL
                 .setPositiveButton("ok",
                         new DialogInterface.OnClickListener() {
                             public void onClick(DialogInterface dialog, int whichButton) {
+                                if (startTimeAMPM.getSelectedItem().toString() == "AM") {
+                                    startTimeLong = Time.valueOf(startTime.getText().toString()+":00:00").getTime();
+                                }
+                                else {
+                                    startTimeLong = Time.valueOf(
+                                                        (startTime.getText().toString() + 12)
+                                                                +":00:00"
+                                                    ).getTime();
+                                }
+                                if (endTimeAMPM.getSelectedItem().toString() == "AM") {
+                                    endTimeLong = Time.valueOf(endTime.getText().toString()+":00:00").getTime();
+                                }
+                                else {
+                                    endTimeLong = Time.valueOf(
+                                            (endTime.getText().toString() + 12)
+                                                    +":00:00"
+                                    ).getTime();
+                                }
+
                                 parentView.setText(startTime.getText().toString() + startTimeAMPM.getSelectedItem().toString() +
                                         " - " + endTime.getText().toString() + endTimeAMPM.getSelectedItem().toString() +
                                         " on " + date.getText().toString());
@@ -103,6 +131,7 @@ public class TimeDateFilterFragment extends DialogFragment implements OnDateSetL
         b.setView(this.myOnCreateView(getActivity().getLayoutInflater(),null,savedInstanceState));
         return b.create();
     }
+
 
 
 

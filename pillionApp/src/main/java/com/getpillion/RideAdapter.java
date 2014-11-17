@@ -47,24 +47,25 @@ public class RideAdapter extends ArrayAdapter<Ride> {
 		/*if ( position == (values.length - 1) ) {
 			//Toast.makeText(context, "Reached bottom", Toast.LENGTH_SHORT).show();
 		}*/
-		RouteViewHolder viewHolder;
+		RideViewHolder viewHolder;
 
 		if (convertView == null) {
 			LayoutInflater inflater = (LayoutInflater) context
 					.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 			convertView = inflater.inflate(R.layout.route, parent, false);
-			viewHolder = new RouteViewHolder();
+			viewHolder = new RideViewHolder();
 			viewHolder.from = (TextView) convertView.findViewById(R.id.from);
             viewHolder.to = (TextView) convertView.findViewById(R.id.to);
             viewHolder.time = (TextView) convertView.findViewById(R.id.time);
 
             convertView.setTag(viewHolder);
 		} else {
-			viewHolder = (RouteViewHolder) convertView.getTag();
+			viewHolder = (RideViewHolder) convertView.getTag();
 		}
 
 		Ride ride = values.get(position);
-        Log.d("RouteAdapter.java","Drumping route time in getView " + ride.timestamp);
+
+        Log.d("RideAdapter","Rendering ride with id " + ride.getId() + ", globalId " + ride.globalId + " and time " + ride.timeLong);
 /*		route.populateFromString(selectedVal);
 		
     	final CheckBox viewHolderCheckBox = viewHolder.shareCheckbox;
@@ -86,6 +87,7 @@ public class RideAdapter extends ArrayAdapter<Ride> {
 		});
 */
 		viewHolder.position = position;
+        viewHolder.rideId = ride.getId();
 		viewHolder.from.setText(ride.route.origin);
 		viewHolder.to.setText(ride.route.dest);
 		viewHolder.time.setText(ride.getAmPmTime());
@@ -161,8 +163,9 @@ public class RideAdapter extends ArrayAdapter<Ride> {
 		return convertView;
 	}
 
-	private class RouteViewHolder {
+	public class RideViewHolder {
         public int position;
+        public long rideId;
 		public TextView from;
         public TextView to;
         public TextView time;

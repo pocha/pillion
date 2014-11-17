@@ -3,4 +3,5 @@
 build/
 *.dex
 *.class
+.DS_Store
 

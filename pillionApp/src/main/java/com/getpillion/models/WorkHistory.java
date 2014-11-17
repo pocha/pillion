@@ -1,25 +1,22 @@
 package com.getpillion.models;
 
-import android.util.Log;
-
-import com.getpillion.common.Helper;
 import com.google.code.linkedinapi.schema.Education;
 import com.google.code.linkedinapi.schema.EndDate;
 import com.google.code.linkedinapi.schema.Position;
 import com.google.code.linkedinapi.schema.StartDate;
-import com.orm.SugarRecord;
-
-import org.json.JSONException;
-import org.json.JSONObject;
+import com.google.gson.annotations.SerializedName;
+import com.orm.dsl.Ignore;
 
 import java.util.List;
 
 /**
  * Created by pocha on 29/10/14.
  */
-public class WorkHistory extends SugarRecord<WorkHistory> {
-    public Long globalId;
+public class WorkHistory extends SyncSugarRecord<WorkHistory> {
+    @SerializedName("user_attributes")
     public User user;
+    @Ignore
+    public Long user_id = null;
     public String data;
     public String duration;
     
@@ -47,26 +44,30 @@ public class WorkHistory extends SugarRecord<WorkHistory> {
         this.save();
     }
 
-    public static WorkHistory createOrUpdateFromJson(JSONObject jsonUser, User user){
+    public static WorkHistory updateFromUpstream(WorkHistory upstream, User user){
         WorkHistory position = null;
-        try {
-            List<WorkHistory> positions = WorkHistory.find(WorkHistory.class, "global_id = ?", String.valueOf(jsonUser.getLong("globalId")));
+            List<WorkHistory> positions = WorkHistory.find(WorkHistory.class, "global_id = ?", String.valueOf(upstream.globalId));
             if (positions.isEmpty()){
-                position = new WorkHistory();
-                position.globalId = jsonUser.getLong("globalId");
+                position = upstream;
                 position.user = user;
             }
-            else
+            else {
                 position = positions.get(0);
+                position.data = upstream.data;
+                position.duration = upstream.duration;
+                position.updatedAt = upstream.updatedAt;
+            }
+            position.saveWithoutSync();
 
-            position.data = Helper.updateFromJsonField(position.data, jsonUser.optString("data"));
-            position.duration = Helper.updateFromJsonField(position.duration, jsonUser.optString("duration"));
-            position.save();
-        }
-        catch (JSONException e){
-            e.printStackTrace();
-            Log.d("LinkedinPosition.java", "Error in createOrUpdateFromJSON " + e.toString());
-        }
         return position;
+    }
+    @Override
+    public String toJson(){
+        //these values will be used on the server for the time & date
+        this.user_id = this.user.globalId;
+
+        excludeFields.add("user");
+
+        return super.toJson();
     }
 }

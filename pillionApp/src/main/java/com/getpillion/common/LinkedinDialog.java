@@ -10,8 +10,9 @@ import android.util.Log;
 import android.view.Window;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
+import android.widget.Toast;
 
-import com.getpillion.IPostLoginCallback;
+import com.getpillion.IPostExecuteCallback;
 import com.getpillion.R;
 import com.google.code.linkedinapi.client.LinkedInApiClient;
 import com.google.code.linkedinapi.client.LinkedInApiClientFactory;
@@ -55,7 +56,7 @@ public class LinkedinDialog extends Dialog{
     }
 
 
-    public static void Login(final Context context, final IPostLoginCallback callBack) {
+    public static void Login(final Context context, final IPostExecuteCallback callBack) {
         progressDialog = new ProgressDialog(context);
         progressDialog.setMessage("Loading...");
         progressDialog.setCancelable(true);
@@ -108,7 +109,7 @@ public class LinkedinDialog extends Dialog{
                             @Override
                             protected void onPostExecute(Person p) {
                                 progressDialog.dismiss();
-                                callBack.postLoginCallback(p);
+                                callBack.onPostExecute(p);
                             }
                         }.execute();
                     } catch (Exception ex) {
@@ -144,6 +145,7 @@ public class LinkedinDialog extends Dialog{
                 protected void onPostExecute(Void result) {
                     progressDialog.dismiss();
                     d.show();
+                    Toast.makeText(context,"Linkedin login will appear shortly. Please wait.",Toast.LENGTH_LONG).show();
                 }
             }.execute();
         } catch (Exception ex) {

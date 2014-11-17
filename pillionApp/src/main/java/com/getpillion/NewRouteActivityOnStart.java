@@ -56,13 +56,11 @@ public class NewRouteActivityOnStart extends SherlockFragmentActivity  {
     @OnClick(R.id.saveRoute) void onSubmit(View v){
         //To-Do validate data
 
-        //check if position exists else create new position
-        User user = new User();
-        user.save();
         SharedPreferences sharedPref = getApplicationContext().getSharedPreferences(
                 Constant.PREFS_NAME, 0);
         Editor sharedPrefEditor = sharedPref.edit();
-        sharedPrefEditor.putLong("userId",user.getId());
+        User user = User.findById(User.class,sharedPref.getLong("userId",0L));
+
         //sharedPrefEditor.commit();
 
         Log.d("NewRouteActivity","dumping intent extra offerRide " + getIntent().getBooleanExtra("offerRide",false));
