@@ -12,7 +12,6 @@ import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.actionbarsherlock.view.MenuItem;
 import com.getpillion.common.Constant;
@@ -62,8 +61,9 @@ public class RideInfoActivity extends ExtendMeSherlockWithMenuActivity {
 
                 switch (myRideStatus) {
                     case Constant.CREATED: //Schedule Ride primary button
-                        intent = new Intent(RideInfoActivity.this,ScheduleRideActivity.class);
-                        intent.putExtra("routeId",ride.route.getId());
+                        intent = new Intent(RideInfoActivity.this, ScheduleRideActivity.class);
+                        intent.putExtra("rideId",ride.getId());
+                        intent.putExtra("type","updateRide");
                         startActivity(intent);
                         break;
                     case Constant.SCHEDULED: //Start Ride primary button
@@ -258,8 +258,9 @@ public class RideInfoActivity extends ExtendMeSherlockWithMenuActivity {
                     String.valueOf(ride.getId()),
                     String.valueOf(sharedPref.getLong("userId", 0L))
             ).get(0);
-            Toast.makeText(this,"global_id of this ride " + rideUserMapping.globalId, Toast.LENGTH_SHORT).show();
+            //Toast.makeText(this,"global_id of this ride " + rideUserMapping.globalId, Toast.LENGTH_SHORT).show();
             myRideStatus = rideUserMapping.status;
+            //Toast.makeText(this,"status of this ride " + rideUserMapping.status, Toast.LENGTH_SHORT).show();
             amIOwner = rideUserMapping.isOwner;
         }
         catch (Exception e){ //user not associated with the ride
@@ -273,7 +274,7 @@ public class RideInfoActivity extends ExtendMeSherlockWithMenuActivity {
                     case Constant.CREATED:
                         secButtonLayout.setVisibility(View.GONE);
 
-                        primaryButton.setVisibility(View.VISIBLE);
+                        primaryButtonLayout.setVisibility(View.VISIBLE);
                         primaryButton.setText("Schedule Ride");
                         primaryButtonMsg.setText("Starting the ride on this route shortly? Schedule the ride on this route.");
                         break;
