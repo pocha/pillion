@@ -5,7 +5,6 @@ import android.content.res.TypedArray;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.util.AttributeSet;
-import android.util.TypedValue;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
@@ -49,14 +48,19 @@ public class TimePickerFragment extends Fragment implements TimePickerDialog.OnT
         setEditTextValue();
     }
 
+    public void setTime(Long time){
+        this.time = new Time(time);
+        setEditTextValue();
+    }
+
     @Override
     public void onInflate(Activity activity, AttributeSet attrs, Bundle savedInstanceState) {
         super.onInflate(activity, attrs, savedInstanceState);
 
-        TypedArray a = activity.obtainStyledAttributes(attrs, R.styleable.TimePickerFragment);
+        TypedArray a = activity.obtainStyledAttributes(attrs, R.styleable.PickerFragment);
 
         try {
-            String timeInfo = a.getText(R.styleable.TimePickerFragment_value).toString();
+            String timeInfo = a.getText(R.styleable.PickerFragment_value).toString();
             if (timeInfo != null)
                 time = Time.valueOf(timeInfo);
             else
@@ -73,8 +77,8 @@ public class TimePickerFragment extends Fragment implements TimePickerDialog.OnT
     @Override
     public View onCreateView(final LayoutInflater inflater, ViewGroup container, Bundle savedInstance){
        v = (EditText) inflater.inflate(R.layout.picker_edittext,container,false);
-       if (getActivity().getClass().getSimpleName().equals("NewRouteActivityOnStart") /*style > -1*/ )
-           v.setTextSize(TypedValue.COMPLEX_UNIT_SP, 30);
+       /*if (getActivity().getClass().getSimpleName().equals("NewRouteActivityOnStart"))
+           v.setTextSize(TypedValue.COMPLEX_UNIT_SP, 30);*/
 
        setEditTextValue();
 

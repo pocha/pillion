@@ -67,9 +67,6 @@ public class RideInfoActivity extends ExtendMeSherlockWithMenuActivity {
                         startActivity(intent);
                         break;
                     case Constant.SCHEDULED: //Start Ride primary button
-                        //button to start ride
-                        //TODO send data to server through AsyncTask & wait for completion before refreshing
-                        //update status in RouteUserMapping to Constant.CANCELLED. Do all below things in AsyncTask
                         rideUserMapping.status = Constant.STARTED;
                         rideUserMapping.save();
                         intent = getIntent();
@@ -78,9 +75,12 @@ public class RideInfoActivity extends ExtendMeSherlockWithMenuActivity {
                         finish();
                         break;
                     case Constant.STARTED:
-                        //nothing
-                    case Constant.CANCELLED:
-                        //nothing
+                    case Constant.CANCELLED: //reschedule button
+                        intent = new Intent(RideInfoActivity.this, ScheduleRideActivity.class);
+                        intent.putExtra("rideId",ride.getId());
+                        intent.putExtra("type","scheduleRide");
+                        startActivity(intent);
+                        break;
                 }
             }
             else { //only cancel ride secondary button here - so nothing doing
@@ -131,29 +131,11 @@ public class RideInfoActivity extends ExtendMeSherlockWithMenuActivity {
                 switch (myRideStatus) {
                     case Constant.CREATED: //nothing as primary button to schedule ride & sec is hidden
                         break;
-                    case Constant.SCHEDULED: //cancel ride button
-                        AlertDialog.Builder builder = new AlertDialog.Builder(thisActivity);
-                        builder.setMessage("Want to cancel the ride ?")
-                                .setCancelable(false)
-                                .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
-                                    public void onClick(DialogInterface dialog, int id) {
-                                        //TODO send data to server through AsyncTask & wait for completion before refreshing
-                                        //update status in RouteUserMapping to Constant.CANCELLED. Do all below things in AsyncTask
-                                        rideUserMapping.status = Constant.CANCELLED;
-                                        rideUserMapping.save();
-                                        intent = getIntent();
-                                        intent.addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
-                                        startActivity(intent);
-                                        finish();
-                                    }
-                                })
-                                .setNegativeButton("No", new DialogInterface.OnClickListener() {
-                                    public void onClick(DialogInterface dialog, int id) {
-                                        dialog.dismiss();
-                                    }
-                                });
-                        AlertDialog alert = builder.create();
-                        alert.show();
+                    case Constant.SCHEDULED: //modify ride button
+                        intent = new Intent(RideInfoActivity.this,ScheduleRideActivity.class);
+                        intent.putExtra("rideId",ride.getId());
+                        intent.putExtra("type","updateRide");
+                        startActivity(intent);
                         break;
                     case Constant.STARTED: //nothing
 
@@ -163,30 +145,11 @@ public class RideInfoActivity extends ExtendMeSherlockWithMenuActivity {
                         break;
                 }
             }
-            else { //cancel ride button
+            else { //edit ride button
                 if (myRideStatus != Constant.CANCELLED) {
-                    AlertDialog.Builder builder = new AlertDialog.Builder(thisActivity);
-                    builder.setMessage("Want to cancel the ride ?")
-                            .setCancelable(false)
-                            .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
-                                public void onClick(DialogInterface dialog, int id) {
-                                    //TODO send data to server through AsyncTask & wait for completion before refreshing
-                                    //update status in RouteUserMapping to Constant.CANCELLED. Do all below things in AsyncTask
-                                    rideUserMapping.status = Constant.CANCELLED;
-                                    rideUserMapping.save();
-                                    intent = getIntent();
-                                    intent.addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
-                                    startActivity(intent);
-                                    finish();
-                                }
-                            })
-                            .setNegativeButton("No", new DialogInterface.OnClickListener() {
-                                public void onClick(DialogInterface dialog, int id) {
-                                    dialog.dismiss();
-                                }
-                            });
-                    AlertDialog alert = builder.create();
-                    alert.show();
+                    intent = new Intent(RideInfoActivity.this,ScheduleRideActivity.class);
+                    intent.putExtra("rideId",ride.getId());
+                    startActivity(intent);
                 }
             }
         }
@@ -315,7 +278,7 @@ public class RideInfoActivity extends ExtendMeSherlockWithMenuActivity {
                         primaryButtonMsg.setText("Starting the ride on this route shortly? Schedule the ride on this route.");
                         break;
                     case Constant.SCHEDULED: //show start ride button
-                        secondaryButton.setText("Cancel Ride");
+                        secondaryButton.setText("Edit Details / Cancel Ride");
                         secButtonMsg.setText("");
 
                         primaryButtonLayout.setVisibility(View.VISIBLE);
@@ -326,23 +289,21 @@ public class RideInfoActivity extends ExtendMeSherlockWithMenuActivity {
                         secButtonLayout.setVisibility(View.GONE);
 
                         primaryButtonLayout.setVisibility(View.VISIBLE);
-                        primaryButton.setText("Start Ride");
-                        primaryButton.setBackgroundColor(getResources().getColor(R.color.BottomButtonDisabled));
+                        primaryButton.setText("Schedule New Ride");
                         primaryButtonMsg.setText("You have STARTED the ride");
                         break;
                     case Constant.CANCELLED:
                         secButtonLayout.setVisibility(View.GONE);
 
                         primaryButtonLayout.setVisibility(View.VISIBLE);
-                        primaryButton.setText("Start Ride");
-                        primaryButton.setBackgroundColor(getResources().getColor(R.color.BottomButtonDisabled));
+                        primaryButton.setText("Schedule New Ride");
                         primaryButtonMsg.setText("You have CANCELLED the ride");
                         break;
                 }
             }
             else { //I am owner & I am seeking ride. Option to cancel ride
                 if (myRideStatus != Constant.CANCELLED) {
-                    secondaryButton.setText("Cancel Ride");
+                    secondaryButton.setText("Edit Details / Cancel Ride");
                     secButtonMsg.setText("");
                     primaryButtonLayout.setVisibility(View.GONE);
                 }

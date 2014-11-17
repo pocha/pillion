@@ -71,12 +71,15 @@
                 android:layout_height="1dp"
                 style="@style/TextViewLabelDivider"/>
 
+            <include android:id="@+id/profileView"
+                layout="@layout/traveller"/>
+
             <Button
-                android:id="@+id/viewProfile"
+                android:visibility="gone"
+                android:id="@+id/importProfile"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="View Profile"/>
-
+                android:text="Import Profile from Linkedin"/>
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -84,7 +87,21 @@
                 android:gravity="center"
                 android:layout_marginTop="5dp"
                 android:text="Your profile is instrumental in getting you ride requests."/>
-
+            <Button
+                android:visibility="gone"
+                android:id="@+id/updateRide"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:text="Update Ride"/>
+            <Button
+                android:visibility="gone"
+                android:id="@+id/deleteRide"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:background="#A00"
+                android:text="Delete Ride"/>
         </LinearLayout>
     </ScrollView>
     <LinearLayout

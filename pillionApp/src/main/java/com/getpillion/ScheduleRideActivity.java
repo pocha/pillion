@@ -1,18 +1,25 @@
 package com.getpillion;
 
+import android.app.AlertDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
+import android.widget.Button;
+import android.widget.LinearLayout;
 import android.widget.Spinner;
 import android.widget.TextView;
+import android.widget.Toast;
 
+import com.getpillion.common.Constant;
 import com.getpillion.common.DatePickerFragment;
 import com.getpillion.common.TimePickerFragment;
 import com.getpillion.models.Ride;
+import com.getpillion.models.RideUserMapping;
 import com.getpillion.models.Route;
 import com.getpillion.models.User;
 import com.getpillion.models.Vehicle;
@@ -36,9 +43,26 @@ public class ScheduleRideActivity extends ExtendMeSherlockWithMenuActivity  {
     private Time userTime;
 
     private Vehicle selectedVehicle = null;
+    private Ride ride = null;
+    private Route route = null;
+
+    @InjectView(R.id.profileView)
+    LinearLayout profileView;
+    @InjectView(R.id.importProfile)
+    Button importProfile;
+    @InjectView(R.id.updateRide)
+    Button updateRide;
+    @InjectView(R.id.deleteRide)
+    Button deleteRide;
+    private ScheduleRideActivity thisActivity;
+    @InjectView(R.id.scheduleRide)
+    Button scheduleRide;
+    private RideUserMapping rideUserMapping = null;
+    @InjectView(R.id.primaryButtonLayout)
+    LinearLayout primaryButtonLayout;
 
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
+    protected void onCreate(Bundle savedInstanceState)  {
 
         super.onCreate(savedInstanceState);
 
@@ -52,6 +76,101 @@ public class ScheduleRideActivity extends ExtendMeSherlockWithMenuActivity  {
         );
         vehicleAdapter = new VehicleAdapter(getApplicationContext(),vehicles);
         vehicleView.setAdapter(vehicleAdapter);
+
+        User user = User.findById(User.class, sharedPref.getLong("userId",0L));
+        if (user.name == null){
+            profileView.setVisibility(View.GONE);
+            importProfile.setVisibility(View.VISIBLE);
+        }
+        else {
+            ((TextView)profileView.findViewById(R.id.name)).setText(user.name);
+            ((TextView)profileView.findViewById(R.id.title)).setText(user.title);
+        }
+
+        if (getIntent().hasExtra("rideId")) { //edit screen
+            ride = Ride.findById(Ride.class,getIntent().getExtras().getLong("rideId",0L));
+            route = ride.route;
+            //set date & time from the ride
+            ((DatePickerFragment) getSupportFragmentManager().findFragmentById(R.id.datePicker)).setDate(ride.dateLong);
+            ((TimePickerFragment) getSupportFragmentManager().findFragmentById(R.id.timePicker)).setTime(ride.timeLong);
+            //pre-select vehicle
+            int position = 0;
+            for (Vehicle v:vehicles){
+                if (v.getId() == ride.vehicle.getId()){
+                    break;
+                }
+                position++;
+            }
+            vehicleView.setSelection(position);
+            if (getIntent().getExtras().getString("type").equals("updateRide")) {
+                updateRide.setVisibility(View.VISIBLE);
+                deleteRide.setVisibility(View.VISIBLE);
+                primaryButtonLayout.setVisibility(View.GONE);
+            }
+            else {
+                //nothing doing as update & delete are hidden by default
+            }
+        }
+        else {
+            route = Route.findById(Route.class, getIntent().getExtras().getLong("routeId"));
+        }
+        thisActivity = this;
+    }
+
+    public void saveRide(boolean isUpdate){
+        //create or update Ride
+        DatePickerFragment d = (DatePickerFragment) getSupportFragmentManager().findFragmentById(R.id.datePicker);
+        userDate = d.date;
+        TimePickerFragment t = (TimePickerFragment) getSupportFragmentManager().findFragmentById(R.id.timePicker);
+        userTime = t.time;
+
+        User user = User.findById(User.class, sharedPref.getLong("userId",0L));
+        if (isUpdate) {
+            ride.update(route,userDate,userTime,selectedVehicle,user);
+            Toast.makeText(ScheduleRideActivity.this,"Ride updated",Toast.LENGTH_LONG).show();
+        }
+        else {
+            ride = new Ride(route, userDate, userTime, selectedVehicle, user);
+            Toast.makeText(ScheduleRideActivity.this,"New Ride created",Toast.LENGTH_LONG).show();
+        }
+        Intent intent = new Intent(ScheduleRideActivity.this,RideInfoActivity.class);
+        intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+        intent.putExtra("rideId", ride.getId());
+        startActivity(intent);
+        finish();
+    }
+
+    @OnClick(R.id.updateRide) void onUpdateRideClick(View v){
+        saveRide(true);
+    }
+    @OnClick(R.id.deleteRide) void onDeleteRideClick(View v){
+        AlertDialog.Builder builder = new AlertDialog.Builder(thisActivity);
+        builder.setMessage("Want to cancel the ride ?")
+                .setCancelable(false)
+                .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int id) {
+                        rideUserMapping = RideUserMapping.find(RideUserMapping.class,
+                                "ride_id = ? AND user_id = ?",
+                                String.valueOf(ride.getId()),
+                                String.valueOf(sharedPref.getLong("userId",0L))
+                        ).get(0);
+                        rideUserMapping.status = Constant.CANCELLED;
+                        rideUserMapping.save();
+                        Intent intent = new Intent(ScheduleRideActivity.this,RideInfoActivity.class);
+                        intent.putExtra("rideId",ride.getId());
+                        intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                        Toast.makeText(thisActivity,"Ride cancelled",Toast.LENGTH_LONG).show();
+                        startActivity(intent);
+                        finish();
+                    }
+                })
+                .setNegativeButton("No", new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int id) {
+                        dialog.dismiss();
+                    }
+                });
+        AlertDialog alert = builder.create();
+        alert.show();
     }
 
     @OnItemSelected(R.id.vehicles) void onVehicleSelect(int position){
@@ -59,21 +178,7 @@ public class ScheduleRideActivity extends ExtendMeSherlockWithMenuActivity  {
     }
 
     @OnClick(R.id.scheduleRide) void scheduleRide(View v){
-        //create new Ride
-        DatePickerFragment d = (DatePickerFragment) getSupportFragmentManager().findFragmentById(R.id.datePicker);
-        userDate = d.date;
-        TimePickerFragment t = (TimePickerFragment) getSupportFragmentManager().findFragmentById(R.id.timePicker);
-        userTime = t.time;
-
-        Route route = Route.findById(Route.class, getIntent().getExtras().getLong("routeId"));
-        User user = User.findById(User.class, sharedPref.getLong("userId",0L));
-        Ride ride = new Ride(route,userDate,userTime,selectedVehicle, user);
-        ride.save();
-        //TODO send data to server
-        Intent intent = new Intent(ScheduleRideActivity.this,RideInfoActivity.class);
-        intent.putExtra("rideId",ride.getId());
-        startActivity(intent);
-        finish();
+        saveRide(false);
     }
 
     private ArrayList<Vehicle> vehicles = new ArrayList<Vehicle>();
@@ -144,7 +249,7 @@ public class ScheduleRideActivity extends ExtendMeSherlockWithMenuActivity  {
         }
     }
 
-    @OnClick(R.id.viewProfile) void myProfileActivityLaunch(View v){
+    @OnClick(R.id.importProfile) void myProfileActivityLaunch(View v){
         Intent intent = new Intent(ScheduleRideActivity.this,MyProfileActivity.class);
         intent.putExtra("requestCode",1);
         startActivityForResult(intent,1);

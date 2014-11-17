@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <declare-styleable name="TimePickerFragment">
+    <declare-styleable name="PickerFragment">
         <attr name="value" format="string"/>
         <attr name="style" format="integer"/>
     </declare-styleable>

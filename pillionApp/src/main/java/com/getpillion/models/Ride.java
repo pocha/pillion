@@ -46,8 +46,7 @@ public class Ride extends SyncSugarRecord<Ride> {
 
     public Ride(){}
 
-    public Ride (Route route, Date date, Time time, Vehicle vehicle, User owner){
-        Log.d("Ride.java","Inside constructor, creating ride with time " + time.toString());
+    public void update(Route route, Date date, Time time, Vehicle vehicle, User owner) {
         this.route = route;
         this.dateLong = date.getTime();
         this.timeLong = time.getTime();
@@ -55,6 +54,11 @@ public class Ride extends SyncSugarRecord<Ride> {
         this.isScheduled = true;
         this.save();
         RideUserMapping.findOrCreate(this, owner, true, Constant.SCHEDULED);
+    }
+
+    public Ride (Route route, Date date, Time time, Vehicle vehicle, User owner){
+        Log.d("Ride.java","Inside constructor, creating ride with time " + time.toString());
+        this.update(route,date,time,vehicle,owner);
     }
 
     public Ride(String from, String to, Time time, boolean isOffered, User owner) {

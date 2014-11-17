@@ -268,14 +268,14 @@ public class AllRidesActivity extends ExtendMeSherlockWithMenuActivity implement
         noRoutesFound.setText("No Routes Found");
 
 
-        Log.d("AllRidesActivity","Dumping all ride objects after rendering");
-        /*for (Ride ride:Ride.findWithQuery(Ride.class,
+        /*Log.d("AllRidesActivity","Dumping all ride objects after rendering");
+        for (Ride ride:Ride.findWithQuery(Ride.class,
                 "SELECT Ride.* FROM Ride JOIN Route ON Ride.route = Route.id " +
                         whereString +
-                        " order by Ride.time_long")){*/
+                        " order by Ride.time_long")){
         for (Ride ride: rides){
             Log.d("AllRidesActivity","ride dump - " + ride.getId() );
-        }
+        }*/
     }
 
 
