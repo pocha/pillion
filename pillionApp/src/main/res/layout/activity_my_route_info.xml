@@ -69,8 +69,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_margin="10dp"
-                android:background="#A00"
-                android:padding="10dp"
+                style="@style/DangerButtonStyle"
                 android:text="Delete Route"/>
 
         </LinearLayout>
@@ -122,8 +121,7 @@
                 android:layout_weight="1"
                 android:layout_height="wrap_content"
                 android:text="Schedule New Ride on this Route"
-                android:background="#333"
-                android:padding="10dp"
+                style="@style/FbButtonStyle"
                 android:layout_margin="5dp"
                 android:shadowRadius="0"
                 />

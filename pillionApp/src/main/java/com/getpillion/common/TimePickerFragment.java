@@ -5,6 +5,7 @@ import android.content.res.TypedArray;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.util.AttributeSet;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
@@ -49,6 +50,7 @@ public class TimePickerFragment extends Fragment implements TimePickerDialog.OnT
     }
 
     public void setTime(Long time){
+        Log.d("TimePickerFragment","inside setTime with value " + time.toString());
         this.time = new Time(time);
         setEditTextValue();
     }

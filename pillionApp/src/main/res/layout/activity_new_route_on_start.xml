@@ -138,6 +138,7 @@
                  android:id="@+id/saveRoute"
                  android:layout_width="match_parent"
                  android:layout_height="wrap_content"
+                 style="@style/FbButtonStyle"
                  android:text="Save Route"/>
 
              <TextView

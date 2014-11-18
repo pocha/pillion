@@ -61,14 +61,13 @@
         android:id="@+id/cost"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="INR ---"/>
+        android:text="INR ---"
+        android:layout_marginBottom="20dp"/>
 
 
     <Button
         android:id="@+id/requestRide"
-        android:layout_marginTop="10dp"
-        android:layout_marginLeft="2dp"
-        android:layout_marginRight="2dp"
+        style="@style/FbButtonStyle"
         android:layout_marginBottom="0dp"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"

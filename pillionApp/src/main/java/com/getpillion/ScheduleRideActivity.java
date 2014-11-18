@@ -91,7 +91,8 @@ public class ScheduleRideActivity extends ExtendMeSherlockWithMenuActivity  {
             ride = Ride.findById(Ride.class,getIntent().getExtras().getLong("rideId",0L));
             route = ride.route;
             //set date & time from the ride
-            ((DatePickerFragment) getSupportFragmentManager().findFragmentById(R.id.datePicker)).setDate(ride.dateLong);
+            if (ride.dateLong != null)
+                ((DatePickerFragment) getSupportFragmentManager().findFragmentById(R.id.datePicker)).setDate(ride.dateLong);
             ((TimePickerFragment) getSupportFragmentManager().findFragmentById(R.id.timePicker)).setTime(ride.timeLong);
             //pre-select vehicle
             int position = 0;

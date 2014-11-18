@@ -99,8 +99,7 @@
                 android:id="@+id/deleteRide"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="10dp"
-                android:background="#A00"
+                style="@style/DangerButtonStyle"
                 android:text="Delete Ride"/>
         </LinearLayout>
     </ScrollView>
@@ -141,10 +140,7 @@
                 android:layout_weight="1"
                 android:layout_height="wrap_content"
                 android:text="Schedule Ride"
-                android:background="#333"
-                android:padding="10dp"
-                android:layout_margin="5dp"
-                android:shadowRadius="0"
+                style="@style/FbButtonStyle"
                 />
         </LinearLayout>
 
