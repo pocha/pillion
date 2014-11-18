@@ -31,16 +31,19 @@ public class VehicleInfoActivity extends ExtendMeSherlockWithMenuActivity {
         Helper.returnControlToCallingActivity(this);
     }
     @OnClick(R.id.saveVehicle) void saveVehicle(View v){
-        if (vehicle == null) {
-            vehicle = new Vehicle();
-            vehicle.user = User.findById(User.class,sharedPref.getLong("userId",0L));
-        }
-        vehicle.model = model.getText().toString();
-        vehicle.color = color.getText().toString();
-        vehicle.number = number.getText().toString();
-        vehicle.save();
-        //TODO send data to server
 
+        Vehicle newVehicle = new Vehicle();
+        newVehicle.user = User.findById(User.class,sharedPref.getLong("userId",0L));
+
+        newVehicle.model = model.getText().toString();
+        newVehicle.color = color.getText().toString();
+        newVehicle.number = number.getText().toString();
+        if (vehicle == null)
+            newVehicle.save();
+        else {
+            if ( vehicle.update(newVehicle) )
+                vehicle.save();
+        }
         Helper.returnControlToCallingActivity(this);
     }
 

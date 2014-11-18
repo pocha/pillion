@@ -46,19 +46,13 @@ public class Ride extends SyncSugarRecord<Ride> {
 
     public Ride(){}
 
-    public void update(Route route, Date date, Time time, Vehicle vehicle, User owner) {
+    public Ride (Route route, Date date, Time time, Vehicle vehicle, User owner){
+        Log.d("Ride.java","Inside constructor, creating ride with time " + time.toString());
         this.route = route;
         this.dateLong = date.getTime();
         this.timeLong = time.getTime();
         this.vehicle = vehicle;
         this.isScheduled = true;
-        this.save();
-        RideUserMapping.findOrCreate(this, owner, true, Constant.SCHEDULED);
-    }
-
-    public Ride (Route route, Date date, Time time, Vehicle vehicle, User owner){
-        Log.d("Ride.java","Inside constructor, creating ride with time " + time.toString());
-        this.update(route,date,time,vehicle,owner);
     }
 
     public Ride(String from, String to, Time time, boolean isOffered, User owner) {
@@ -72,7 +66,7 @@ public class Ride extends SyncSugarRecord<Ride> {
         Log.d("ashish","New ride created - " + this.toString());
         this.save();
 
-        RideUserMapping.findOrCreate(this, owner, true, Constant.CREATED);
+        RideUserMapping.createOrUpdate(this, owner, true, Constant.CREATED);
     }
 
     public String getAmPmTime(){
@@ -91,15 +85,15 @@ public class Ride extends SyncSugarRecord<Ride> {
             ride = upstreamRide;
         } else {//update values
             ride = rides.get(0);
-            ride.updatedAt = upstreamRide.updatedAt;
-            ride.isScheduled = upstreamRide.isScheduled;
+            ride.update(upstreamRide);
         }
+
         ride.timeLong = Time.valueOf(upstreamRide.time_stamp).getTime();
         Log.d("Ride.java","updated time from upstream " + ride.timeLong);
         if (!upstreamRide.ride_date.isEmpty())
             ride.dateLong = new SimpleDateFormat("yyyy-MM-dd").parse(upstreamRide.ride_date).getTime();
 
-        ride.saveWithoutSync(); // we need ride.getId() in RideUserMapping.findOrCreate
+        ride.saveWithoutSync(); // we need ride.getId() in RideUserMapping.createOrUpdate
 
         if (upstreamRide.route != null) { //null check is done as if only a few params in ride are updating, the rest may remain empty
             ride.route = Route.updateFromUpstream(upstreamRide.route);

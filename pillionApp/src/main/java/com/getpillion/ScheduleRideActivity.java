@@ -127,11 +127,17 @@ public class ScheduleRideActivity extends ExtendMeSherlockWithMenuActivity  {
 
         User user = User.findById(User.class, sharedPref.getLong("userId",0L));
         if (isUpdate) {
-            ride.update(route,userDate,userTime,selectedVehicle,user);
+            Ride newRide = new Ride(route,userDate,userTime,selectedVehicle,user);
+            if (ride.update(newRide)) {
+                ride.save();
+            }
+            RideUserMapping.createOrUpdate(ride, user, true, Constant.SCHEDULED);
             Toast.makeText(ScheduleRideActivity.this,"Ride updated",Toast.LENGTH_LONG).show();
         }
         else {
             ride = new Ride(route, userDate, userTime, selectedVehicle, user);
+            ride.save();
+            RideUserMapping.createOrUpdate(ride, user, true, Constant.SCHEDULED);
             Toast.makeText(ScheduleRideActivity.this,"New Ride created",Toast.LENGTH_LONG).show();
         }
         Intent intent = new Intent(ScheduleRideActivity.this,RideInfoActivity.class);

@@ -108,8 +108,11 @@ public class MyRidesActivity extends ExtendMeSherlockWithMenuActivity implements
                     Ride.findWithQuery(Ride.class,
                             "SELECT Ride.* FROM Ride JOIN Route ON Ride.route = Route.id " +
                                     "WHERE Route.owner = ? AND " +
-                                    "Ride.date_long IS NULL OR " +
-                                    "Ride.date_long > ? OR (Ride.date_long = ? AND Ride.time_long > ?)",
+                                    "(" +
+                                        "Ride.date_long IS NULL OR " +
+                                        "Ride.date_long > ? OR " +
+                                        "(Ride.date_long = ? AND Ride.time_long > ?)" +
+                                    ")",
                             String.valueOf(sharedPref.getLong("userId", 0L)),
                             String.valueOf(today),
                             String.valueOf(today),String.valueOf(now)
@@ -121,7 +124,10 @@ public class MyRidesActivity extends ExtendMeSherlockWithMenuActivity implements
                     Ride.findWithQuery(Ride.class,
                             "SELECT Ride.* FROM Ride JOIN Route ON Ride.route = Route.id " +
                                     "WHERE Route.owner = ? AND " +
-                                    "Ride.date_long < ? OR (Ride.date_long = ? AND Ride.time_long <= ?)",
+                                    "(" +
+                                        "Ride.date_long < ? OR " +
+                                        "(Ride.date_long = ? AND Ride.time_long <= ?)" +
+                                    ")",
                             String.valueOf(sharedPref.getLong("userId", 0L)),
                             String.valueOf(today),
                             String.valueOf(today),String.valueOf(now)

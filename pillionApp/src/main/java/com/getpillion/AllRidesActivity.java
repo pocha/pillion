@@ -212,7 +212,7 @@ public class AllRidesActivity extends ExtendMeSherlockWithMenuActivity implement
                                      "}" +
                                 "]}";
                     }*/
-
+                    Log.d("AllRidesActivity","Rides json from the server - " + result);
                     Gson gson = new Gson();
                     for (Ride nestedRide: gson.fromJson(result,Ride[].class))
                         Ride.updateFromUpstream(nestedRide);

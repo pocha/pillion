@@ -40,25 +40,25 @@ public class MyRouteInfoActivity extends ExtendMeSherlockWithMenuActivity {
     LinearLayout primaryButtonLayout;
 
     @OnClick(R.id.saveRoute) void saveRoute(View v){
-        if (route == null){
-            route = new Route();
-        }
-        route.origin = from.getText().toString();
-        route.dest = to.getText().toString();
-        route.isOffered = isOffered.isChecked();
-        route.owner = User.findById(User.class, sharedPref.getLong("userId", 0L));
 
-        if (route.getId() == null) {        
-            route.save();
-            //TODO send data to server
-            //send to Schedule Route Activity as the route is newly created
+        Route newRoute = new Route();
+        newRoute.origin = from.getText().toString();
+        newRoute.dest = to.getText().toString();
+        newRoute.isOffered = isOffered.isChecked();
+        newRoute.owner = User.findById(User.class, sharedPref.getLong("userId", 0L));
+
+        if (route == null){
+            newRoute.save();
             Intent intent = new Intent(MyRouteInfoActivity.this,ScheduleRideActivity.class);
             intent.putExtra("routeId", route.getId());
             startActivity(intent);
             Toast.makeText(getApplicationContext(),"Route saved. Why not schedule a Ride on the route.",Toast.LENGTH_LONG);
-            return;          
+            return;
         }
-        route.save();
+        else {
+            if(route.update(newRoute))
+                route.save();
+        }
         Helper.returnControlToCallingActivity(this);
     }
 

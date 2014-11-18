@@ -20,7 +20,7 @@ import org.json.JSONObject;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Arrays;
-
+import java.lang.reflect.Field;
 /**
  * Created by pocha on 03/11/14.
  */
@@ -220,6 +220,27 @@ public class SyncSugarRecord<T> extends SugarRecord<T> implements Serializable {
                     f.getName().equals("tableName") ||
                     f.getName().equals("isSynced");*/
         }
+    }
+
+    public boolean update(Object newInstance){
+        boolean isSave = false;
+        for (Field f: newInstance.getClass().getDeclaredFields()){
+            try {
+                Log.d("SyncSugarRecord","Superclass of field "+ f.getName() + " is " + f.getType().getSuperclass());
+                if (f.getAnnotation(Ignore.class) == null &&
+                        !SyncSugarRecord.class.equals(f.getType().getSuperclass()) &&
+                        !f.get(newInstance).equals(f.get(this))
+                    ) {
+                        Log.d("SyncSugarRecord","Updated field " + f.getName() + " found for " + this.getClass().getSimpleName());
+                        f.set(this,f.get(newInstance));
+                        isSave = true;
+                    }
+            }
+            catch (Exception e){
+                Log.e("SyncSugarRecord","Error while updating " + this.getClass().getSimpleName(),e);
+            }
+        }
+        return isSave;
     }
 
 }

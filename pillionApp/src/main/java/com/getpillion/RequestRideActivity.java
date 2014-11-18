@@ -60,7 +60,7 @@ public class RequestRideActivity extends ExtendMeSherlockWithMenuActivity {
         ride = Ride.findById(Ride.class, getIntent().getExtras().getLong("rideId"));
         Log.d("RequestRideActivity","dumping route id - " + ride.getId());
         //TODO send request to the server
-        RideUserMapping rideUserMapping = RideUserMapping.findOrCreate(ride, user, false, Constant.REQUESTED);
+        RideUserMapping rideUserMapping = RideUserMapping.createOrUpdate(ride, user, false, Constant.REQUESTED);
 
         Intent intent = new Intent(RequestRideActivity.this, RideInfoActivity.class);
         intent.putExtra("rideId", ride.getId());

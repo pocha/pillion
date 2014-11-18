@@ -12,6 +12,7 @@ import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.actionbarsherlock.view.MenuItem;
 import com.getpillion.common.Constant;
@@ -149,6 +150,7 @@ public class RideInfoActivity extends ExtendMeSherlockWithMenuActivity {
                 if (myRideStatus != Constant.CANCELLED) {
                     intent = new Intent(RideInfoActivity.this,ScheduleRideActivity.class);
                     intent.putExtra("rideId",ride.getId());
+                    intent.putExtra("type","updateRide");
                     startActivity(intent);
                 }
             }
@@ -260,7 +262,7 @@ public class RideInfoActivity extends ExtendMeSherlockWithMenuActivity {
             ).get(0);
             //Toast.makeText(this,"global_id of this ride " + rideUserMapping.globalId, Toast.LENGTH_SHORT).show();
             myRideStatus = rideUserMapping.status;
-            //Toast.makeText(this,"status of this ride " + rideUserMapping.status, Toast.LENGTH_SHORT).show();
+            Toast.makeText(this,"status of this ride " + rideUserMapping.status, Toast.LENGTH_SHORT).show();
             amIOwner = rideUserMapping.isOwner;
         }
         catch (Exception e){ //user not associated with the ride

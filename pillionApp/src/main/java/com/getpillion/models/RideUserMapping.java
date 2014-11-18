@@ -17,6 +17,7 @@ public class RideUserMapping extends SyncSugarRecord<RideUserMapping> {
     @SerializedName("user_id")
     public Long userId;
     @Ignore
+    @SerializedName("user_attributes")
     public User user; //needed for creation of object from json
 
     public int status = 0; // User status for this ride (requested, cancelled etc) check possible status value in Constants.java
@@ -32,22 +33,22 @@ public class RideUserMapping extends SyncSugarRecord<RideUserMapping> {
     }
 
 
-    public static RideUserMapping findOrCreate(Ride ride, User user, Boolean isOwner, int status){
-        Log.d("RideUserMapping","Inside findOrCreate. isOwner value " + isOwner);
+    public static RideUserMapping createOrUpdate(Ride ride, User user, Boolean isOwner, int status){
+        Log.d("RideUserMapping","Inside createOrUpdate. isOwner value " + isOwner);
         List<RideUserMapping> rideUserMappings = RideUserMapping.find(RideUserMapping.class,
                 "ride_id = ? and user_id = ?", String.valueOf(ride.getId()), String.valueOf(user.getId()));
         RideUserMapping rideUserMapping = null;
         if (rideUserMappings.isEmpty()){
             //create entry
             rideUserMapping = new RideUserMapping(ride.getId(),user.getId(),isOwner,status);
+            rideUserMapping.save();
         }
         else {
             rideUserMapping = rideUserMappings.get(0);
-            rideUserMapping.status = status;
+            RideUserMapping newObject = new RideUserMapping(ride.getId(),user.getId(),isOwner,status);
+            if ( rideUserMapping.update(newObject) )
+                rideUserMapping.save();
         }
-
-        rideUserMapping.save();
-
 
         return rideUserMapping;
     }
@@ -64,10 +65,10 @@ public class RideUserMapping extends SyncSugarRecord<RideUserMapping> {
         }
         else {
             rideUserMapping = rideUserMappings.get(0);
-            rideUserMapping.status = upstream.status;
-            rideUserMapping.updatedAt = upstream.updatedAt;
+            upstream.userId = rideUserMapping.userId;
+            upstream.rideId = rideUserMapping.rideId;
+            rideUserMapping.update(upstream);
         }
-
         rideUserMapping.saveWithoutSync();
     }
 
@@ -80,7 +81,7 @@ public class RideUserMapping extends SyncSugarRecord<RideUserMapping> {
         User user = User.findById(User.class,this.userId);
         this.userId = user.globalId;
 
-        excludeFields.add("user");
+        //excludeFields.add("user"); //we need this field for new ride request to be broadcasted to the owner
 
         String json = super.toJson();
 

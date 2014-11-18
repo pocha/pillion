@@ -167,8 +167,7 @@
                 android:layout_weight="1"
                 android:layout_height="wrap_content"
                 android:text="Check In"
-                android:background="#333"
-                android:padding="10dp"
+                style="@style/FbButtonStyle"
                 android:layout_margin="5dp"
                 android:shadowRadius="0"
                 />
