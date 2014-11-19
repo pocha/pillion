@@ -132,8 +132,50 @@ public class Ride extends SyncSugarRecord<Ride> {
         excludeFields.add("vehicle");
         excludeFields.add("users");
 
-
         return super.toJson();
+    }
+
+    public static List<Ride> myRides(Long myUserId, String type){
+        Long today = 0L;
+        try {
+            SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+            Date d = sdf.parse(sdf.format(new Date()));
+            Log.d("MyRidesActivity","Today's date - " + d.toString());
+            today = d.getTime();
+        }catch (Exception e){}
+
+        Long now = 0L;
+        try {
+            SimpleDateFormat sdf = new SimpleDateFormat("HH:mm:ss");
+            Date d = sdf.parse(sdf.format(new Date()));
+            Log.d("MyRidesActivity","Time now - " + d.toString());
+            now = d.getTime();
+        }catch (Exception e){}
+
+
+
+        return Ride.findWithQuery(Ride.class,
+                "SELECT Ride.* FROM Ride JOIN Ride_User_Mapping ON Ride.id = Ride_User_Mapping.ride_id " +
+                        "WHERE Ride_User_Mapping.user_id = ? AND " +
+                        "(" +
+                            (type.equals("upcoming")
+                                    ?
+                                "Ride.date_long IS NULL OR " +
+                                "Ride.date_long > ? OR " +
+                                "(Ride.date_long = ? AND Ride.time_long > ?)"
+                                    :
+                                "Ride.date_long < ? OR " +
+                                "(Ride.date_long = ? AND Ride.time_long <= ?)"
+                            )
+                        + ")" +
+                        (type.equals("upcoming") ?
+                            " ORDER BY Ride.date_long, Ride.time_long" : //most imminent ride will be on the top
+                            " ORDER BY Ride.date_long DESC, Ride.time_long DESC" // most recently happened ride will be on the top
+                        ),
+                String.valueOf(myUserId),
+                String.valueOf(today),
+                String.valueOf(today),String.valueOf(now)
+        );
     }
 
 

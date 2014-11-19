@@ -14,9 +14,7 @@ import com.actionbarsherlock.app.ActionBar;
 import com.getpillion.common.Helper;
 import com.getpillion.models.Ride;
 
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Date;
 
 import butterknife.ButterKnife;
 import butterknife.InjectView;
@@ -85,55 +83,9 @@ public class MyRidesActivity extends ExtendMeSherlockWithMenuActivity implements
     }
 
     public void showRides() {
-
-        Long today = 0L;
-        try {
-            SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
-            Date d = sdf.parse(sdf.format(new Date()));
-            Log.d("MyRidesActivity","Today's date - " + d.toString());
-            today = d.getTime();
-        }catch (Exception e){}
-
-        Long now = 0L;
-        try {
-            SimpleDateFormat sdf = new SimpleDateFormat("HH:mm:ss");
-            Date d = sdf.parse(sdf.format(new Date()));
-            Log.d("MyRidesActivity","Time now - " + d.toString());
-            now = d.getTime();
-        }catch (Exception e){}
-
+        Long userId = sharedPref.getLong("userId",0L);
         rides.clear();
-        if (selectedTab.getTag() == "upcoming") {
-            rides.addAll(
-                    Ride.findWithQuery(Ride.class,
-                            "SELECT Ride.* FROM Ride JOIN Route ON Ride.route = Route.id " +
-                                    "WHERE Route.owner = ? AND " +
-                                    "(" +
-                                        "Ride.date_long IS NULL OR " +
-                                        "Ride.date_long > ? OR " +
-                                        "(Ride.date_long = ? AND Ride.time_long > ?)" +
-                                    ")",
-                            String.valueOf(sharedPref.getLong("userId", 0L)),
-                            String.valueOf(today),
-                            String.valueOf(today),String.valueOf(now)
-                    )
-            );
-        }
-        else {
-            rides.addAll(
-                    Ride.findWithQuery(Ride.class,
-                            "SELECT Ride.* FROM Ride JOIN Route ON Ride.route = Route.id " +
-                                    "WHERE Route.owner = ? AND " +
-                                    "(" +
-                                        "Ride.date_long < ? OR " +
-                                        "(Ride.date_long = ? AND Ride.time_long <= ?)" +
-                                    ")",
-                            String.valueOf(sharedPref.getLong("userId", 0L)),
-                            String.valueOf(today),
-                            String.valueOf(today),String.valueOf(now)
-                    )
-            );
-        }
+        rides.addAll(Ride.myRides(userId, selectedTab.getTag().toString()));
         adapter.notifyDataSetChanged();
         Log.d("AllRoutesActivity", "Data count in adapter - " + adapter.getCount());
         Helper.setListViewHeightBasedOnChildren(mListView);

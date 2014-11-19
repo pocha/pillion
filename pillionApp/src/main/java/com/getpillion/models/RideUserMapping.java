@@ -53,7 +53,7 @@ public class RideUserMapping extends SyncSugarRecord<RideUserMapping> {
         return rideUserMapping;
     }
 
-    public static void updateFromUpstream(Ride ride, RideUserMapping upstream){
+    public static RideUserMapping updateFromUpstream(Ride ride, RideUserMapping upstream){
         List<RideUserMapping> rideUserMappings = RideUserMapping.find(RideUserMapping.class,"global_id = ?",String.valueOf(upstream.globalId));
         RideUserMapping rideUserMapping;
         if (rideUserMappings.isEmpty()){
@@ -70,6 +70,7 @@ public class RideUserMapping extends SyncSugarRecord<RideUserMapping> {
             rideUserMapping.update(upstream);
         }
         rideUserMapping.saveWithoutSync();
+        return rideUserMapping;
     }
 
     @Override

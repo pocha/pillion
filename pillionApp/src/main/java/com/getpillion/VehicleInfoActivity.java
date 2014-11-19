@@ -34,7 +34,6 @@ public class VehicleInfoActivity extends ExtendMeSherlockWithMenuActivity {
 
         Vehicle newVehicle = new Vehicle();
         newVehicle.user = User.findById(User.class,sharedPref.getLong("userId",0L));
-
         newVehicle.model = model.getText().toString();
         newVehicle.color = color.getText().toString();
         newVehicle.number = number.getText().toString();

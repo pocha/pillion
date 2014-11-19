@@ -19,23 +19,6 @@ public class Vehicle extends SyncSugarRecord<Vehicle> {
 
     public Vehicle(){}
 
-    public Vehicle (String model, String color, String number) {
-        //TODO pass user information
-
-        this.model = model;
-        this.color = color;
-        this.number = number;
-        this.save();
-    }
-
-    public Vehicle (String model, String color, String number, User user) {
-        this.model = model;
-        this.color = color;
-        this.number = number;
-        this.user = user;
-        this.save();
-    }
-
     public static Vehicle updateFromUpstream(Vehicle upstreamVehicle, User user){
         List<Vehicle> vehicles = Vehicle.find(Vehicle.class,"global_id = ?",String.valueOf(upstreamVehicle.globalId));
 

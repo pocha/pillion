@@ -128,11 +128,18 @@ public class ScheduleRideActivity extends ExtendMeSherlockWithMenuActivity  {
         User user = User.findById(User.class, sharedPref.getLong("userId",0L));
         if (isUpdate) {
             Ride newRide = new Ride(route,userDate,userTime,selectedVehicle,user);
-            if (ride.update(newRide)) {
+            boolean isRideUpdated = ride.update(newRide);
+            //check if user has put in new vehicle. This need to be relayed to other users
+            //TODO comment this check in
+            /*if (ride.vehicle != null && selectedVehicle.getId() != ride.vehicle.getId()){
+                ride.vehicle = selectedVehicle;
+                isRideUpdated = true;
+            }*/
+            if (isRideUpdated) {
                 ride.save();
+                Toast.makeText(ScheduleRideActivity.this,"Ride updated",Toast.LENGTH_LONG).show();
             }
             RideUserMapping.createOrUpdate(ride, user, true, Constant.SCHEDULED);
-            Toast.makeText(ScheduleRideActivity.this,"Ride updated",Toast.LENGTH_LONG).show();
         }
         else {
             ride = new Ride(route, userDate, userTime, selectedVehicle, user);

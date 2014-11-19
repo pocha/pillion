@@ -227,7 +227,7 @@ public class SyncSugarRecord<T> extends SugarRecord<T> implements Serializable {
         for (Field f: newInstance.getClass().getDeclaredFields()){
             try {
                 Log.d("SyncSugarRecord","Superclass of field "+ f.getName() + " is " + f.getType().getSuperclass());
-                if (f.getAnnotation(Ignore.class) == null &&
+                    if (f.getAnnotation(Ignore.class) == null &&
                         !SyncSugarRecord.class.equals(f.getType().getSuperclass()) &&
                         !f.get(newInstance).equals(f.get(this))
                     ) {
@@ -237,7 +237,7 @@ public class SyncSugarRecord<T> extends SugarRecord<T> implements Serializable {
                     }
             }
             catch (Exception e){
-                Log.e("SyncSugarRecord","Error while updating " + this.getClass().getSimpleName(),e);
+                Log.e("SyncSugarRecord","Field " + f.getName() + " is null for " + this.getClass().getSimpleName(),e);
             }
         }
         return isSave;
