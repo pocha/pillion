@@ -38,6 +38,8 @@ import com.getpillion.models.Vehicle;
 import com.google.android.gms.gcm.GoogleCloudMessaging;
 import com.google.gson.Gson;
 
+import java.util.Random;
+
 /**
  * This {@code IntentService} does the actual handling of the GCM message.
  * {@code GcmBroadcastReceiver} (a {@code WakefulBroadcastReceiver}) holds a
@@ -109,10 +111,11 @@ public class GcmIntentService extends IntentService {
                 if (simpleClassName.equals("Ride")) { //check if ride timing or vehicle info got updated
                     try {
                         Ride updatedRide = gson.fromJson(json, Ride.class);
-                        Ride ride = Ride.updateFromUpstream(updatedRide);
+                        Ride ride = Ride.find(Ride.class,"global_id = ?",String.valueOf(updatedRide.globalId)).get(0);
+                        Ride.updateFromUpstream(updatedRide);
                         targetIntent = new Intent(this, RideInfoActivity.class);
                         targetIntent.putExtra("rideId",ride.getId());
-                        if (updatedRide.vehicle != null)
+                        if (updatedRide.vehicle.globalId != ride.vehicle.globalId)
                             msg = "Vehicle info updated";
                         else
                             msg = "Ride timing has changed";
@@ -210,9 +213,9 @@ public class GcmIntentService extends IntentService {
                         .setSmallIcon(R.drawable.ic_launcher_white)
                         .setContentTitle(msg)
                         .setStyle(new NotificationCompat.BigTextStyle()
-                                .bigText(msg))
+                                .bigText(greetingMessages[new Random().nextInt(greetingMessages.length)]))
                         .setPriority(2)
-                        /*.setContentText(msg)*/;
+                        .setContentText(msg);
 
         mBuilder.setContentIntent(contentIntent);
         Notification notification = mBuilder.build();
@@ -221,4 +224,8 @@ public class GcmIntentService extends IntentService {
         //notification.defaults |= Notification.DEFAULT_VIBRATE;
         mNotificationManager.notify(NOTIFICATION_ID, notification);
     }
+
+    private static String[] greetingMessages = {"Ta da","Knock Knock","Heya","Hola buddy","Yo dude",
+            "Smells like new request", "Excuse me","Vandu Nimisha","Enna Rascala (kidding :-|)",
+            };
 }

@@ -60,13 +60,19 @@ public class TravellerAdapter extends ArrayAdapter<RideUserMapping> {
 		});
 */
 		viewHolder.position = position;
-		viewHolder.name.setText(user.name);
 
        //Log.d("TravellerAdapter.java","routeOwner " + routeOwner.name);
-        if (rideUsers.get(position).isOwner)
+        if (rideUsers.get(position).isOwner) {
+            if (user.name == null)
+                viewHolder.name.setText("You (profile missing)");
+            else
+                viewHolder.name.setText(user.name + " (you)");
             viewHolder.title.setText("Owner");
-        else
-		    viewHolder.title.setText(user.title);
+        }
+        else {
+            viewHolder.name.setText(user.name);
+            viewHolder.title.setText(user.title);
+        }
 
 /*
 		viewHolder.friendNewApp.setVisibility(LinearLayout.GONE);

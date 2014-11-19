@@ -141,6 +141,19 @@
         </LinearLayout>
         
     </LinearLayout>
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:background="#a94442"
+        android:padding="5dp">
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textColor="#fff"
+            android:textSize="10sp"
+            android:text="BETA ALERT: Deleting the app will make you loose all your data. You will be unable to get your rides or any other data back on re-installation."/>
+    </LinearLayout>
     
 </LinearLayout>
     

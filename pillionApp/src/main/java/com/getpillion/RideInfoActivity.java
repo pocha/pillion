@@ -249,8 +249,10 @@ public class RideInfoActivity extends ExtendMeSherlockWithMenuActivity {
         else
             vehicleInfo.setVisibility(View.GONE);
 
-        travellers = RideUserMapping.find(RideUserMapping.class, "ride_id=?", String.valueOf(ride.getId()));
-        Log.d("RouteInfoActivity", "traveller count " + travellers.size());
+        travellers = RideUserMapping.find(RideUserMapping.class, "ride_id=? AND status != ? AND status != ?",
+                String.valueOf(ride.getId()), String.valueOf(Constant.REQUESTED), String.valueOf(Constant.REJECTED)
+        );
+        Log.d("RideInfoActivity", "traveller count " + travellers.size());
         adapter = new TravellerAdapter(getApplicationContext(),travellers);
         travellersList.setAdapter(adapter);
         Helper.setListViewHeightBasedOnChildren(travellersList);
