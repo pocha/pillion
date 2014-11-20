@@ -1,13 +1,11 @@
 package com.getpillion;
 
 import android.content.Context;
-import android.content.SharedPreferences;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
-import android.widget.CheckBox;
 import android.widget.TextView;
 
 import com.getpillion.models.Ride;
@@ -17,13 +15,6 @@ import java.util.ArrayList;
 public class RideAdapter extends ArrayAdapter<Ride> {
 	private final Context context;
 	private ArrayList<Ride> values;
-	
-	private String appName;
-	private String appPackage;
-	private String shareFlag = "0";
-	private CheckBox itemCheckBox = null;
-	private String FB_USER_ID;
-	SharedPreferences settings = null;
 
 	public RideAdapter(Context context, ArrayList<Ride> values) {
 		super(context, R.layout.route, values);

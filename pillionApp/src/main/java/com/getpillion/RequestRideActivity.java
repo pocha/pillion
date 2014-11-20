@@ -13,6 +13,7 @@ import com.getpillion.common.Constant;
 import com.getpillion.common.PlaceSelectFragment;
 import com.getpillion.models.Ride;
 import com.getpillion.models.RideUserMapping;
+import com.getpillion.models.Route;
 import com.getpillion.models.User;
 
 import org.json.JSONException;
@@ -48,6 +49,7 @@ public class RequestRideActivity extends ExtendMeSherlockWithMenuActivity {
         Log.d("RequestRideActivity","dumping user id - " + user.getId());
         Log.d("RequestRideActivity","dumping user name - " + user.name);
 
+        //TODO comment this back in
         /*if (user.name == null){
             Log.d("RequestRideActivity","Launching ProfileActivity as no user data found");
             Intent intent = new Intent(RequestRideActivity.this, MyProfileActivity.class);
@@ -55,12 +57,12 @@ public class RequestRideActivity extends ExtendMeSherlockWithMenuActivity {
             return;
         }*/
 
-
+        Route route = Route.findOrCreate(pickUp.getText().toString(),drop.getText().toString(), distance.getText().toString(), false,user);
         //TODO move the code below to payment gateway
         ride = Ride.findById(Ride.class, getIntent().getExtras().getLong("rideId"));
         Log.d("RequestRideActivity","dumping route id - " + ride.getId());
         //TODO send request to the server
-        RideUserMapping rideUserMapping = RideUserMapping.createOrUpdate(ride, user, false, Constant.REQUESTED);
+        RideUserMapping.createOrUpdate(ride, user, false, Constant.REQUESTED, route);
 
         Intent intent = new Intent(RequestRideActivity.this, RideInfoActivity.class);
         intent.putExtra("rideId", ride.getId());

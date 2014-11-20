@@ -118,7 +118,7 @@ public class MyRoutesActivity extends ExtendMeSherlockWithMenuActivity {
                 viewHolder = new RouteViewHolder();
                 viewHolder.from = (TextView) convertView.findViewById(R.id.from);
                 viewHolder.to = (TextView) convertView.findViewById(R.id.to);
-
+                convertView.findViewById(R.id.time).setVisibility(View.GONE);
                 convertView.setTag(viewHolder);
             } else {
                 viewHolder = (RouteViewHolder) convertView.getTag();

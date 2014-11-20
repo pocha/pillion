@@ -32,20 +32,24 @@
     
     <LinearLayout
         android:layout_width="0dp"
-        android:layout_weight="1"
-        android:padding="8dp"
+        android:layout_weight="1.5"
         android:layout_height="60dp"
         android:gravity="center_vertical"
         android:orientation="horizontal" >
-        
+
+        <ImageView android:id="@+id/image"
+            android:src="@drawable/action_people"
+            android:layout_width="56dp"
+            android:layout_height="56dp"
+            android:layout_gravity="center_vertical"
+            android:scaleType="fitXY" />
         
         <TextView
 	        android:id="@+id/name"
 	        android:layout_width="wrap_content"
 	        android:layout_height="wrap_content"
-	        android:text="Ashish"
+	        android:text="Ashish (incomplete profile)"
 	        android:textColor="#333333"
-	        android:lines="1"
 	        android:textSize="16sp" >
 	    </TextView>
 	    
@@ -196,7 +200,7 @@
     <LinearLayout
         android:id="@+id/right_arrow_div"
         android:layout_width="0dp"
-        android:layout_weight="2"
+        android:layout_weight="1"
         android:padding="4dp"
         android:layout_height="60dp"
         android:gravity="right|center_vertical"

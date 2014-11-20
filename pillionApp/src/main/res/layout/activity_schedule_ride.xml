@@ -72,14 +72,10 @@
                 style="@style/TextViewLabelDivider"/>
 
             <include android:id="@+id/profileView"
-                layout="@layout/traveller"/>
+                layout="@layout/traveller"
+                android:clickable="true"
+                />
 
-            <Button
-                android:visibility="gone"
-                android:id="@+id/importProfile"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="Import Profile from Linkedin"/>
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -93,6 +89,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="10dp"
+                android:layout_marginBottom="10dp"
                 android:text="Update Ride"/>
             <Button
                 android:visibility="gone"

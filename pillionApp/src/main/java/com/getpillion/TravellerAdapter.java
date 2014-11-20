@@ -16,11 +16,13 @@ import java.util.List;
 public class TravellerAdapter extends ArrayAdapter<RideUserMapping> {
 	private final Context context;
     private List<RideUserMapping> rideUsers;
+    private Long viewerId;
 
-	public TravellerAdapter(Context context, List<RideUserMapping> users) {
+	public TravellerAdapter(Context context, List<RideUserMapping> users, Long viewerId) {
         super(context, R.layout.route, users);
         this.context = context;
         this.rideUsers = users;
+        this.viewerId = viewerId;
     }
 	@Override
 	public View getView(int position, View convertView, ViewGroup parent) {
@@ -62,26 +64,28 @@ public class TravellerAdapter extends ArrayAdapter<RideUserMapping> {
 */
 		viewHolder.position = position;
 
-       //Log.d("TravellerAdapter.java","routeOwner " + routeOwner.name);
-        if (rideUsers.get(position).isOwner) {
+        if (viewerId == rideUsers.get(position).userId){
+            //attach you
             if (user.name == null)
                 viewHolder.name.setText("You (profile missing)");
             else
                 viewHolder.name.setText(user.name + " (you)");
-            viewHolder.title.setText("Owner");
         }
-        else {
+        else
             viewHolder.name.setText(user.name);
-            //these only visible to the owner as for others, these entries will not come
-            if (rideUsers.get(position).status == Constant.REQUESTED)
-                viewHolder.title.setText("waiting acceptance");
-            else if (rideUsers.get(position).status == Constant.REJECTED)
-                viewHolder.title.setText("rejected");
-            else if (rideUsers.get(position).status == Constant.CANCELLED)
-                viewHolder.title.setText("request cancelled");
-            else
-                viewHolder.title.setText(user.title);
-        }
+
+
+        //these only visible to the owner as for others, these entries will not come
+        if (rideUsers.get(position).isOwner)
+            viewHolder.title.setText("Owner");
+        else if (rideUsers.get(position).status == Constant.REQUESTED)
+            viewHolder.title.setText("waiting acceptance");
+        else if (rideUsers.get(position).status == Constant.REJECTED)
+            viewHolder.title.setText("rejected");
+        else if (rideUsers.get(position).status == Constant.CANCELLED)
+            viewHolder.title.setText("request cancelled");
+        else
+            viewHolder.title.setText(user.title);
 
 /*
 		viewHolder.friendNewApp.setVisibility(LinearLayout.GONE);

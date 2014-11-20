@@ -1,6 +1,5 @@
 package com.getpillion.models;
 
-import com.google.gson.annotations.SerializedName;
 import com.orm.dsl.Ignore;
 
 import java.util.List;
@@ -12,10 +11,9 @@ public class Vehicle extends SyncSugarRecord<Vehicle> {
     public String model;
     public String color;
     public String number;
-    @SerializedName("user_attributes")
-    public User user = null; //indicates which user this vehicle belongs to
+    public User user = null;
     @Ignore
-    public Long user_id = null;
+    public Long user_id = null; //for sending information whose user this vehicle belongs to upstream
 
     public Vehicle(){}
 

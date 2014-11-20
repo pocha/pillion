@@ -20,11 +20,13 @@ import com.getpillion.common.Helper;
 import com.getpillion.models.Ride;
 import com.getpillion.models.RideUserMapping;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import butterknife.ButterKnife;
 import butterknife.InjectView;
 import butterknife.OnClick;
+import butterknife.OnItemClick;
 
 public class RideInfoActivity extends ExtendMeSherlockWithMenuActivity {
 
@@ -32,7 +34,7 @@ public class RideInfoActivity extends ExtendMeSherlockWithMenuActivity {
     private Ride ride;
     private ProgressDialog progress;
     private TravellerAdapter adapter;
-    private List<RideUserMapping> travellers;
+    private List<RideUserMapping> travellers = new ArrayList<RideUserMapping>();
     private Boolean isRideCreationSuccess;
     private int rideCreationStatus = Constant.CREATED;
     private RideUserMapping rideUserMapping = null;
@@ -48,6 +50,11 @@ public class RideInfoActivity extends ExtendMeSherlockWithMenuActivity {
     @InjectView(R.id.vehicleInfo) LinearLayout vehicleInfo;
     @InjectView(R.id.vehicle) TextView vehicle;
     @InjectView(R.id.travellers) ListView travellersList;
+    @OnItemClick(R.id.travellers) void onTravellerSelect(int position){
+        Intent intent = new Intent(RideInfoActivity.this, UserProfileActivity.class);
+        intent.putExtra("rideUserMappingId",travellers.get(position).getId());
+        startActivity(intent);
+    }
     @InjectView(R.id.primaryButton) Button primaryButton;
     @InjectView(R.id.primaryButtonMsg) TextView primaryButtonMsg;
     @InjectView(R.id.primaryButtonLayout) LinearLayout primaryButtonLayout;
@@ -202,6 +209,29 @@ public class RideInfoActivity extends ExtendMeSherlockWithMenuActivity {
         }
     }
 
+    @Override
+    public void onStart(){
+        super.onStart();
+        travellers.clear();
+        if (amIOwner) //show all users to owner
+            travellers.addAll(
+                    RideUserMapping.find(RideUserMapping.class, "ride_id=?",String.valueOf(ride.getId()))
+            );
+        else
+            travellers.addAll(
+                    RideUserMapping.find(RideUserMapping.class,
+                        "ride_id=? AND (user_id = ? OR " +
+                                "(status != ? AND status != ?))",
+                        String.valueOf(ride.getId()), String.valueOf(sharedPref.getLong("userId",0L)),
+                        String.valueOf(Constant.REQUESTED), String.valueOf(Constant.REJECTED)
+                    ) //show user's entry whatever status it is, but dont show other pending status users to him
+            );
+
+        Log.d("RideInfoActivity", "traveller count " + travellers.size());
+        adapter.notifyDataSetChanged(); //update traveller's status once the creator comes back to this screen
+        Helper.setListViewHeightBasedOnChildren(travellersList);
+    }
+
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -264,16 +294,8 @@ public class RideInfoActivity extends ExtendMeSherlockWithMenuActivity {
             //both myRideStatus & amIOwner stays the default value so nothing doing.
         }
 
-        travellers = RideUserMapping.find(RideUserMapping.class, "ride_id=? AND status != ? AND status != ?",
-                String.valueOf(ride.getId()), String.valueOf(Constant.REQUESTED), String.valueOf(Constant.REJECTED)
-        );
-        if (amIOwner) //show all users to owner
-            travellers = RideUserMapping.find(RideUserMapping.class, "ride_id=?",String.valueOf(ride.getId()));
-
-        Log.d("RideInfoActivity", "traveller count " + travellers.size());
-        adapter = new TravellerAdapter(getApplicationContext(),travellers);
+        adapter = new TravellerAdapter(getApplicationContext(),travellers,sharedPref.getLong("userId",0L));
         travellersList.setAdapter(adapter);
-        Helper.setListViewHeightBasedOnChildren(travellersList);
 
         if (amIOwner) {
             if (ride.route.isOffered) { //I am owner & I am offering ride. Option to accept requests
@@ -334,7 +356,7 @@ public class RideInfoActivity extends ExtendMeSherlockWithMenuActivity {
                         secondaryButton.setText("Cancel Ride Request");
                         secButtonMsg.setText("You can cancel your request any time & your money will get refunded into your account.");
                         primaryButtonLayout.setVisibility(View.VISIBLE);
-                        primaryButton.setBackgroundColor(getResources().getColor(R.color.BottomButtonDisabled));
+                        primaryButton.setEnabled(false);
                         primaryButtonMsg.setText("The ride owner has not yet approved your request");
                         break;
                     case Constant.ACCEPTED:
@@ -346,21 +368,21 @@ public class RideInfoActivity extends ExtendMeSherlockWithMenuActivity {
                         secButtonLayout.setVisibility(View.GONE);
 
                         primaryButtonLayout.setVisibility(View.VISIBLE);
-                        primaryButton.setBackgroundColor(getResources().getColor(R.color.BottomButtonDisabled));
+                        primaryButton.setEnabled(false);
                         primaryButtonMsg.setText("You have CANCELLED the ride request");
                         break;
                     case Constant.REJECTED:
                         secButtonLayout.setVisibility(View.GONE);
 
                         primaryButtonLayout.setVisibility(View.VISIBLE);
-                        primaryButton.setBackgroundColor(getResources().getColor(R.color.BottomButtonDisabled));
+                        primaryButton.setEnabled(false);
                         primaryButtonMsg.setText("Your ride request has been REJECTED by the vehicle owner. The money has been credited in your account.");
                         break;
                     case Constant.CHECKED_IN:
                         secButtonLayout.setVisibility(View.GONE);
 
                         primaryButtonLayout.setVisibility(View.VISIBLE);
-                        primaryButton.setBackgroundColor(getResources().getColor(R.color.BottomButtonDisabled));
+                        primaryButton.setEnabled(false);
                         primaryButtonMsg.setText("You have checked in at the pickup point. Wait for the ride owner to turn-up.");
                         break;
                 }

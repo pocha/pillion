@@ -152,7 +152,7 @@
             android:layout_height="wrap_content"
             android:textColor="#fff"
             android:textSize="10sp"
-            android:text="BETA ALERT: Deleting the app will make you loose all your data. You will be unable to get your rides or any other data back on re-installation."/>
+            android:text="BETA ALERT: Once you delete the app, you will be unable to get your rides or any other app data back on re-installation."/>
     </LinearLayout>
     
 </LinearLayout>

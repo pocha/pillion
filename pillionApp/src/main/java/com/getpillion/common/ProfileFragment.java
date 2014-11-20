@@ -24,6 +24,7 @@ import com.getpillion.models.WorkHistory;
 import java.net.URL;
 import java.util.List;
 
+import butterknife.ButterKnife;
 import butterknife.InjectView;
 
 public class ProfileFragment extends Fragment {
@@ -31,7 +32,9 @@ public class ProfileFragment extends Fragment {
 
     @Override
     public View onCreateView(final LayoutInflater inflater, ViewGroup container, Bundle savedInstance){
-        return inflater.inflate(R.layout.fragment_profile, null);
+        View v = inflater.inflate(R.layout.fragment_profile, null);
+        ButterKnife.inject(this, v);
+        return v;
     }
 
     @InjectView(R.id.noProfileData)

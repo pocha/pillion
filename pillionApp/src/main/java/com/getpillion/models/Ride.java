@@ -59,14 +59,15 @@ public class Ride extends SyncSugarRecord<Ride> {
         Log.d("ashish","Entered new route creation");
         Log.d("Ride.java","Inside constructor, creating ride with time " + time.toString() + " which will be converted to " + time.getTime());
 
-        this.route = new Route(from,to,isOffered,owner);
+        //TODO calculate distance for the ride creator. Currently putting 0
+        this.route = new Route(from,to,"0",isOffered,owner);
 
         this.timeLong = (time == null) ? Time.valueOf("09:00:00").getTime() : time.getTime();
 
         Log.d("ashish","New ride created - " + this.toString());
         this.save();
 
-        RideUserMapping.createOrUpdate(this, owner, true, Constant.CREATED);
+        RideUserMapping.createOrUpdate(this, owner, true, Constant.CREATED, route);
     }
 
     public String getAmPmTime(){
@@ -169,7 +170,7 @@ public class Ride extends SyncSugarRecord<Ride> {
                             )
                         + ")" +
                         (type.equals("upcoming") ?
-                            " ORDER BY Ride.date_long, Ride.time_long" : //most imminent ride will be on the top
+                            " ORDER BY Ride.date_long IS NULL, Ride.time_long" : //most imminent ride will be on the top
                             " ORDER BY Ride.date_long DESC, Ride.time_long DESC" // most recently happened ride will be on the top
                         ),
                 String.valueOf(myUserId),

@@ -99,14 +99,21 @@ public class GcmIntentService extends IntentService {
 
                 if (simpleClassName.equals("Route")) {
                     Route route = Route.updateFromUpstream(gson.fromJson(json,Route.class));
-                    //take user to the Ride Activity whose Route has been updated
-                    targetIntent = new Intent(this, RideInfoActivity.class);
-                    targetIntent.putExtra(
-                            "rideId", Ride.find(
-                                        Ride.class,"route_id = ?", String.valueOf(route.getId())
-                                      ).get(0).getId()
-                    );
-                    msg = "Ride creator has updated route";
+                    //take user to the Ride Activity for the most recent upcoming ride
+                    Ride mostRecentUpcomingRide = null;
+                    for (Ride ride: Ride.myRides(sharedPref.getLong("userId", 0L), "upcoming")){
+                        if (ride.route.getId() == route.getId()) {
+                            mostRecentUpcomingRide = ride;
+                            break;
+                        }
+                    }
+                    try {
+                        targetIntent = new Intent(this, RideInfoActivity.class);
+                        targetIntent.putExtra("rideId", mostRecentUpcomingRide.getId());
+                        msg = "Ride creator has updated route";
+                    }catch (Exception e){
+                        //no upcoming rides for the updated route. lets not bother the user
+                    }
                 }
                 if (simpleClassName.equals("Ride")) { //check if ride timing or vehicle info got updated
                     try {
@@ -213,9 +220,12 @@ public class GcmIntentService extends IntentService {
                         .setSmallIcon(R.drawable.ic_launcher_white)
                         .setContentTitle(msg)
                         .setStyle(new NotificationCompat.BigTextStyle()
-                                .bigText(greetingMessages[new Random().nextInt(greetingMessages.length)]))
+                                        .bigText(
+                                                msg
+                                        )
+                        )
                         .setPriority(2)
-                        .setContentText(msg);
+                        .setContentText(greetingMessages[new Random().nextInt(greetingMessages.length)]);
 
         mBuilder.setContentIntent(contentIntent);
         Notification notification = mBuilder.build();

@@ -7,7 +7,6 @@
     >
 
     <fragment
-        android:visibility="gone"
         android:id="@+id/profile"
         android:name="com.getpillion.common.ProfileFragment"
         android:layout_width="match_parent"
@@ -15,6 +14,7 @@
         android:layout_weight="1"
         tools:layout="@layout/fragment_profile"/>
     <LinearLayout
+        android:visibility="gone"
         android:id="@+id/pickupDrop"
         android:layout_width="match_parent"
         android:layout_height="0dp"
@@ -26,7 +26,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             style="@style/TextViewLabel"
-            android:text="Pickup point"/>
+            android:text="Start point"/>
         <TextView
             android:layout_width="match_parent"
             android:layout_height="1dp"
@@ -41,7 +41,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             style="@style/TextViewLabel"
-            android:text="Drop point"/>
+            android:text="End point"/>
         <TextView
             android:layout_width="match_parent"
             android:layout_height="1dp"
@@ -102,6 +102,12 @@
             android:background="#dddddd" >
 
         </LinearLayout>
+        <TextView
+            android:layout_marginTop="5dp"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:text="Tip: Ride creator, you can change your decision later."/>
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -115,15 +121,16 @@
                 android:layout_weight="1"
                 android:layout_height="wrap_content"
                 style="@style/DangerButtonStyle"
-                android:text="Reject"/>
+                android:text="Reject"
+                />
             <Button
                 android:id="@+id/call"
+                android:layout_marginTop="3dp"
                 android:layout_width="match_parent"
                 android:layout_weight="1"
                 android:layout_height="wrap_content"
-                style="@style/FbButtonStyle"
-                android:background="#444"
-                android:text="Call"/>
+                android:text="Call"
+                />
 
             <Button
                 android:id="@+id/accept"

@@ -16,36 +16,40 @@ public class RideUserMapping extends SyncSugarRecord<RideUserMapping> {
     public Long rideId;
     @SerializedName("user_id")
     public Long userId;
-    @Ignore
-    @SerializedName("user_attributes")
+    @Ignore //as we already storing user_id separately. This is bad. Ideally, we should just have user & ride
     public User user; //needed for creation of object from json
 
     public int status = 0; // User status for this ride (requested, cancelled etc) check possible status value in Constants.java
     @SerializedName("is_owner")
     public Boolean isOwner = false;
+    public Route route;
+    @Ignore
+    public Long route_id; //to be intimated upstream
+
 
     public RideUserMapping(){}
-    public RideUserMapping(Long rideId, Long userId, Boolean isOwner, int status){
+    public RideUserMapping(Long rideId, Long userId, Boolean isOwner, int status, Route route){
         this.rideId = rideId;
         this.userId = userId;
         this.isOwner = isOwner;
         this.status = status;
+        this.route = route;
     }
 
 
-    public static RideUserMapping createOrUpdate(Ride ride, User user, Boolean isOwner, int status){
+    public static RideUserMapping createOrUpdate(Ride ride, User user, Boolean isOwner, int status, Route route){
         Log.d("RideUserMapping","Inside createOrUpdate. isOwner value " + isOwner);
         List<RideUserMapping> rideUserMappings = RideUserMapping.find(RideUserMapping.class,
                 "ride_id = ? and user_id = ?", String.valueOf(ride.getId()), String.valueOf(user.getId()));
         RideUserMapping rideUserMapping = null;
         if (rideUserMappings.isEmpty()){
             //create entry
-            rideUserMapping = new RideUserMapping(ride.getId(),user.getId(),isOwner,status);
+            rideUserMapping = new RideUserMapping(ride.getId(),user.getId(),isOwner,status, route);
             rideUserMapping.save();
         }
         else {
             rideUserMapping = rideUserMappings.get(0);
-            RideUserMapping newObject = new RideUserMapping(ride.getId(),user.getId(),isOwner,status);
+            RideUserMapping newObject = new RideUserMapping(ride.getId(),user.getId(),isOwner,status, route);
             if ( rideUserMapping.update(newObject) )
                 rideUserMapping.save();
         }
@@ -57,8 +61,11 @@ public class RideUserMapping extends SyncSugarRecord<RideUserMapping> {
         List<RideUserMapping> rideUserMappings = RideUserMapping.find(RideUserMapping.class,"global_id = ?",String.valueOf(upstream.globalId));
         RideUserMapping rideUserMapping;
         if (rideUserMappings.isEmpty()){
-            //create user to get its id
+            //data is coming from upstream & can have new user & route. We need to locally create them.
             User user = User.updateFromUpstream(upstream.user);
+            Route route = Route.updateFromUpstream(upstream.route);
+            upstream.route = route;
+
             upstream.userId = user.getId();
             upstream.rideId = ride.getId();
             rideUserMapping = upstream;
@@ -82,7 +89,11 @@ public class RideUserMapping extends SyncSugarRecord<RideUserMapping> {
         User user = User.findById(User.class,this.userId);
         this.userId = user.globalId;
 
-        //excludeFields.add("user"); //we need this field for new ride request to be broadcasted to the owner
+        this.route_id = route.globalId;
+
+        //server does not need these information. To broadcast to other clients, server is anyway creating it separately
+        excludeFields.add("user");
+        excludeFields.add("route");
 
         String json = super.toJson();
 

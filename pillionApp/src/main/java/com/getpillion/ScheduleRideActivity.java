@@ -48,8 +48,11 @@ public class ScheduleRideActivity extends ExtendMeSherlockWithMenuActivity  {
 
     @InjectView(R.id.profileView)
     LinearLayout profileView;
-    @InjectView(R.id.importProfile)
-    Button importProfile;
+    @OnClick(R.id.profileView) void loadMyProfile(View v){
+        Intent intent = new Intent(ScheduleRideActivity.this, MyProfileActivity.class);
+        startActivity(intent);
+    }
+
     @InjectView(R.id.updateRide)
     Button updateRide;
     @InjectView(R.id.deleteRide)
@@ -60,6 +63,20 @@ public class ScheduleRideActivity extends ExtendMeSherlockWithMenuActivity  {
     private RideUserMapping rideUserMapping = null;
     @InjectView(R.id.primaryButtonLayout)
     LinearLayout primaryButtonLayout;
+
+    @Override
+    public void onStart(){
+        super.onStart();
+        User user = User.findById(User.class, sharedPref.getLong("userId",0L));
+        if (user.name == null){
+            ((TextView)profileView.findViewById(R.id.name)).setText("You (profile missing)");
+            ((TextView)profileView.findViewById(R.id.title)).setText("Owner");
+        }
+        else {
+            ((TextView)profileView.findViewById(R.id.name)).setText(user.name);
+            ((TextView)profileView.findViewById(R.id.title)).setText("Owner");
+        }
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState)  {
@@ -76,16 +93,6 @@ public class ScheduleRideActivity extends ExtendMeSherlockWithMenuActivity  {
         );
         vehicleAdapter = new VehicleAdapter(getApplicationContext(),vehicles);
         vehicleView.setAdapter(vehicleAdapter);
-
-        User user = User.findById(User.class, sharedPref.getLong("userId",0L));
-        if (user.name == null){
-            profileView.setVisibility(View.GONE);
-            importProfile.setVisibility(View.VISIBLE);
-        }
-        else {
-            ((TextView)profileView.findViewById(R.id.name)).setText(user.name);
-            ((TextView)profileView.findViewById(R.id.title)).setText(user.title);
-        }
 
         if (getIntent().hasExtra("rideId")) { //edit screen
             ride = Ride.findById(Ride.class,getIntent().getExtras().getLong("rideId",0L));
@@ -139,12 +146,12 @@ public class ScheduleRideActivity extends ExtendMeSherlockWithMenuActivity  {
                 ride.save();
                 Toast.makeText(ScheduleRideActivity.this,"Ride updated",Toast.LENGTH_LONG).show();
             }
-            RideUserMapping.createOrUpdate(ride, user, true, Constant.SCHEDULED);
+            RideUserMapping.createOrUpdate(ride, user, true, Constant.SCHEDULED, ride.route);
         }
         else {
             ride = new Ride(route, userDate, userTime, selectedVehicle, user);
             ride.save();
-            RideUserMapping.createOrUpdate(ride, user, true, Constant.SCHEDULED);
+            RideUserMapping.createOrUpdate(ride, user, true, Constant.SCHEDULED, ride.route);
             Toast.makeText(ScheduleRideActivity.this,"New Ride created",Toast.LENGTH_LONG).show();
         }
         Intent intent = new Intent(ScheduleRideActivity.this,RideInfoActivity.class);
@@ -261,12 +268,6 @@ public class ScheduleRideActivity extends ExtendMeSherlockWithMenuActivity  {
                 );
                 vehicleAdapter.notifyDataSetChanged();
         }
-    }
-
-    @OnClick(R.id.importProfile) void myProfileActivityLaunch(View v){
-        Intent intent = new Intent(ScheduleRideActivity.this,MyProfileActivity.class);
-        intent.putExtra("requestCode",1);
-        startActivityForResult(intent,1);
     }
 
     @OnClick(R.id.addVehicle) void addVehicle(View v){

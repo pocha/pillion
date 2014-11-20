@@ -118,7 +118,7 @@
         </activity>
         <activity
             android:name="com.getpillion.RequestRideActivity"
-            android:label="@string/title_activity_request_ride"
+            android:label="Request Ride"
             android:logo="@drawable/ic_launcher"
             android:parentActivityName=".RideInfoActivity" >
             <meta-data
@@ -129,8 +129,11 @@
             android:name="com.getpillion.MyProfileActivity"
             android:label="My Profile"
             android:logo="@drawable/list">
-
         </activity>
+        <activity
+            android:name=".UserProfileActivity"
+            android:label="Traveller Profile"
+            android:logo="@drawable/list"/>
         <activity
             android:name="com.getpillion.MyRoutesActivity"
             android:label="My Routes"

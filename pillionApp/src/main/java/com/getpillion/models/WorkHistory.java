@@ -4,7 +4,6 @@ import com.google.code.linkedinapi.schema.Education;
 import com.google.code.linkedinapi.schema.EndDate;
 import com.google.code.linkedinapi.schema.Position;
 import com.google.code.linkedinapi.schema.StartDate;
-import com.google.gson.annotations.SerializedName;
 import com.orm.dsl.Ignore;
 
 import java.util.List;
@@ -13,10 +12,9 @@ import java.util.List;
  * Created by pocha on 29/10/14.
  */
 public class WorkHistory extends SyncSugarRecord<WorkHistory> {
-    @SerializedName("user_attributes")
     public User user;
     @Ignore
-    public Long user_id = null;
+    public Long user_id = null; //for upstream
     public String data;
     public String duration;
     
