@@ -249,14 +249,6 @@ public class RideInfoActivity extends ExtendMeSherlockWithMenuActivity {
         else
             vehicleInfo.setVisibility(View.GONE);
 
-        travellers = RideUserMapping.find(RideUserMapping.class, "ride_id=? AND status != ? AND status != ?",
-                String.valueOf(ride.getId()), String.valueOf(Constant.REQUESTED), String.valueOf(Constant.REJECTED)
-        );
-        Log.d("RideInfoActivity", "traveller count " + travellers.size());
-        adapter = new TravellerAdapter(getApplicationContext(),travellers);
-        travellersList.setAdapter(adapter);
-        Helper.setListViewHeightBasedOnChildren(travellersList);
-
         try {
             rideUserMapping = RideUserMapping.find(RideUserMapping.class, "ride_id =? AND user_id =?",
                     String.valueOf(ride.getId()),
@@ -271,6 +263,17 @@ public class RideInfoActivity extends ExtendMeSherlockWithMenuActivity {
             Log.d("RideInfoActivity","Boss you are not part of this ride");
             //both myRideStatus & amIOwner stays the default value so nothing doing.
         }
+
+        travellers = RideUserMapping.find(RideUserMapping.class, "ride_id=? AND status != ? AND status != ?",
+                String.valueOf(ride.getId()), String.valueOf(Constant.REQUESTED), String.valueOf(Constant.REJECTED)
+        );
+        if (amIOwner) //show all users to owner
+            travellers = RideUserMapping.find(RideUserMapping.class, "ride_id=?",String.valueOf(ride.getId()));
+
+        Log.d("RideInfoActivity", "traveller count " + travellers.size());
+        adapter = new TravellerAdapter(getApplicationContext(),travellers);
+        travellersList.setAdapter(adapter);
+        Helper.setListViewHeightBasedOnChildren(travellersList);
 
         if (amIOwner) {
             if (ride.route.isOffered) { //I am owner & I am offering ride. Option to accept requests

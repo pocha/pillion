@@ -1,0 +1,185 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    android:orientation="vertical" >
+
+    <LinearLayout
+        android:id="@+id/noProfileData"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="6"
+        android:orientation="vertical"
+        android:gravity="center_vertical"
+        android:padding="10dp"
+        >
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="No profile data found"
+            android:textSize="30sp"
+            android:gravity="center"/>
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            style="@style/TextViewLabelDivider"/>
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Chances of people sharing ride increases significantly if they know a bit about your work life."
+            android:layout_marginBottom="20dp"/>
+
+    </LinearLayout>
+    
+    <ScrollView
+        android:visibility="gone"
+        android:id="@+id/profile"
+        android:layout_width="fill_parent"
+        android:layout_height="0dp"
+        android:layout_weight="6"
+        style="@style/ScrollViewStyle"
+        android:layout_gravity="bottom|center_horizontal">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+       <!--     <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
+                <ImageView
+                    android:id="@+id/profilePic"
+                    android:layout_width="match_parent"
+                    android:layout_weight="2"
+                    android:layout_height="wrap_content"
+                    android:src="@drawable/action_people"/>
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_weight="1"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical">
+                    <TextView
+                        android:id="@+id/name"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="Ashish Sharma"
+                        style="@style/TextViewBig"/>
+                    <TextView
+                        android:id="@+id/title"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="Co-founder at Codelearn"
+                        android:layout_marginTop="2dp"/>
+
+                    <TextView
+                        android:id="@+id/fieldOfWork"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="IT, Telecommunication"
+                        style="@style/TextViewLabel"
+                        android:layout_marginTop="10dp"/>
+                </LinearLayout>
+            </LinearLayout> -->
+
+
+            <ImageView
+                android:id="@+id/profilePic"
+                android:layout_width="match_parent"
+                android:layout_height="100dp"
+                android:src="@drawable/action_people"
+                android:gravity="center"/>
+            <TextView
+                android:id="@+id/name"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Ashish Sharma"
+                style="@style/TextViewBig"
+                android:gravity="center"/>
+            <TextView
+                android:id="@+id/title"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Co-founder at Codelearn"
+                android:layout_marginTop="2dp"
+                android:gravity="center"/>
+
+            <TextView
+                android:id="@+id/fieldOfWork"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="IT, Telecommunication"
+                style="@style/TextViewLabel"
+                android:layout_marginTop="10dp"
+                android:gravity="center"/>
+
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical">
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    style="@style/TextViewLabel"
+                    android:text="Work History"/>
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="1dp"
+                    style="@style/TextViewLabelDivider"/>
+                <ListView
+                    android:id="@+id/workHistory"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"/>
+                <TextView
+                    android:id="@+id/noWorkHistory"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="No work history found"
+                    android:visibility="gone"/>
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    style="@style/TextViewLabel"
+                    android:text="Languages"/>
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="1dp"
+                    style="@style/TextViewLabelDivider"/>
+                <TextView
+                    android:id="@+id/languages"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="No languages found"
+                    />
+
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    style="@style/TextViewLabel"
+                    android:text="Interests"/>
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="1dp"
+                    style="@style/TextViewLabelDivider"/>
+                <TextView
+                    android:id="@+id/interests"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="bla bla, bla bla bla, more bla bla"/>
+
+            </LinearLayout>
+
+        </LinearLayout>
+        
+    </ScrollView>
+
+</LinearLayout>
+    
+    
+    

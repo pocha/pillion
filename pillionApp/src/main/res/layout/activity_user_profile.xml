@@ -1,0 +1,146 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    android:orientation="vertical"
+    >
+
+    <fragment
+        android:visibility="gone"
+        android:id="@+id/profile"
+        android:name="com.getpillion.common.ProfileFragment"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        tools:layout="@layout/fragment_profile"/>
+    <LinearLayout
+        android:id="@+id/pickupDrop"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:orientation="vertical"
+        android:padding="10dp">
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            style="@style/TextViewLabel"
+            android:text="Pickup point"/>
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            style="@style/TextViewLabelDivider"/>
+        <TextView
+            android:id="@+id/pickUp"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="pickup point address"
+            />
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            style="@style/TextViewLabel"
+            android:text="Drop point"/>
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            style="@style/TextViewLabelDivider"/>
+        <TextView
+            android:id="@+id/drop"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="drop point address"
+            />
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            style="@style/TextViewLabel"
+            android:text="Total Distance"/>
+        <View
+            android:layout_width="fill_parent"
+            android:layout_height="1dp"
+            style="@style/TextViewLabelDivider"/>
+
+        <TextView
+            android:id="@+id/distance"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="10 km"/>
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            style="@style/TextViewLabel"
+            android:text="Credits Earned by accepting request"/>
+        <View
+            android:layout_width="fill_parent"
+            android:layout_height="1dp"
+            style="@style/TextViewLabelDivider"/>
+
+        <TextView
+            android:id="@+id/cost"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="INR 100"
+            android:layout_marginBottom="20dp"
+            />
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/primaryButtonLayout"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:layout_gravity="center"
+        android:orientation="vertical"
+        android:background="#eee">
+
+        <LinearLayout android:orientation="horizontal"
+            android:layout_width="fill_parent"
+            android:layout_height="3dp"
+            android:background="#dddddd" >
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:padding="5dp">
+
+            <Button
+                android:id="@+id/reject"
+                android:layout_width="match_parent"
+                android:layout_weight="1"
+                android:layout_height="wrap_content"
+                style="@style/DangerButtonStyle"
+                android:text="Reject"/>
+            <Button
+                android:id="@+id/call"
+                android:layout_width="match_parent"
+                android:layout_weight="1"
+                android:layout_height="wrap_content"
+                style="@style/FbButtonStyle"
+                android:background="#444"
+                android:text="Call"/>
+
+            <Button
+                android:id="@+id/accept"
+                android:layout_width="match_parent"
+                android:layout_weight="1"
+                android:layout_height="wrap_content"
+                style="@style/FbButtonStyle"
+                android:text="Accept"/>
+
+        </LinearLayout>
+
+
+    </LinearLayout>
+
+
+
+</LinearLayout>
+    
+    
+    

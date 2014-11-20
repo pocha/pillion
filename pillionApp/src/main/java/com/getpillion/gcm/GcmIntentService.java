@@ -227,5 +227,6 @@ public class GcmIntentService extends IntentService {
 
     private static String[] greetingMessages = {"Ta da","Knock Knock","Heya","Hola buddy","Yo dude",
             "Smells like new request", "Excuse me","Vandu Nimisha","Enna Rascala (kidding :-|)",
+            "Dayavittu kshamishi", "Yatrigan kripya dhyan de"
             };
 }

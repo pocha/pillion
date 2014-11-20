@@ -7,6 +7,7 @@ import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.TextView;
 
+import com.getpillion.common.Constant;
 import com.getpillion.models.RideUserMapping;
 import com.getpillion.models.User;
 
@@ -71,7 +72,15 @@ public class TravellerAdapter extends ArrayAdapter<RideUserMapping> {
         }
         else {
             viewHolder.name.setText(user.name);
-            viewHolder.title.setText(user.title);
+            //these only visible to the owner as for others, these entries will not come
+            if (rideUsers.get(position).status == Constant.REQUESTED)
+                viewHolder.title.setText("waiting acceptance");
+            else if (rideUsers.get(position).status == Constant.REJECTED)
+                viewHolder.title.setText("rejected");
+            else if (rideUsers.get(position).status == Constant.CANCELLED)
+                viewHolder.title.setText("request cancelled");
+            else
+                viewHolder.title.setText(user.title);
         }
 
 /*
