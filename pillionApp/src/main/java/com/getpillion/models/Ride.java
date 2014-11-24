@@ -194,4 +194,5 @@ public class Ride extends SyncSugarRecord<Ride> {
 
 
 
+
 }

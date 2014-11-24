@@ -51,8 +51,10 @@ public class RideAdapter extends ArrayAdapter<Ride> {
 					.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 			convertView = inflater.inflate(R.layout.route, parent, false);
 			viewHolder = new RideViewHolder();
-			viewHolder.from = (TextView) convertView.findViewById(R.id.from);
-            viewHolder.to = (TextView) convertView.findViewById(R.id.to);
+			viewHolder.fromHeader = (TextView) convertView.findViewById(R.id.fromHeader);
+            viewHolder.fromFooter = (TextView) convertView.findViewById(R.id.fromFooter);
+            viewHolder.toHeader = (TextView) convertView.findViewById(R.id.toHeader);
+            viewHolder.toFooter = (TextView) convertView.findViewById(R.id.toFooter);
             viewHolder.time = (TextView) convertView.findViewById(R.id.time);
             viewHolder.statusGrey = (TextView) convertView.findViewById(R.id.statusGrey);
             viewHolder.statusRed = (TextView) convertView.findViewById(R.id.statusRed);
@@ -89,8 +91,10 @@ public class RideAdapter extends ArrayAdapter<Ride> {
 */
 		viewHolder.position = position;
         viewHolder.rideId = ride.getId();
-		viewHolder.from.setText(ride.origin);
-		viewHolder.to.setText(ride.dest);
+		viewHolder.fromHeader.setText(Helper.getHeadFromLocation(ride.origin));
+        viewHolder.fromFooter.setText(Helper.getFooterFromLocation(ride.origin));
+        viewHolder.toHeader.setText(Helper.getHeadFromLocation(ride.dest));
+        viewHolder.toFooter.setText(Helper.getFooterFromLocation(ride.dest));
 		viewHolder.time.setText(ride.getAmPmTime());
         viewHolder.statusGrey.setVisibility(View.GONE);
         viewHolder.statusYellow.setVisibility(View.GONE);
@@ -228,8 +232,10 @@ public class RideAdapter extends ArrayAdapter<Ride> {
 	public class RideViewHolder {
         public int position;
         public long rideId;
-		public TextView from;
-        public TextView to;
+		public TextView fromHeader;
+        public TextView fromFooter;
+        public TextView toHeader;
+        public TextView toFooter;
         public TextView time;
         public TextView statusGrey;
         public TextView statusRed;

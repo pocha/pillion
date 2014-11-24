@@ -1,4 +1,3 @@
 //include ':facebookSDK'
 include ':slidingMenu'
-include ':smoothie'
 include ':pillionApp'

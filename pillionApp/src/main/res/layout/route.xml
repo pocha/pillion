@@ -37,20 +37,42 @@
         android:layout_height="60dp"
         android:gravity="center_vertical"
         android:orientation="horizontal"
-        android:paddingLeft="10dp">
+        android:paddingLeft="2dp">
         
-        
-        <TextView
-	        android:id="@+id/from"
-	        android:layout_width="match_parent"
+        <LinearLayout
+            android:layout_width="match_parent"
             android:layout_weight="1"
-	        android:layout_height="wrap_content"
-	        android:text="Brigade Gardenia"
-	        android:textColor="#333333"
-	        android:lines="1"
-	        android:textSize="16sp"
-            android:ellipsize="end">
-	    </TextView>
+            android:layout_height="match_parent"
+            android:orientation="vertical"
+            android:gravity="center"
+            >
+
+            <TextView
+                android:id="@+id/fromHeader"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Brigade Gardenia"
+                android:lines="1"
+                style="@style/TextViewLabel"
+                android:layout_marginTop="0dp"
+                android:layout_marginBottom="0dp"
+                >
+            </TextView>
+            <TextView
+                android:id="@+id/fromFooter"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="0dp"
+                android:gravity="center"
+                android:text="9th Cross Road, JP Nagar Bangalore .........................................................."
+                style="@style/TextViewLabel"
+                android:lines="2"
+                android:ellipsize="end"
+                android:textColor="#999999">
+            </TextView>
+
+        </LinearLayout>
+
 
         <TextView
             android:id="@+id/fromTo"
@@ -58,24 +80,45 @@
             android:layout_height="wrap_content"
             android:text=" => "
             android:lines="1"
+            android:layout_marginTop="5dp"
+            android:layout_gravity="top"
             android:textColor="#999999"
             android:textSize="16sp" >
         </TextView>
-	    
-        <TextView
-	        android:id="@+id/to"
+
+        <LinearLayout
             android:layout_width="match_parent"
             android:layout_weight="1"
-	        android:layout_height="wrap_content"
-	        android:lines="1"
-            android:textColor="#333333"
-	        android:text="Adarsh Palm Retreat"
-	        android:textSize="16sp"
-            android:ellipsize="end">
-	    </TextView>
-	    
-        
-	    
+            android:layout_height="match_parent"
+            android:orientation="vertical"
+            android:gravity="center"
+            >
+
+            <TextView
+                android:id="@+id/toHeader"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Brigade Gardenia"
+                android:lines="1"
+                style="@style/TextViewLabel"
+                android:layout_marginTop="0dp"
+                android:layout_marginBottom="1dp"
+                >
+            </TextView>
+            <TextView
+                android:id="@+id/toFooter"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="0dp"
+                android:gravity="center"
+                android:text="9th Cross Road, JP Nagar Bangalore .........................................................."
+                style="@style/TextViewLabel"
+                android:lines="2"
+                android:ellipsize="end"
+                android:textColor="#999999"                >
+            </TextView>
+
+        </LinearLayout>
         
     </LinearLayout>
     

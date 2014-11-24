@@ -341,5 +341,19 @@ public class Helper {
         //return !FormValidator.validate(activity, new SimpleErrorPopupCallback(activity));
     }
 
+    public static String getHeadFromLocation(String location){
+        if (location.indexOf(",") != -1 )
+            return location.substring(0, location.indexOf(","));
+        else
+            return location;
+    }
+    public static String getFooterFromLocation(String location){
+        if (location.indexOf(",") != -1 )
+            return location.substring(location.indexOf(",") + 2);
+        else
+            return "";
+    }
+
+
 
 }
