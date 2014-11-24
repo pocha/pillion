@@ -53,7 +53,8 @@ public class ProfileFragment extends Fragment {
     @InjectView(R.id.interests) TextView interests;
 
     public void fillUserData(final User user){
-
+        if (user.name == null)
+            return;
         noProfileData.setVisibility(View.GONE);
         profile.setVisibility(View.VISIBLE);
 

@@ -34,7 +34,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:gravity="center"
-            android:text="No Routes Found"
+            android:text="No Rides Found"
             android:visibility="gone"
             style="@style/TextViewLabel"/>
         <Button
@@ -42,7 +42,8 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_margin="10dp"
-            android:text="Schedule Ride"/>
+            android:text="Offer Ride"
+            android:visibility="gone"/>
         
     </LinearLayout>
    </ScrollView>

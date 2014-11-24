@@ -22,10 +22,20 @@ public class RideUserMapping extends SyncSugarRecord<RideUserMapping> {
     public int status = 0; // User status for this ride (requested, cancelled etc) check possible status value in Constants.java
     @SerializedName("is_owner")
     public Boolean isOwner = false;
-    public Route route;
-    @Ignore
-    public Long route_id; //to be intimated upstream
 
+    //Route detail
+    public String origin;
+    public String dest;
+    public String distance;
+    @SerializedName("is_offered")
+    public boolean isOffered;
+
+    private void storeFromRoute(Route route){
+        this.origin = route.origin;
+        this.dest = route.dest;
+        this.distance = route.distance;
+        this.isOffered = route.isOffered;
+    }
 
     public RideUserMapping(){}
     public RideUserMapping(Long rideId, Long userId, Boolean isOwner, int status, Route route){
@@ -33,7 +43,7 @@ public class RideUserMapping extends SyncSugarRecord<RideUserMapping> {
         this.userId = userId;
         this.isOwner = isOwner;
         this.status = status;
-        this.route = route;
+        storeFromRoute(route);
     }
 
 
@@ -63,8 +73,8 @@ public class RideUserMapping extends SyncSugarRecord<RideUserMapping> {
         if (rideUserMappings.isEmpty()){
             //data is coming from upstream & can have new user & route. We need to locally create them.
             User user = User.updateFromUpstream(upstream.user);
-            Route route = Route.updateFromUpstream(upstream.route);
-            upstream.route = route;
+            /*Route route = Route.updateFromUpstream(upstream.route);
+            upstream.route = route;*/
 
             upstream.userId = user.getId();
             upstream.rideId = ride.getId();
@@ -89,7 +99,7 @@ public class RideUserMapping extends SyncSugarRecord<RideUserMapping> {
         User user = User.findById(User.class,this.userId);
         this.userId = user.globalId;
 
-        this.route_id = route.globalId;
+        //this.route_id = route.globalId; //not needed
 
         //server does not need these information. To broadcast to other clients, server is anyway creating it separately
         excludeFields.add("user");

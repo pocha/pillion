@@ -17,6 +17,12 @@ public class Vehicle extends SyncSugarRecord<Vehicle> {
 
     public Vehicle(){}
 
+    public Vehicle(String model, String color, String number){
+        this.model = model;
+        this.color = color;
+        this.number = number;
+    }
+
     public static Vehicle updateFromUpstream(Vehicle upstreamVehicle, User user){
         List<Vehicle> vehicles = Vehicle.find(Vehicle.class,"global_id = ?",String.valueOf(upstreamVehicle.globalId));
 
@@ -37,6 +43,8 @@ public class Vehicle extends SyncSugarRecord<Vehicle> {
 
         return vehicle;
     }
+
+
     @Override
     public String toJson(){
         //these values will be used on the server for the time & date

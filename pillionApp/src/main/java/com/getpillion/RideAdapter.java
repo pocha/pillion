@@ -8,18 +8,24 @@ import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.TextView;
 
+import com.getpillion.common.Constant;
+import com.getpillion.common.Helper;
 import com.getpillion.models.Ride;
+import com.getpillion.models.RideUserMapping;
 
 import java.util.ArrayList;
+import java.util.Date;
 
 public class RideAdapter extends ArrayAdapter<Ride> {
 	private final Context context;
 	private ArrayList<Ride> values;
+    private Date today;
 
 	public RideAdapter(Context context, ArrayList<Ride> values) {
 		super(context, R.layout.route, values);
 		this.context = context;
 		this.values = values;
+        today = new Date();
 		/*FB_USER_ID = facebookUserID;
 		settings = context
 				.getSharedPreferences(Constant.PREFS_NAME, 0);*/
@@ -48,6 +54,10 @@ public class RideAdapter extends ArrayAdapter<Ride> {
 			viewHolder.from = (TextView) convertView.findViewById(R.id.from);
             viewHolder.to = (TextView) convertView.findViewById(R.id.to);
             viewHolder.time = (TextView) convertView.findViewById(R.id.time);
+            viewHolder.statusGrey = (TextView) convertView.findViewById(R.id.statusGrey);
+            viewHolder.statusRed = (TextView) convertView.findViewById(R.id.statusRed);
+            viewHolder.statusGreen = (TextView) convertView.findViewById(R.id.statusGreen);
+            viewHolder.statusYellow = (TextView) convertView.findViewById(R.id.statusYellow);
 
             convertView.setTag(viewHolder);
 		} else {
@@ -79,9 +89,70 @@ public class RideAdapter extends ArrayAdapter<Ride> {
 */
 		viewHolder.position = position;
         viewHolder.rideId = ride.getId();
-		viewHolder.from.setText(ride.route.origin);
-		viewHolder.to.setText(ride.route.dest);
+		viewHolder.from.setText(ride.origin);
+		viewHolder.to.setText(ride.dest);
 		viewHolder.time.setText(ride.getAmPmTime());
+        viewHolder.statusGrey.setVisibility(View.GONE);
+        viewHolder.statusYellow.setVisibility(View.GONE);
+        viewHolder.statusGreen.setVisibility(View.GONE);
+        viewHolder.statusRed.setVisibility(View.GONE);
+
+
+        RideUserMapping rideOwnerMapping = RideUserMapping.find(RideUserMapping.class,"is_owner = 1 AND ride_id = ?",
+                    String.valueOf(ride.getId())
+                ).get(0);
+
+
+            switch (rideOwnerMapping.status) {
+                case Constant.STARTED:
+                    if (Helper.compareDate(ride.dateLong, today) >= 0) {
+                        viewHolder.statusGreen.setText("started");
+                        viewHolder.statusGreen.setVisibility(View.VISIBLE);
+                    } else { //older journey. just show the date of journey
+                        viewHolder.statusGrey.setText(Helper.niceDate(ride.dateLong));
+                        viewHolder.statusGrey.setVisibility(View.VISIBLE);
+                    }
+                    break;
+                case Constant.CANCELLED:
+                    viewHolder.statusRed.setText("cancelled");
+                    viewHolder.statusRed.setVisibility(View.VISIBLE);
+                    break;
+                case Constant.CREATED:
+                    if (ride.isOffered) {
+                        viewHolder.statusRed.setText("not-scheduled");
+                        viewHolder.statusRed.setVisibility(View.VISIBLE);
+                    }
+                    else {
+                        if (ride.dateLong != null) {
+                            if (Helper.compareDate(ride.dateLong, today) >= 0) {
+                                viewHolder.statusYellow.setText(Helper.niceDate(ride.dateLong));
+                                viewHolder.statusYellow.setVisibility(View.VISIBLE);
+                            } else {
+                                viewHolder.statusGrey.setText(Helper.niceDate(ride.dateLong));
+                                viewHolder.statusGrey.setVisibility(View.VISIBLE);
+                            }
+                        }
+                        else { //office ride mostly
+                            viewHolder.statusGrey.setText("daily");
+                            viewHolder.statusGrey.setVisibility(View.VISIBLE);
+                        }
+                    }
+                    break;
+                default:
+                    if (ride.dateLong != null) {
+                        if (Helper.compareDate(ride.dateLong, today) >= 0) {
+                            viewHolder.statusYellow.setText(Helper.niceDate(ride.dateLong));
+                            viewHolder.statusYellow.setVisibility(View.VISIBLE);
+                        } else {
+                            viewHolder.statusGrey.setText(Helper.niceDate(ride.dateLong));
+                            viewHolder.statusGrey.setVisibility(View.VISIBLE);
+                        }
+                    }
+            }
+
+
+
+
 
 /*
 		viewHolder.friendNewApp.setVisibility(LinearLayout.GONE);
@@ -160,7 +231,11 @@ public class RideAdapter extends ArrayAdapter<Ride> {
 		public TextView from;
         public TextView to;
         public TextView time;
-	}
+        public TextView statusGrey;
+        public TextView statusRed;
+        public TextView statusYellow;
+        public TextView statusGreen;
+    }
 
 /*	private static class ThumbnailTask extends AsyncTask {
 		private int mPosition;

@@ -14,6 +14,7 @@
             android:layout_height="wrap_content"
             android:orientation="vertical"
             android:padding="10dp">
+
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -44,22 +45,39 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 style="@style/TextViewLabel"
-                android:text="Select Vehicle"/>
+                android:text="Vehicle Info"/>
             <View
                 android:layout_width="fill_parent"
                 android:layout_height="1dp"
                 style="@style/TextViewLabelDivider"/>
 
-           <Spinner
-               android:id="@+id/vehicles"
+           <LinearLayout
                android:layout_width="match_parent"
-               android:layout_height="wrap_content"></Spinner>
+               android:layout_height="wrap_content"
+               android:orientation="horizontal">
 
-            <Button
-                android:id="@+id/addVehicle"
+               <EditText
+                   android:id="@+id/color"
+                   android:layout_width="match_parent"
+                   android:layout_weight="2"
+                   android:layout_height="wrap_content"
+                   android:hint="color (black)"/>
+               <EditText
+                   android:id="@+id/model"
+                   android:layout_width="match_parent"
+                   android:layout_weight="2"
+                   android:layout_height="wrap_content"
+                   android:hint="model (Mercedez)"/>
+           </LinearLayout>
+            <EditText
+                android:id="@+id/number"
                 android:layout_width="match_parent"
+                android:layout_weight="1.5"
                 android:layout_height="wrap_content"
-                android:text="Add New Vehicle"/>
+                android:hint="number (KA51 Q b055)"/>
+
+
+
 
             <TextView
                 android:layout_width="match_parent"

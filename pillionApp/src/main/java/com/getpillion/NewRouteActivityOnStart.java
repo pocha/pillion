@@ -11,6 +11,7 @@ import android.widget.EditText;
 
 import com.actionbarsherlock.app.SherlockFragmentActivity;
 import com.getpillion.common.Constant;
+import com.getpillion.common.Helper;
 import com.getpillion.common.PlaceSelectFragment;
 import com.getpillion.common.TimePickerFragment;
 import com.getpillion.models.Ride;
@@ -22,12 +23,16 @@ import butterknife.ButterKnife;
 import butterknife.InjectView;
 import butterknife.OnClick;
 import butterknife.OnTouch;
+import eu.inmite.android.lib.validations.form.annotations.NotEmpty;
 
 public class NewRouteActivityOnStart extends SherlockFragmentActivity  {
 
 
 	//private SlidingMenu menu = null;
+    @NotEmpty(messageId = R.string.non_empty_field)
     @InjectView(R.id.office) EditText office;
+
+    @NotEmpty(messageId = R.string.non_empty_field)
     @InjectView(R.id.home) EditText home;
 
 
@@ -54,7 +59,8 @@ public class NewRouteActivityOnStart extends SherlockFragmentActivity  {
 
 
     @OnClick(R.id.saveRoute) void onSubmit(View v){
-        //To-Do validate data
+        if (Helper.fieldsHaveErrors(this))
+                return;
 
         SharedPreferences sharedPref = getApplicationContext().getSharedPreferences(
                 Constant.PREFS_NAME, 0);

@@ -153,7 +153,7 @@ public class Helper {
     }
 
     public static String niceDate(Long date) {
-        SimpleDateFormat ft = new SimpleDateFormat("E MMM d");
+        SimpleDateFormat ft = new SimpleDateFormat("E d MMM");
         return ft.format(new Date(date));
     }
 
@@ -334,6 +334,11 @@ public class Helper {
                  */
             //return null;
         }
+    }
+
+    public static boolean fieldsHaveErrors(Activity activity){
+        return false; //for testing
+        //return !FormValidator.validate(activity, new SimpleErrorPopupCallback(activity));
     }
 
 

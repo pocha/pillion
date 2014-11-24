@@ -14,7 +14,6 @@ import com.actionbarsherlock.app.ActionBar;
 import com.getpillion.common.Constant;
 import com.getpillion.common.ProfileFragment;
 import com.getpillion.models.RideUserMapping;
-import com.getpillion.models.Route;
 import com.getpillion.models.User;
 
 import butterknife.ButterKnife;
@@ -51,37 +50,41 @@ public class UserProfileActivity extends ExtendMeSherlockWithMenuActivity implem
         setContentView(R.layout.activity_user_profile);
         ButterKnife.inject(this);
 
+        rideUserMapping = RideUserMapping.findById(RideUserMapping.class, getIntent().getExtras().getLong("rideUserMappingId"));
+        user = User.findById(User.class, rideUserMapping.userId);
+
+        //fill user data in the fragment
+        ((ProfileFragment)getSupportFragmentManager().findFragmentById(R.id.profile)).fillUserData(user);
+
         ActionBar actionBar = getSupportActionBar();
         actionBar.setHomeButtonEnabled(true);
-        actionBar.setNavigationMode(ActionBar.NAVIGATION_MODE_TABS);
 
-        pickupDropTab = actionBar.newTab().setText("Pickup Drop");
-        pickupDropTab.setTag("pickupDrop");
-        pickupDropTab.setTabListener(this);
-        actionBar.addTab(pickupDropTab);
+        if (rideUserMapping.isOwner) {
+            ((ProfileFragment)getSupportFragmentManager().findFragmentById(R.id.profile)).getView().setVisibility(View.VISIBLE);
+            pickupDropView.setVisibility(View.GONE);
+            bottomBar.setVisibility(View.GONE);
+            return;
+        }
+
+        //show tabs only for regular users
+        actionBar.setNavigationMode(ActionBar.NAVIGATION_MODE_TABS);
 
         profileTab = actionBar.newTab().setText("Profile");
         profileTab.setTag("profile");
         profileTab.setTabListener(this);
         actionBar.addTab(profileTab);
 
-        rideUserMapping = RideUserMapping.findById(RideUserMapping.class, getIntent().getExtras().getLong("rideUserMappingId"));
-        user = User.findById(User.class, rideUserMapping.userId);
+        pickupDropTab = actionBar.newTab().setText("Pickup Drop");
+        pickupDropTab.setTag("pickupDrop");
+        pickupDropTab.setTabListener(this);
+        actionBar.addTab(pickupDropTab);
 
         //fill in user's route data
-        Route route = rideUserMapping.route;
-        pickUp.setText(route.origin);
-        drop.setText(route.dest);
-        distance.setText(route.distance + " km");
+        //Route route = rideUserMapping.route;
+        pickUp.setText(rideUserMapping.origin);
+        drop.setText(rideUserMapping.dest);
+        distance.setText(rideUserMapping.distance + " km");
         cost.setText(" .. I am too exhausted to implement this now. Sorry :( ..");
-
-        //fill user data in the fragment
-        ((ProfileFragment)getSupportFragmentManager().findFragmentById(R.id.profile)).fillUserData(user);
-        if (rideUserMapping.isOwner) { //hide the bottom bar
-            bottomBar.setVisibility(View.GONE);
-            return;
-        }
-
 
         //modify button content
         if (rideUserMapping.status == Constant.REJECTED) {

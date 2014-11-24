@@ -39,7 +39,6 @@ import butterknife.InjectView;
 import butterknife.OnClick;
 import butterknife.OnTextChanged;
 import butterknife.OnTouch;
-import uk.co.senab.bitmapcache.BitmapLruCache;
 
 public class AllRidesActivity extends ExtendMeSherlockWithMenuActivity implements ActionBar.TabListener {
 
@@ -52,7 +51,7 @@ public class AllRidesActivity extends ExtendMeSherlockWithMenuActivity implement
 	ConnectionDetector cd;
 
 //	private AsyncListView mListView;
-	private BitmapLruCache mCache;
+//	private BitmapLruCache mCache;
 
 	private String FB_USER_ID = "";
 	String friendFacebookID = "";
@@ -241,21 +240,19 @@ public class AllRidesActivity extends ExtendMeSherlockWithMenuActivity implement
     public void showRoutes(){
         rides.clear();
 
-        String whereString = "WHERE " + (
+        String whereString =  (
                         (selectedTab.getTag() == "offering")
-                                ? "Route.is_offered = 1"
-                                : "Route.is_offered = 0"
+                                ? "is_offered = 1"
+                                : "is_offered = 0"
         );
 
         if (!from.getText().toString().isEmpty())
-            whereString += " AND Route.origin like '%"+ from.getText().toString() +"%'";
+            whereString += " AND origin like '%"+ from.getText().toString() +"%'";
         if (!to.getText().toString().isEmpty())
-            whereString += " AND Route.dest like '%"+ to.getText().toString() +"%'";
+            whereString += " AND dest like '%"+ to.getText().toString() +"%'";
 
-        rides.addAll(Ride.findWithQuery(Ride.class,
-                        "SELECT Ride.* FROM Ride JOIN Route ON Ride.route = Route.id " +
-                                whereString +
-                                " order by Ride.time_long")
+        rides.addAll(
+                Ride.find(Ride.class, whereString +" order by Ride.time_long")
         );
 
         /*for (Ride ride : rides){
@@ -327,12 +324,12 @@ public class AllRidesActivity extends ExtendMeSherlockWithMenuActivity implement
         mListView.setEmptyView(noRoutesFound);
         mListView.setAdapter(adapter);
 
-        offeringTab = actionBar.newTab().setText("Rides Offered");
+        offeringTab = actionBar.newTab().setText("People Offering");
         offeringTab.setTag("offering");
         offeringTab.setTabListener(this);
         actionBar.addTab(offeringTab);
 
-        seekingTab = actionBar.newTab().setText("Rides Sought");
+        seekingTab = actionBar.newTab().setText("People Seeking");
         seekingTab.setTag("seeking");
         seekingTab.setTabListener(this);
         actionBar.addTab(seekingTab);

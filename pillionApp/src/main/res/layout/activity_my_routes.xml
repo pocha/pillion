@@ -21,7 +21,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 style="@style/TextViewLabel"
-                android:text="Offering Ride (select a route to schedule ride on it)"/>
+                android:text="Offering Ride (select a route to offer ride on it)"/>
             <View
                 android:layout_width="fill_parent"
                 android:layout_height="1dp"

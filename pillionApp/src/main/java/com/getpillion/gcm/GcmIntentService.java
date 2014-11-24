@@ -32,9 +32,7 @@ import com.getpillion.RideInfoActivity;
 import com.getpillion.common.Constant;
 import com.getpillion.models.Ride;
 import com.getpillion.models.RideUserMapping;
-import com.getpillion.models.Route;
 import com.getpillion.models.User;
-import com.getpillion.models.Vehicle;
 import com.google.android.gms.gcm.GoogleCloudMessaging;
 import com.google.gson.Gson;
 
@@ -97,24 +95,7 @@ public class GcmIntentService extends IntentService {
                 SharedPreferences sharedPref = getApplicationContext().getSharedPreferences(
                         Constant.PREFS_NAME, 0);
 
-                if (simpleClassName.equals("Route")) {
-                    Route route = Route.updateFromUpstream(gson.fromJson(json,Route.class));
-                    //take user to the Ride Activity for the most recent upcoming ride
-                    Ride mostRecentUpcomingRide = null;
-                    for (Ride ride: Ride.myRides(sharedPref.getLong("userId", 0L), "upcoming")){
-                        if (ride.route.getId() == route.getId()) {
-                            mostRecentUpcomingRide = ride;
-                            break;
-                        }
-                    }
-                    try {
-                        targetIntent = new Intent(this, RideInfoActivity.class);
-                        targetIntent.putExtra("rideId", mostRecentUpcomingRide.getId());
-                        msg = "Ride creator has updated route";
-                    }catch (Exception e){
-                        //no upcoming rides for the updated route. lets not bother the user
-                    }
-                }
+
                 if (simpleClassName.equals("Ride")) { //check if ride timing or vehicle info got updated
                     try {
                         Ride updatedRide = gson.fromJson(json, Ride.class);
@@ -122,26 +103,12 @@ public class GcmIntentService extends IntentService {
                         Ride.updateFromUpstream(updatedRide);
                         targetIntent = new Intent(this, RideInfoActivity.class);
                         targetIntent.putExtra("rideId",ride.getId());
-                        if (updatedRide.vehicle.globalId != ride.vehicle.globalId)
-                            msg = "Vehicle info updated";
-                        else
-                            msg = "Ride timing has changed";
-
+                        msg = "Ride creator has updated the ride";
                     }catch (Exception e){
                         e.printStackTrace();
                     }
                 }
-                if (simpleClassName.equals("Vehicle")) {
-                    Vehicle vehicle = Vehicle.updateFromUpstream(gson.fromJson(json, Vehicle.class),null);
-                    //take user to the most imminent upcoming ride
-                    try {
-                        targetIntent = new Intent(this,RideInfoActivity.class);
-                        targetIntent.putExtra("rideId",Ride.myRides(sharedPref.getLong("userId",0L),"upcoming").get(0).getId());
-                        msg = "Vehicle info updated";
-                    }
-                    catch (Exception e) { // there probably is no upcoming ride with the vehicle. Lets not bother user
-                    }
-                }
+
                 if (simpleClassName.equals("User")) {
                     User.updateFromUpstream(gson.fromJson(json, User.class));
                     //lets not send notification for user info update
@@ -158,7 +125,6 @@ public class GcmIntentService extends IntentService {
                                                                     String.valueOf(ride.getId()),
                                                                     String.valueOf(sharedPref.getLong("userId",0L))
                                                            ).get(0);
-                    //TODO commented out for testing
                     if (myEntry.status != Constant.REQUESTED &&
                             myEntry.status != Constant.REJECTED &&
                             myEntry.status != Constant.CANCELLED) //no need to show updates to these guys

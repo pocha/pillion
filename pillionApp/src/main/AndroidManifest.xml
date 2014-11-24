@@ -80,7 +80,7 @@
         </activity> -->
         <activity
             android:name=".AllRidesActivity"
-            android:label="All Rides"
+            android:label="Search Rides"
             android:logo="@drawable/list" >
         </activity>
 
@@ -110,11 +110,6 @@
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="com.getpillion.AllRidesActivity" />
-        </activity>
-        <activity
-            android:name="com.getpillion.SettingActivity"
-            android:label="Setting"
-            android:logo="@drawable/back" >
         </activity>
         <activity
             android:name="com.getpillion.RequestRideActivity"

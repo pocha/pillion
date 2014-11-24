@@ -222,21 +222,72 @@
     <LinearLayout
         android:id="@+id/right_arrow_div"
         android:layout_width="0dp"
-        android:layout_weight="1"
-        android:padding="4dp"
+        android:layout_weight="1.3"
+        android:paddingRight="4dp"
         android:layout_height="60dp"
         android:gravity="right|center_vertical"
         android:layout_gravity="center_vertical"
-        android:orientation="horizontal">
+        android:orientation="horizontal"
+        android:layout_marginLeft="4dp">
 
-        <TextView
-            android:id="@+id/time"
+        <LinearLayout
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="4:30 PM"
-            android:textSize="12sp"
-            android:textColor="#999999"
-            />
+            android:layout_height="match_parent"
+            android:orientation="vertical"
+            android:gravity="center"
+            android:layout_marginRight="4dp">
+
+            <TextView
+                android:visibility="gone"
+                android:id="@+id/statusGrey"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Cancelled"
+                style="@style/Badge"
+                android:layout_marginBottom="4dp"
+                />
+
+            <TextView
+                android:visibility="gone"
+                android:id="@+id/statusRed"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Cancelled"
+                style="@style/BadgeRed"
+                android:layout_marginBottom="4dp"
+                />
+            <TextView
+                android:visibility="gone"
+                android:id="@+id/statusGreen"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Cancelled"
+                style="@style/BadgeGreen"
+                android:layout_marginBottom="4dp"
+                />
+            <TextView
+                android:visibility="gone"
+                android:id="@+id/statusYellow"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Cancelled"
+                style="@style/BadgeYellow"
+                android:layout_marginBottom="4dp"
+                />
+
+            <TextView
+                android:id="@+id/time"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="4:30 PM"
+                android:textSize="12sp"
+                android:textColor="#999999"
+                />
+
+
+        </LinearLayout>
+
+
         
         <ImageView android:id="@+id/right_arrow"
             android:src="@drawable/right_arrow"

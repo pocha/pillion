@@ -2,7 +2,7 @@ package com.getpillion.common;
 
 public class Constant {
 
-	public static String SERVER = "http://192.168.43.5:3000";
+	public static String SERVER = "http://192.168.1.6:3000";
     public static String NEW_RECORD_URL = SERVER + "/new";
     public static String UPDATE_RECORD_URL = SERVER + "/update";
     public static String DELETE_RECORD_URL = SERVER + "/delete";

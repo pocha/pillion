@@ -23,9 +23,13 @@ public class Ride extends SyncSugarRecord<Ride> {
     @Ignore
     public String time_stamp = null;
 
-    public Vehicle vehicle = null;
-    @Ignore
-    private Long vehicle_id = null;
+    //Vehicle detail
+    @SerializedName("vehicle_color")
+    public String vehicleColor = null;
+    @SerializedName("vehicle_model")
+    public String vehicleModel = null;
+    @SerializedName("vehicle_number")
+    public String vehicleNumber = null;
 
     @SerializedName("date_long")
     public Long dateLong = null; //declaring date as Long because SugarRecord does not seem to take null for date
@@ -35,9 +39,12 @@ public class Ride extends SyncSugarRecord<Ride> {
     @SerializedName("is_scheduled")
     public boolean isScheduled = false;
 
-    public Route route;
-    @Ignore
-    private Long route_id = null;
+    //Route detail
+    public String origin;
+    public String dest;
+    public String distance;
+    @SerializedName("is_offered")
+    public boolean isOffered;
 
     @Ignore
     @SerializedName("ride_user_mappings")
@@ -46,12 +53,25 @@ public class Ride extends SyncSugarRecord<Ride> {
 
     public Ride(){}
 
+    private void storeFromRoute(Route route){
+        this.origin = route.origin;
+        this.dest = route.dest;
+        this.distance = route.distance;
+        this.isOffered = route.isOffered;
+    }
+
+    private void storeFromVehicle(Vehicle vehicle){
+        this.vehicleColor = vehicle.color;
+        this.vehicleModel = vehicle.model;
+        this.vehicleNumber = vehicle.number;
+    }
+
     public Ride (Route route, Date date, Time time, Vehicle vehicle, User owner){
         Log.d("Ride.java","Inside constructor, creating ride with time " + time.toString());
-        this.route = route;
+        storeFromRoute(route);
         this.dateLong = date.getTime();
         this.timeLong = time.getTime();
-        this.vehicle = vehicle;
+        storeFromVehicle(vehicle);
         this.isScheduled = true;
     }
 
@@ -60,7 +80,8 @@ public class Ride extends SyncSugarRecord<Ride> {
         Log.d("Ride.java","Inside constructor, creating ride with time " + time.toString() + " which will be converted to " + time.getTime());
 
         //TODO calculate distance for the ride creator. Currently putting 0
-        this.route = new Route(from,to,"0",isOffered,owner);
+        Route route = new Route(from,to,"0",isOffered,owner);
+        storeFromRoute(route);
 
         this.timeLong = (time == null) ? Time.valueOf("09:00:00").getTime() : time.getTime();
 
@@ -96,15 +117,6 @@ public class Ride extends SyncSugarRecord<Ride> {
 
         ride.saveWithoutSync(); // we need ride.getId() in RideUserMapping.createOrUpdate
 
-        if (upstreamRide.route != null) { //null check is done as if only a few params in ride are updating, the rest may remain empty
-            ride.route = Route.updateFromUpstream(upstreamRide.route);
-            //no need to create RideUserMapping as it is being taken care in the travellers array below
-        }
-
-        if (upstreamRide.vehicle != null) {
-            ride.vehicle = Vehicle.updateFromUpstream(upstreamRide.vehicle, ride.route.owner);
-        }
-
         if (upstreamRide.rideUserMappings != null)
             for (RideUserMapping rideUserMapping:upstreamRide.rideUserMappings){
                 RideUserMapping.updateFromUpstream(ride, rideUserMapping);
@@ -123,14 +135,14 @@ public class Ride extends SyncSugarRecord<Ride> {
             Date date = new Date(this.dateLong);
             this.ride_date = new SimpleDateFormat("yyyy-MM-dd").format(date);
         }
-        this.route_id = this.route.globalId;
+        /*this.route_id = this.route.globalId;
         if (vehicle != null)
-            this.vehicle_id = this.vehicle.globalId;
+            this.vehicle_id = this.vehicle.globalId;*/ //not needed anymore
 
         excludeFields.add("timeLong");
         excludeFields.add("dateLong");
-        excludeFields.add("route");
-        excludeFields.add("vehicle");
+        /*excludeFields.add("route");
+        excludeFields.add("vehicle");*/
         excludeFields.add("users");
 
         return super.toJson();

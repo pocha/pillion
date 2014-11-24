@@ -10,6 +10,7 @@ import android.widget.TextView;
 
 import com.actionbarsherlock.view.MenuItem;
 import com.getpillion.common.Constant;
+import com.getpillion.common.Helper;
 import com.getpillion.common.PlaceSelectFragment;
 import com.getpillion.models.Ride;
 import com.getpillion.models.RideUserMapping;
@@ -32,32 +33,39 @@ import butterknife.InjectView;
 import butterknife.OnClick;
 import butterknife.OnTextChanged;
 import butterknife.OnTouch;
+import eu.inmite.android.lib.validations.form.annotations.NotEmpty;
 
 
 public class RequestRideActivity extends ExtendMeSherlockWithMenuActivity {
     private Ride ride = null;
 
     @OnClick(R.id.requestRide) void redirectBackToRouteInfoActivity(View V){
+        if (Helper.fieldsHaveErrors(this))
+            return;
         //store pickup & drop point in sharedPref so that it can be populated on next load
         sharedPrefEditor.putString("pickUpLocation",pickUp.getText().toString());
         sharedPrefEditor.putString("dropLocation", drop.getText().toString());
         sharedPrefEditor.putString("seekerDistance", distance.getText().toString());
         sharedPrefEditor.commit();
 
-        //check if user data is there - take him to MyProfileActivity if not
+        //create new seeking route if not exist
         User user = User.findById(User.class,sharedPref.getLong("userId",0L));
+        Route route = Route.findOrCreate(pickUp.getText().toString(), drop.getText().toString(), distance.getText().toString(), false, user);
+        if (route.getId() == null)
+            route.save();
+
+        //check if user data is there - take him to MyProfileActivity if not
         Log.d("RequestRideActivity","dumping user id - " + user.getId());
         Log.d("RequestRideActivity","dumping user name - " + user.name);
 
         //TODO comment this back in
-        /*if (user.name == null){
+        if (user.name == null){
             Log.d("RequestRideActivity","Launching ProfileActivity as no user data found");
             Intent intent = new Intent(RequestRideActivity.this, MyProfileActivity.class);
             startActivity(intent);
             return;
-        }*/
+        }
 
-        Route route = Route.findOrCreate(pickUp.getText().toString(),drop.getText().toString(), distance.getText().toString(), false,user);
         //TODO move the code below to payment gateway
         ride = Ride.findById(Ride.class, getIntent().getExtras().getLong("rideId"));
         Log.d("RequestRideActivity","dumping route id - " + ride.getId());
@@ -73,8 +81,12 @@ public class RequestRideActivity extends ExtendMeSherlockWithMenuActivity {
         finish();
     }
 
+    @NotEmpty(messageId = R.string.non_empty_field)
     @InjectView(R.id.pickUp) TextView pickUp;
+
+    @NotEmpty(messageId = R.string.non_empty_field)
     @InjectView(R.id.drop) TextView drop;
+
     @InjectView(R.id.distance) TextView distance;
     @InjectView(R.id.cost) TextView cost;
 

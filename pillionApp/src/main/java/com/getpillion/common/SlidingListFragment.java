@@ -18,7 +18,6 @@ import com.getpillion.AllRidesActivity;
 import com.getpillion.MyProfileActivity;
 import com.getpillion.MyRidesActivity;
 import com.getpillion.MyRoutesActivity;
-import com.getpillion.MyVehiclesActivity;
 import com.getpillion.R;
 
 public class SlidingListFragment extends ListFragment {
@@ -42,13 +41,14 @@ public class SlidingListFragment extends ListFragment {
 		adapter.add(new SampleItem("Invite friends", R.drawable.invite_friend));
 		*/
 		
-		adapter.add(new SampleItem("All Rides", R.drawable.office));
-		adapter.add(new SampleItem("My Routes", R.drawable.all_friends));
+		adapter.add(new SampleItem("Search Rides", R.drawable.action_location));
+        adapter.add(new SampleItem("Offer Ride", R.drawable.list));
+        adapter.add(new SampleItem("My Rides", R.drawable.action_home));
 		//adapter.add(new SampleItem("New Apps", R.drawable.new_app1));
-		adapter.add(new SampleItem("My Rides", R.drawable.my_apps));
+
 		//adapter.add(new SampleItem("Find More Friends", R.drawable.invite_friend));
-		adapter.add(new SampleItem("My Vehicles", R.drawable.like));
-		adapter.add(new SampleItem("My Profile", R.drawable.settings));
+		//adapter.add(new SampleItem("My Vehicles", R.drawable.like));
+		adapter.add(new SampleItem("My Profile", R.drawable.action_people));
 		
 		setListAdapter(adapter);
 	}
@@ -157,10 +157,10 @@ public class SlidingListFragment extends ListFragment {
 					/*intent.putExtra("type", "all");
 					intent.putExtra("title", "Top Friends Apps");*/
                     intent = new Intent(getActivity(),MyRoutesActivity.class);
-				} else if (arg2 == 3) {
+				} /*else if (arg2 == 3) {
 					//intent = new Intent(Intent.ACTION_VIEW, Uri.parse("http://www.facebook.com/appcovery"));
                     intent = new Intent(getActivity(), MyVehiclesActivity.class);
-				} else if ( arg2 == 4 ) {
+				}*/ else if ( arg2 == 3 ) {
 					intent = new Intent(getActivity(), MyProfileActivity.class);
 				} else if ( arg2 == 2) {
 					/*intent.putExtra("type", "my_apps");

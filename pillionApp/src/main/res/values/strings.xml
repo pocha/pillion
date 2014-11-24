@@ -42,4 +42,6 @@
         <item>AM</item>
         <item>PM</item>
     </string-array>
+
+    <string name="non_empty_field">Field can\'t be empty</string>
 </resources>

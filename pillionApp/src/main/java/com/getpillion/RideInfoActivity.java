@@ -65,7 +65,7 @@ public class RideInfoActivity extends ExtendMeSherlockWithMenuActivity {
     @OnClick(R.id.primaryButton) void setPrimaryButtonListener(View v){
 
         if (amIOwner){
-            if (ride.route.isOffered){
+            if (ride.isOffered){
 
                 switch (myRideStatus) {
                     case Constant.CREATED: //Schedule Ride primary button
@@ -96,7 +96,7 @@ public class RideInfoActivity extends ExtendMeSherlockWithMenuActivity {
             }
         }
         else {
-            if (ride.route.isOffered){
+            if (ride.isOffered){
 
                 switch (myRideStatus) {
                     case Constant.CREATED: //Request Ride primary button
@@ -135,7 +135,7 @@ public class RideInfoActivity extends ExtendMeSherlockWithMenuActivity {
     @OnClick(R.id.secondaryButton) void setSecondaryButtonListener(View v){
 
         if (amIOwner){
-            if (ride.route.isOffered){
+            if (ride.isOffered){
                 switch (myRideStatus) {
                     case Constant.CREATED: //nothing as primary button to schedule ride & sec is hidden
                         break;
@@ -163,7 +163,7 @@ public class RideInfoActivity extends ExtendMeSherlockWithMenuActivity {
             }
         }
         else {
-            if (ride.route.isOffered){
+            if (ride.isOffered){
                 switch (myRideStatus) {
                     case Constant.CREATED:
                         //nothing as request ride main button
@@ -237,6 +237,7 @@ public class RideInfoActivity extends ExtendMeSherlockWithMenuActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_ride_info);
 
+
         //getSupportActionBar().setHomeButtonEnabled(true);
         thisActivity = this;
         final Long rideId = getIntent().getExtras().getLong("rideId");
@@ -247,14 +248,14 @@ public class RideInfoActivity extends ExtendMeSherlockWithMenuActivity {
 
         //Fill data
         ButterKnife.inject(this);
-        from.setText(ride.route.origin);
-        to.setText(ride.route.dest);
+        from.setText(ride.origin);
+        to.setText(ride.dest);
 
         int ownerRideStatus = RideUserMapping.find(RideUserMapping.class, "ride_id =? AND is_owner = 1",
                         String.valueOf(ride.getId())
                     ).get(0).status;
 
-        if (ride.route.isOffered) {
+        if (ride.isOffered) {
             if (ride.isScheduled) {
                 status.setText("SCHEDULED at " + ride.getAmPmTime() + " on " + Helper.niceDate(ride.dateLong));
             } else if (ride.dateLong != null) { // not Constant.SCHEDULED so must have happened in past
@@ -274,8 +275,8 @@ public class RideInfoActivity extends ExtendMeSherlockWithMenuActivity {
             }
         }
         
-        if(ride.vehicle != null)
-            vehicle.setText(ride.vehicle.color + " " + ride.vehicle.model);
+        if(ride.vehicleNumber != null)
+            vehicle.setText(ride.vehicleColor + " " + ride.vehicleModel + " - " + ride.vehicleNumber);
         else
             vehicleInfo.setVisibility(View.GONE);
 
@@ -298,14 +299,14 @@ public class RideInfoActivity extends ExtendMeSherlockWithMenuActivity {
         travellersList.setAdapter(adapter);
 
         if (amIOwner) {
-            if (ride.route.isOffered) { //I am owner & I am offering ride. Option to accept requests
+            if (ride.isOffered) { //I am owner & I am offering ride. Option to accept requests
                 switch (myRideStatus) {
                     case Constant.CREATED:
                         secButtonLayout.setVisibility(View.GONE);
 
                         primaryButtonLayout.setVisibility(View.VISIBLE);
-                        primaryButton.setText("Schedule Ride");
-                        primaryButtonMsg.setText("Starting the ride on this route shortly? Schedule the ride on this route.");
+                        primaryButton.setText("Create Ride");
+                        primaryButtonMsg.setText("Route created during app installation. Create ride by adding date & vehicle information.");
                         break;
                     case Constant.SCHEDULED: //show start ride button
                         secondaryButton.setText("Edit Details / Cancel Ride");
@@ -319,14 +320,14 @@ public class RideInfoActivity extends ExtendMeSherlockWithMenuActivity {
                         secButtonLayout.setVisibility(View.GONE);
 
                         primaryButtonLayout.setVisibility(View.VISIBLE);
-                        primaryButton.setText("Schedule New Ride");
+                        primaryButton.setText("Create New Ride");
                         primaryButtonMsg.setText("You have STARTED the ride");
                         break;
                     case Constant.CANCELLED:
                         secButtonLayout.setVisibility(View.GONE);
 
                         primaryButtonLayout.setVisibility(View.VISIBLE);
-                        primaryButton.setText("Schedule New Ride");
+                        primaryButton.setText("Create New Ride");
                         primaryButtonMsg.setText("You have CANCELLED the ride");
                         break;
                 }
@@ -344,7 +345,7 @@ public class RideInfoActivity extends ExtendMeSherlockWithMenuActivity {
             }
         }
         else {
-            if (ride.route.isOffered) { //I am not owner & ride is offered. Option to send request
+            if (ride.isOffered) { //I am not owner & ride is offered. Option to send request
                 switch (myRideStatus) {
                     case Constant.CREATED:
                         secButtonLayout.setVisibility(View.GONE);

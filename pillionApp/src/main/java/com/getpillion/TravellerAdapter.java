@@ -64,15 +64,15 @@ public class TravellerAdapter extends ArrayAdapter<RideUserMapping> {
 */
 		viewHolder.position = position;
 
-        if (viewerId == rideUsers.get(position).userId){
-            //attach you
-            if (user.name == null)
-                viewHolder.name.setText("You (profile missing)");
-            else
-                viewHolder.name.setText(user.name + " (you)");
-        }
+        if (user.name == null)
+            viewHolder.name.setText("(profile missing)");
         else
             viewHolder.name.setText(user.name);
+
+        if (viewerId == rideUsers.get(position).userId){
+            viewHolder.name.setText(viewHolder.name.getText() + " (you)");
+        }
+
 
 
         //these only visible to the owner as for others, these entries will not come

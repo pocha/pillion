@@ -20,13 +20,17 @@ import butterknife.ButterKnife;
 import butterknife.InjectView;
 import butterknife.OnClick;
 import butterknife.OnTouch;
+import eu.inmite.android.lib.validations.form.annotations.NotEmpty;
 
 public class MyRouteInfoActivity extends ExtendMeSherlockWithMenuActivity {
 
     private Route route = null;
     private boolean userHasVehicle = false;
 
+    @NotEmpty(messageId = R.string.non_empty_field)
     @InjectView(R.id.from) EditText from;
+
+    @NotEmpty(messageId = R.string.non_empty_field)
     @InjectView(R.id.to) EditText to;
 
 
@@ -41,6 +45,9 @@ public class MyRouteInfoActivity extends ExtendMeSherlockWithMenuActivity {
 
     @OnClick(R.id.saveRoute) void saveRoute(View v){
 
+        if (Helper.fieldsHaveErrors(this))
+            return;
+
         Route newRoute = new Route();
         newRoute.origin = from.getText().toString();
         newRoute.dest = to.getText().toString();
@@ -50,7 +57,7 @@ public class MyRouteInfoActivity extends ExtendMeSherlockWithMenuActivity {
         if (route == null){
             newRoute.save();
             Intent intent = new Intent(MyRouteInfoActivity.this,ScheduleRideActivity.class);
-            intent.putExtra("routeId", route.getId());
+            intent.putExtra("routeId", newRoute.getId());
             startActivity(intent);
             Toast.makeText(getApplicationContext(),"Route saved. Why not schedule a Ride on the route.",Toast.LENGTH_LONG);
             return;
