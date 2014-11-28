@@ -13,6 +13,7 @@ import android.widget.EditText;
 import android.widget.ListAdapter;
 import android.widget.ListView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.actionbarsherlock.app.SherlockFragmentActivity;
 import com.getpillion.R;
@@ -36,6 +37,9 @@ import java.sql.Time;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
+
+import eu.inmite.android.lib.validations.form.FormValidator;
+import eu.inmite.android.lib.validations.form.callback.SimpleErrorPopupCallback;
 
 public class Helper {
 
@@ -337,8 +341,11 @@ public class Helper {
     }
 
     public static boolean fieldsHaveErrors(Activity activity){
-        return false; //for testing
-        //return !FormValidator.validate(activity, new SimpleErrorPopupCallback(activity));
+        //return false; //for testing
+        boolean isError = !FormValidator.validate(activity, new SimpleErrorPopupCallback(activity));
+        if (isError)
+            Toast.makeText(activity, "Please fix the errors marked in red", Toast.LENGTH_LONG);
+        return isError;
     }
 
     public static String getHeadFromLocation(String location){

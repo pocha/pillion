@@ -293,6 +293,12 @@ public class AllRidesActivity extends ExtendMeSherlockWithMenuActivity implement
         // TODO Auto-generated method stub
     }
 
+    @Override
+    public void onResume(){
+        super.onResume();
+        if(asyncTask != null && asyncTask.getStatus() == AsyncTask.Status.FINISHED )
+            showRoutes();
+    }
 
 
 	@Override
@@ -320,7 +326,7 @@ public class AllRidesActivity extends ExtendMeSherlockWithMenuActivity implement
 
         rides = new ArrayList<Ride>();
 
-        adapter = new RideAdapter(this, rides);
+        adapter = new RideAdapter(this, rides, "AllRidesActivity");
         mListView.setEmptyView(noRoutesFound);
         mListView.setAdapter(adapter);
 

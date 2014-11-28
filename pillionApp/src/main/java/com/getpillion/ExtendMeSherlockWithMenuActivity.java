@@ -17,8 +17,8 @@ public class ExtendMeSherlockWithMenuActivity extends SherlockFragmentActivity {
 
     private SlidingMenu menu = null;
     public ProgressDialog progress;
-    SharedPreferences sharedPref;
-    Editor sharedPrefEditor;
+    public SharedPreferences sharedPref;
+    public Editor sharedPrefEditor;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -49,6 +49,13 @@ public class ExtendMeSherlockWithMenuActivity extends SherlockFragmentActivity {
         } catch (Exception ex) {
             return true;
         }
+    }
+
+    @Override
+    protected void onResume()
+    {
+        super.onResume();
+
     }
 
 }

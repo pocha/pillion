@@ -37,15 +37,15 @@
         android:layout_height="60dp"
         android:gravity="center_vertical"
         android:orientation="horizontal"
-        android:paddingLeft="2dp">
+        android:paddingLeft="2dp"
+        android:layout_marginTop="4dp">
         
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_weight="1"
             android:layout_height="match_parent"
             android:orientation="vertical"
-            android:gravity="center"
-            >
+            android:gravity="center">
 
             <TextView
                 android:id="@+id/fromHeader"
@@ -53,9 +53,8 @@
                 android:layout_height="wrap_content"
                 android:text="Brigade Gardenia"
                 android:lines="1"
-                style="@style/TextViewLabel"
-                android:layout_marginTop="0dp"
-                android:layout_marginBottom="0dp"
+                android:gravity="center"
+                android:layout_marginBottom="4dp"
                 >
             </TextView>
             <TextView
@@ -99,11 +98,9 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="Brigade Gardenia"
+                android:gravity="center"
                 android:lines="1"
-                style="@style/TextViewLabel"
-                android:layout_marginTop="0dp"
-                android:layout_marginBottom="1dp"
-                >
+                android:layout_marginBottom="4dp">
             </TextView>
             <TextView
                 android:id="@+id/toFooter"

@@ -3,8 +3,10 @@ package com.getpillion.common;
 
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.v4.app.ListFragment;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -14,11 +16,13 @@ import android.widget.ArrayAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.demach.konotor.Konotor;
 import com.getpillion.AllRidesActivity;
 import com.getpillion.MyProfileActivity;
 import com.getpillion.MyRidesActivity;
 import com.getpillion.MyRoutesActivity;
 import com.getpillion.R;
+import com.getpillion.models.User;
 
 public class SlidingListFragment extends ListFragment {
 
@@ -42,15 +46,17 @@ public class SlidingListFragment extends ListFragment {
 		*/
 		
 		adapter.add(new SampleItem("Search Rides", R.drawable.action_location));
-        adapter.add(new SampleItem("Offer Ride", R.drawable.list));
-        adapter.add(new SampleItem("My Rides", R.drawable.action_home));
+        adapter.add(new SampleItem("Offer/Seek Ride", R.drawable.list));
+        adapter.add(new SampleItem("Your Rides", R.drawable.action_home));
 		//adapter.add(new SampleItem("New Apps", R.drawable.new_app1));
 
 		//adapter.add(new SampleItem("Find More Friends", R.drawable.invite_friend));
 		//adapter.add(new SampleItem("My Vehicles", R.drawable.like));
-		adapter.add(new SampleItem("My Profile", R.drawable.action_people));
-		
-		setListAdapter(adapter);
+		adapter.add(new SampleItem("Your Profile", R.drawable.action_people));
+        adapter.add(new SampleItem("Talk to Founders", R.drawable.action_two_way));
+
+
+        setListAdapter(adapter);
 	}
 
 	private class SampleItem {
@@ -166,7 +172,35 @@ public class SlidingListFragment extends ListFragment {
 					/*intent.putExtra("type", "my_apps");
 					intent.putExtra("title", "Select Apps to Share");*/
                     intent = new Intent(getActivity(),MyRidesActivity.class);
-				}
+                } else if ( arg2 == 4) {
+                        /*intent.putExtra("type", "my_apps");
+                        intent.putExtra("title", "Select Apps to Share");*/
+                    SharedPreferences sharedPref = getActivity().getApplicationContext().getSharedPreferences(
+                            Constant.PREFS_NAME, 0);
+                    User user = User.findById(User.class,sharedPref.getLong("userId",0L));
+                    Log.d("SlidingListFragment","user name is " + user.name);
+
+                    // Instantiate Konotor.
+                    Konotor.getInstance(getActivity().getApplicationContext())
+                            .withUserName((user != null && user.name != null) ? user.name : "User " + user.getId()) 			// optional name by which to display the user
+                            /*.withIdentifier("My_User_100") 			// optional unique identifier for your reference
+                            .withUserMeta("age", "19") 			// optional metadata for your user
+                            .withUserEmail("your@domain.com") 		// optional email address of the user*/
+                            .withSupportName("Pillion Founders") 		// optional custom name for the support person
+                            .withFeedbackScreenTitle("We are all ears") 	// optional title to display when asking for feedback
+                            //.withNoAudioRecording(true) // optional - to disable voice messaging
+                            //.withNoPictureMessaging(true) // optional - to disable sending images from camera/gallery
+                            //.withUsesCustomSupportImage(true) // optional - set to true to use a different image to represenent the app on the chat screen. Replace konotor_support_image.png with your desired image
+                            .withUsesCustomNotificationImage(true) // optional - set to true to use a different notification icon from your default app icon. Replace konotor_chat.png with your desired icon
+                            .withWelcomeMessage("Hello there. We are couple of guys running the show here. We are all ears. Just shoot what you got.\n Anish, Anter, Vishal & Pocha")
+                            .withNoGcmRegistration(true)
+                            .init("0e60406f-f9f1-49a8-98ea-134c5ce4dbe5",
+                                    "959d0839-6341-4fa9-b18f-a9859bd05c42");
+                    Log.d("Konotor", "Konotor initialized");
+                    Konotor.getInstance(getActivity().getApplicationContext())
+                            .launchFeedbackScreen(getActivity());
+                    return;
+                }
 				startActivity(intent);
 			}
 		});

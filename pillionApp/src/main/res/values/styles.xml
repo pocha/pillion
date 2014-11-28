@@ -19,15 +19,22 @@
         <item name="android:buttonStyle">@style/ButtonStyle</item>
     </style>
 
+
+
     <style name="EditTextStyle" parent="android:Widget.EditText">
         <item name="android:layout_width">match_parent</item>
         <item name="android:layout_height">16sp</item>
         <item name="android:layout_marginBottom">10dp</item>
         <item name="android:gravity">center</item>
     </style>
+    <style name="SmallEditTextStyle" parent="EditTextStyle">
+        <item name="android:layout_height">10sp</item>
+        <item name="android:textSize">10sp</item>
+    </style>
 
     <style name="ScrollViewStyle" parent="android:Widget.ScrollView">
         <item name="android:padding">10dp</item>
+        <item name="android:background">#f7f7f7</item>
     </style>
 
 

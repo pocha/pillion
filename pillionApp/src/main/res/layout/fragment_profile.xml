@@ -29,6 +29,16 @@
             android:layout_height="wrap_content"
             android:text="Chances of people sharing ride increases significantly if they know a bit about your work life."
             android:layout_marginBottom="20dp"/>
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textColor="#fff"
+            android:textSize="10sp"
+            android:background="#a94442"
+            android:padding="5dp"
+            android:layout_gravity="center"
+            android:text="It is mandatory to import your profile before your request/offer ride"
+            android:layout_marginBottom="20dp"/>
 
     </LinearLayout>
     

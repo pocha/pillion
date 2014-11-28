@@ -2,7 +2,8 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="fill_parent"
     android:layout_height="fill_parent"
-    android:orientation="vertical" >
+    android:orientation="vertical"
+    >
     
     <ScrollView
         android:layout_width="fill_parent"
@@ -15,6 +16,37 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical">
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                style="@style/TextViewLabel"
+                android:text="Type"/>
+            <View
+                android:layout_width="fill_parent"
+                android:layout_height="1dp"
+                style="@style/TextViewLabelDivider"/>
+
+            <TextView
+                android:id="@+id/type"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Ride offered"/>
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                style="@style/TextViewLabel"
+                android:text="Status"/>
+            <View
+                android:layout_width="fill_parent"
+                android:layout_height="1dp"
+                style="@style/TextViewLabelDivider"/>
+
+            <TextView
+                android:id="@+id/status"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Scheduled for 4:30 PM today"/>
 
             <TextView
                 android:layout_width="match_parent"
@@ -48,21 +80,6 @@
                 android:layout_height="wrap_content"
                 android:text="To Address here"/>
 
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                style="@style/TextViewLabel"
-                android:text="Status"/>
-            <View
-                android:layout_width="fill_parent"
-                android:layout_height="1dp"
-                style="@style/TextViewLabelDivider"/>
-
-            <TextView
-                android:id="@+id/status"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="Scheduled for 4:30 PM today"/>
 
             <LinearLayout
                 android:id="@+id/vehicleInfo"

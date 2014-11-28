@@ -47,11 +47,18 @@ public class UserProfileActivity extends ExtendMeSherlockWithMenuActivity implem
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        setContentView(R.layout.activity_user_profile);
-        ButterKnife.inject(this);
-
         rideUserMapping = RideUserMapping.findById(RideUserMapping.class, getIntent().getExtras().getLong("rideUserMappingId"));
         user = User.findById(User.class, rideUserMapping.userId);
+
+        //redirect to MyProfileActivity if viewer is owner & this is ride he/she is offering
+        if (rideUserMapping.isOwner && rideUserMapping.userId == sharedPref.getLong("userId",0L)) {
+            Intent intent = new Intent(UserProfileActivity.this, MyProfileActivity.class);
+            startActivity(intent);
+            finish();
+        }
+
+        setContentView(R.layout.activity_user_profile);
+        ButterKnife.inject(this);
 
         //fill user data in the fragment
         ((ProfileFragment)getSupportFragmentManager().findFragmentById(R.id.profile)).fillUserData(user);

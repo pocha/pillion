@@ -16,6 +16,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.actionbarsherlock.app.SherlockFragmentActivity;
+import com.demach.konotor.Konotor;
 import com.getpillion.common.Constant;
 import com.getpillion.models.User;
 import com.google.android.gms.common.ConnectionResult;
@@ -128,6 +129,7 @@ public class MainActivity extends SherlockFragmentActivity {
                         gcm = GoogleCloudMessaging.getInstance(context);
                     }
                     regid = gcm.register(SENDER_ID);
+                    Konotor.getInstance(getApplicationContext()).updateGcmRegistrationId(regid);
                 }catch (Exception e){
                     throw new Exception("Could not connect to Google server.");
                 }

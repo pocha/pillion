@@ -1,17 +1,40 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="fill_parent"
-    android:layout_height="fill_parent"
-    android:orientation="vertical" >
+xmlns:tools="http://schemas.android.com/tools"
+android:layout_width="fill_parent"
+android:layout_height="fill_parent"
+android:orientation="vertical" >
 
-   <fragment
-       android:id="@+id/profile"
-       android:name="com.getpillion.common.ProfileFragment"
-       android:layout_width="match_parent"
-       android:layout_height="0dp"
-       android:layout_weight="1"
-       tools:layout="@layout/fragment_profile"/>
+    <LinearLayout
+        android:id="@+id/profileContainer"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:orientation="vertical">
+        <fragment
+            android:id="@+id/profile"
+            android:name="com.getpillion.common.ProfileFragment"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1"
+            tools:layout="@layout/fragment_profile"/>
+        <Button
+            android:id="@+id/loginButton"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="10dp"
+            style="@style/FbButtonStyle"
+            android:text="Import profile from Linkedin"/>
+
+    </LinearLayout>
+    <fragment
+        android:visibility="gone"
+        android:id="@+id/confirmPhone"
+        android:name="com.getpillion.common.ConfirmPhoneFragment"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        tools:layout="@layout/fragment_confirm_phone"/>
 
     <LinearLayout
         android:id="@+id/primaryButtonLayout"
@@ -20,9 +43,7 @@
         android:gravity="center"
         android:layout_gravity="center"
         android:orientation="vertical"
-        android:background="#eee"
-
-      >
+        android:background="#eee">
 
         <LinearLayout android:orientation="horizontal"
             android:layout_width="fill_parent"
@@ -35,14 +56,6 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="horizontal">
-            <Button
-                android:id="@+id/loginButton"
-                android:layout_width="match_parent"
-                android:layout_weight="1"
-                android:layout_height="wrap_content"
-                android:layout_margin="10dp"
-                style="@style/FbButtonStyle"
-                android:text="Linkedin Login"/>
             <Button
                 android:id="@+id/done"
                 android:layout_weight="1"
@@ -58,6 +71,7 @@
 
 
 </LinearLayout>
-    
-    
+
+
+
     

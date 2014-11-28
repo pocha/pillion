@@ -64,18 +64,18 @@ public class MyRidesActivity extends ExtendMeSherlockWithMenuActivity implements
 
         rides = new ArrayList<Ride>();
 
-        adapter = new RideAdapter(this, rides);
+        adapter = new RideAdapter(this, rides, "MyRidesActivity");
         mListView.setEmptyView(noRoutesFound);
         noRoutesFound.setText("No Rides found");
         mListView.setAdapter(adapter);
 
-        upcomingRidesTab = actionBar.newTab().setText("Upcoming Rides");
-        upcomingRidesTab.setTag("upcoming");
+        upcomingRidesTab = actionBar.newTab().setText("You Offering");
+        upcomingRidesTab.setTag("you_offering");
         upcomingRidesTab.setTabListener(this);
         actionBar.addTab(upcomingRidesTab);
 
-        pastRidesTab = actionBar.newTab().setText("Past Rides");
-        pastRidesTab.setTag("past");
+        pastRidesTab = actionBar.newTab().setText("You Seeking");
+        pastRidesTab.setTag("you_seeking");
         pastRidesTab.setTabListener(this);
         actionBar.addTab(pastRidesTab);
 

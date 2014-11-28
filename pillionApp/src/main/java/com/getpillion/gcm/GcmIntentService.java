@@ -27,6 +27,7 @@ import android.os.Bundle;
 import android.support.v4.app.NotificationCompat;
 import android.util.Log;
 
+import com.demach.konotor.Konotor;
 import com.getpillion.R;
 import com.getpillion.RideInfoActivity;
 import com.getpillion.common.Constant;
@@ -54,6 +55,8 @@ public class GcmIntentService extends IntentService {
         super("GcmIntentService");
     }
     public static final String TAG = "GCM Demo";
+
+
 
     @Override
     protected void onHandleIntent(Intent intent)  {
@@ -85,6 +88,15 @@ public class GcmIntentService extends IntentService {
                     }
                 }
                 Log.i(TAG, "Completed work @ " + SystemClock.elapsedRealtime());*/
+
+                Log.d("GcmIntentService","Got data from upstream " + extras.toString());
+
+                if(Konotor.getInstance(getApplicationContext()).isKonotorMessage(intent))
+                {
+                    Log.d("Konotor","Got konotor message");
+                    Konotor.getInstance(getApplicationContext()).handleGcmOnMessage(intent);
+                    return;
+                }
 
                 String simpleClassName = extras.getString("model_name");
                 String json = extras.getString("json");

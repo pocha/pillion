@@ -1,0 +1,80 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    android:orientation="vertical" >
+
+    <LinearLayout
+        android:id="@+id/noProfileData"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="6"
+        android:orientation="vertical"
+        android:gravity="center_vertical"
+        android:padding="10dp"
+        >
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="The app will send an sms to your own number &amp; it will intercept it to confirm your number. Local sms charge will apply."/>
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            style="@style/TextViewLabel"
+            android:text="Enter your phone number"/>
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            style="@style/TextViewLabelDivider"/>
+        <EditText
+            android:id="@+id/phone"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="20dp"
+            android:inputType="numberDecimal"
+            android:hint="9538384545"/>
+        <Button
+            android:id="@+id/confirm"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            style="@style/FbButtonStyle"
+            android:text="Proceed with Confirmation"
+            />
+        <TextView
+            android:id="@+id/error"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            style="@style/BadgeRed"
+            android:layout_gravity="center"
+            android:gravity="center"
+            android:text="It is mandatory to confirm your phone number before you can request/offer ride"
+            android:layout_marginTop="20dp"/>
+        <TextView
+            android:visibility="gone"
+            android:id="@+id/success"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            style="@style/BadgeGreen"
+            android:layout_gravity="center"
+            android:gravity="center"
+            android:layout_marginTop="20dp"/>
+        <TextView
+            android:visibility="gone"
+            android:id="@+id/warning"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            style="@style/BadgeYellow"
+            android:layout_gravity="center"
+            android:gravity="center"
+            android:layout_marginTop="20dp"/>
+
+    </LinearLayout>
+    
+
+
+</LinearLayout>
+    
+    
+    

@@ -60,16 +60,19 @@ public class ScheduleRideActivity extends ExtendMeSherlockWithMenuActivity  {
     @InjectView(R.id.model) TextView vehicleModel;
     @NotEmpty(messageId = R.string.non_empty_field)
     @InjectView(R.id.number) TextView vehicleNumber;
-
+    @InjectView(R.id.vehicleContainer) LinearLayout vehicleContainer;
 
 
     @Override
     public void onStart(){
         super.onStart();
         User user = User.findById(User.class, sharedPref.getLong("userId",0L));
-        if (user.name == null){
-            ((TextView)profileView.findViewById(R.id.name)).setText("You (profile missing)");
-            ((TextView)profileView.findViewById(R.id.title)).setText("Owner");
+        //check if no user data - send user to MyProfileActivity
+        if (user.name == null || user.phone == null){
+            Intent intent = new Intent(ScheduleRideActivity.this, MyProfileActivity.class);
+            startActivity(intent);
+            Toast.makeText(this,"You need to complete your profile to create ride",Toast.LENGTH_LONG);
+            finish();
         }
         else {
             ((TextView)profileView.findViewById(R.id.name)).setText(user.name);
@@ -101,6 +104,7 @@ public class ScheduleRideActivity extends ExtendMeSherlockWithMenuActivity  {
             //set date & time from the ride
             if (ride.dateLong != null)
                 ((DatePickerFragment) getSupportFragmentManager().findFragmentById(R.id.datePicker)).setDate(ride.dateLong);
+
             ((TimePickerFragment) getSupportFragmentManager().findFragmentById(R.id.timePicker)).setTime(ride.timeLong);
 
             if (getIntent().getExtras().getString("type").equals("updateRide")) {
@@ -111,9 +115,13 @@ public class ScheduleRideActivity extends ExtendMeSherlockWithMenuActivity  {
             else {
                 //nothing doing as update & delete are hidden by default
             }
+            if (!ride.isOffered)
+                vehicleContainer.setVisibility(View.GONE);
         }
         else {
             route = Route.findById(Route.class, getIntent().getExtras().getLong("routeId"));
+            if (!route.isOffered)
+                vehicleContainer.setVisibility(View.GONE);
         }
         thisActivity = this;
     }
@@ -153,9 +161,8 @@ public class ScheduleRideActivity extends ExtendMeSherlockWithMenuActivity  {
             RideUserMapping.createOrUpdate(ride, user, true, Constant.SCHEDULED, route);
             Toast.makeText(this,"New Ride created",Toast.LENGTH_LONG).show();
         }
-        Intent intent = new Intent(ScheduleRideActivity.this, MyProfileActivity.class);
+        Intent intent = new Intent(ScheduleRideActivity.this, MyRidesActivity.class);
         intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-        intent.putExtra("rideId", ride.getId());
         startActivity(intent);
         finish();
     }

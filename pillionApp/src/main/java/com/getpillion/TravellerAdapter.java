@@ -81,9 +81,11 @@ public class TravellerAdapter extends ArrayAdapter<RideUserMapping> {
         else if (rideUsers.get(position).status == Constant.REQUESTED)
             viewHolder.title.setText("waiting acceptance");
         else if (rideUsers.get(position).status == Constant.REJECTED)
-            viewHolder.title.setText("rejected");
+            viewHolder.title.setText("rejected by owner");
         else if (rideUsers.get(position).status == Constant.CANCELLED)
             viewHolder.title.setText("request cancelled");
+        else if (rideUsers.get(position).status == Constant.CHECKED_IN)
+            viewHolder.title.setText("already checked in");
         else
             viewHolder.title.setText(user.title);
 

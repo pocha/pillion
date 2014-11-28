@@ -56,7 +56,8 @@
                 android:id="@+id/isOffered"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="Check the box if you bringing your vehicle"/>
+                android:text="Check the box if you offering ride on this route"
+                android:layout_marginBottom="20dp"/>
 
             <Button
                 android:id="@+id/saveRoute"

@@ -1,6 +1,7 @@
 package com.getpillion;
 
 import android.content.Context;
+import android.content.SharedPreferences;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -20,12 +21,14 @@ public class RideAdapter extends ArrayAdapter<Ride> {
 	private final Context context;
 	private ArrayList<Ride> values;
     private Date today;
+    private String activityType;
 
-	public RideAdapter(Context context, ArrayList<Ride> values) {
+	public RideAdapter(Context context, ArrayList<Ride> values, String activityType) {
 		super(context, R.layout.route, values);
 		this.context = context;
 		this.values = values;
         today = new Date();
+        this.activityType = activityType;
 		/*FB_USER_ID = facebookUserID;
 		settings = context
 				.getSharedPreferences(Constant.PREFS_NAME, 0);*/
@@ -101,16 +104,35 @@ public class RideAdapter extends ArrayAdapter<Ride> {
         viewHolder.statusGreen.setVisibility(View.GONE);
         viewHolder.statusRed.setVisibility(View.GONE);
 
+        RideUserMapping rideUserMapping = null;
 
-        RideUserMapping rideOwnerMapping = RideUserMapping.find(RideUserMapping.class,"is_owner = 1 AND ride_id = ?",
+        try {
+            SharedPreferences sharedPref = context.getSharedPreferences(
+                    Constant.PREFS_NAME, 0);
+            rideUserMapping = RideUserMapping.find(RideUserMapping.class, "user_id = ? AND ride_id = ?",
+                    String.valueOf(sharedPref.getLong("userId",0L)),
                     String.valueOf(ride.getId())
-                ).get(0);
+            ).get(0);
+        }
+        catch (Exception e){
+            rideUserMapping = RideUserMapping.find(RideUserMapping.class,"is_owner = 1 AND ride_id = ?",
+                    String.valueOf(ride.getId())
+            ).get(0);
+        }
 
 
-            switch (rideOwnerMapping.status) {
+            switch (rideUserMapping.status) {
                 case Constant.STARTED:
+                case Constant.CHECKED_IN:
+                case Constant.ACCEPTED:
                     if (Helper.compareDate(ride.dateLong, today) >= 0) {
-                        viewHolder.statusGreen.setText("started");
+                        if (rideUserMapping.status == Constant.STARTED)
+                            viewHolder.statusGreen.setText("started");
+                        else if (rideUserMapping.status == Constant.ACCEPTED)
+                            viewHolder.statusGreen.setText("accepted");
+                        else
+                            viewHolder.statusGreen.setText("checked_in");
+
                         viewHolder.statusGreen.setVisibility(View.VISIBLE);
                     } else { //older journey. just show the date of journey
                         viewHolder.statusGrey.setText(Helper.niceDate(ride.dateLong));
@@ -118,7 +140,11 @@ public class RideAdapter extends ArrayAdapter<Ride> {
                     }
                     break;
                 case Constant.CANCELLED:
-                    viewHolder.statusRed.setText("cancelled");
+                case Constant.REJECTED:
+                    if (rideUserMapping.status == Constant.CANCELLED)
+                        viewHolder.statusGreen.setText("cancelled");
+                    else
+                        viewHolder.statusGreen.setText("rejected");
                     viewHolder.statusRed.setVisibility(View.VISIBLE);
                     break;
                 case Constant.CREATED:
@@ -142,7 +168,11 @@ public class RideAdapter extends ArrayAdapter<Ride> {
                         }
                     }
                     break;
-                default:
+                case Constant.REQUESTED:
+                    viewHolder.statusYellow.setText("requested");
+                    viewHolder.statusYellow.setVisibility(View.VISIBLE);
+                    break;
+                case Constant.SCHEDULED:
                     if (ride.dateLong != null) {
                         if (Helper.compareDate(ride.dateLong, today) >= 0) {
                             viewHolder.statusYellow.setText(Helper.niceDate(ride.dateLong));

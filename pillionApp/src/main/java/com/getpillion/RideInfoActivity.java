@@ -21,6 +21,7 @@ import com.getpillion.models.Ride;
 import com.getpillion.models.RideUserMapping;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 import butterknife.ButterKnife;
@@ -47,6 +48,7 @@ public class RideInfoActivity extends ExtendMeSherlockWithMenuActivity {
     @InjectView(R.id.from) TextView from;
     @InjectView(R.id.to) TextView to;
     @InjectView(R.id.status) TextView status;
+    @InjectView(R.id.type) TextView type;
     @InjectView(R.id.vehicleInfo) LinearLayout vehicleInfo;
     @InjectView(R.id.vehicle) TextView vehicle;
     @InjectView(R.id.travellers) ListView travellersList;
@@ -141,7 +143,7 @@ public class RideInfoActivity extends ExtendMeSherlockWithMenuActivity {
                         break;
                     case Constant.SCHEDULED: //modify ride button
                         intent = new Intent(RideInfoActivity.this,ScheduleRideActivity.class);
-                        intent.putExtra("rideId",ride.getId());
+                        intent.putExtra("rideId", ride.getId());
                         intent.putExtra("type","updateRide");
                         startActivity(intent);
                         break;
@@ -250,16 +252,20 @@ public class RideInfoActivity extends ExtendMeSherlockWithMenuActivity {
         ButterKnife.inject(this);
         from.setText(ride.origin);
         to.setText(ride.dest);
+        type.setText(ride.isOffered ? "Ride Offered" : "Seeking Ride");
 
         int ownerRideStatus = RideUserMapping.find(RideUserMapping.class, "ride_id =? AND is_owner = 1",
                         String.valueOf(ride.getId())
                     ).get(0).status;
 
+
         if (ride.isOffered) {
-            if (ride.isScheduled) {
-                status.setText("SCHEDULED at " + ride.getAmPmTime() + " on " + Helper.niceDate(ride.dateLong));
-            } else if (ride.dateLong != null) { // not Constant.SCHEDULED so must have happened in past
-                status.setText("Last ride happened at " + ride.getAmPmTime() + " on " + Helper.niceDate(ride.dateLong));
+            if (ride.dateLong != null) {
+                if (Helper.compareDate(ride.dateLong, new Date()) >= 0) {
+                    status.setText("SCHEDULED at " + ride.getAmPmTime() + " on " + Helper.niceDate(ride.dateLong));
+                } else { // not Constant.SCHEDULED so must have happened in past
+                    status.setText("Last ride happened at " + ride.getAmPmTime() + " on " + Helper.niceDate(ride.dateLong));
+                }
             } else if (ownerRideStatus == Constant.CANCELLED) {
                 status.setText("The owner has cancelled the ride");
             } else {// no information of ride present

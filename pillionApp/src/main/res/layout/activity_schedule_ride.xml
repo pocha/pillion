@@ -54,27 +54,32 @@
            <LinearLayout
                android:layout_width="match_parent"
                android:layout_height="wrap_content"
-               android:orientation="horizontal">
+               android:orientation="horizontal"
+               android:id="@+id/vehicleContainer">
 
                <EditText
                    android:id="@+id/color"
                    android:layout_width="match_parent"
                    android:layout_weight="2"
                    android:layout_height="wrap_content"
+                   style="@style/SmallEditTextStyle"
                    android:hint="color (black)"/>
                <EditText
                    android:id="@+id/model"
                    android:layout_width="match_parent"
                    android:layout_weight="2"
                    android:layout_height="wrap_content"
-                   android:hint="model (Mercedez)"/>
+                   style="@style/SmallEditTextStyle"
+                   android:hint="model (Merc)"/>
+
+                <EditText
+                    android:id="@+id/number"
+                    android:layout_width="match_parent"
+                    android:layout_weight="1.5"
+                    android:layout_height="wrap_content"
+                    style="@style/SmallEditTextStyle"
+                    android:hint="number (KA51 Q b055)"/>
            </LinearLayout>
-            <EditText
-                android:id="@+id/number"
-                android:layout_width="match_parent"
-                android:layout_weight="1.5"
-                android:layout_height="wrap_content"
-                android:hint="number (KA51 Q b055)"/>
 
 
 

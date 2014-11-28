@@ -116,8 +116,12 @@ public class MyRoutesActivity extends ExtendMeSherlockWithMenuActivity {
                         .getSystemService(Context.LAYOUT_INFLATER_SERVICE);
                 convertView = inflater.inflate(R.layout.route, parent, false);
                 viewHolder = new RouteViewHolder();
-                viewHolder.from = (TextView) convertView.findViewById(R.id.from);
-                viewHolder.to = (TextView) convertView.findViewById(R.id.to);
+                viewHolder.fromHeader = (TextView) convertView.findViewById(R.id.fromHeader);
+                viewHolder.fromHeader.setTextColor(getResources().getColor(R.color.BottomButton));
+                viewHolder.fromFooter = (TextView) convertView.findViewById(R.id.fromFooter);
+                viewHolder.toHeader = (TextView) convertView.findViewById(R.id.toHeader);
+                viewHolder.toHeader.setTextColor(getResources().getColor(R.color.BottomButton));
+                viewHolder.toFooter = (TextView) convertView.findViewById(R.id.toFooter);
                 convertView.findViewById(R.id.time).setVisibility(View.GONE);
                 convertView.setTag(viewHolder);
             } else {
@@ -126,16 +130,20 @@ public class MyRoutesActivity extends ExtendMeSherlockWithMenuActivity {
 
             final Route route = values.get(position);
             viewHolder.position = position;
-            viewHolder.from.setText(route.origin);
-            viewHolder.to.setText(route.dest);
+            viewHolder.fromHeader.setText(Helper.getHeadFromLocation(route.origin));
+            viewHolder.fromFooter.setText(Helper.getFooterFromLocation(route.origin));
+            viewHolder.toHeader.setText(Helper.getHeadFromLocation(route.dest));
+            viewHolder.toFooter.setText(Helper.getFooterFromLocation(route.dest));
 
             return convertView;
         }
 
         private class RouteViewHolder {
             public int position;
-            public TextView from;
-            public TextView to;
+            public TextView fromHeader;
+            public TextView fromFooter;
+            public TextView toHeader;
+            public TextView toFooter;
         }
     }
 

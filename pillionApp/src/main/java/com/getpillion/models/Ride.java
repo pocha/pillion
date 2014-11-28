@@ -36,9 +36,6 @@ public class Ride extends SyncSugarRecord<Ride> {
     @Ignore
     public String ride_date = null;
 
-    @SerializedName("is_scheduled")
-    public boolean isScheduled = false;
-
     //Route detail
     public String origin;
     public String dest;
@@ -72,7 +69,6 @@ public class Ride extends SyncSugarRecord<Ride> {
         this.dateLong = date.getTime();
         this.timeLong = time.getTime();
         storeFromVehicle(vehicle);
-        this.isScheduled = true;
     }
 
     public Ride(String from, String to, Time time, boolean isOffered, User owner) {
@@ -149,7 +145,7 @@ public class Ride extends SyncSugarRecord<Ride> {
     }
 
     public static List<Ride> myRides(Long myUserId, String type){
-        Long today = 0L;
+        /*Long today = 0L;
         try {
             SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
             Date d = sdf.parse(sdf.format(new Date()));
@@ -163,31 +159,22 @@ public class Ride extends SyncSugarRecord<Ride> {
             Date d = sdf.parse(sdf.format(new Date()));
             Log.d("MyRidesActivity","Time now - " + d.toString());
             now = d.getTime();
-        }catch (Exception e){}
+        }catch (Exception e){}*/
 
 
 
         return Ride.findWithQuery(Ride.class,
                 "SELECT Ride.* FROM Ride JOIN Ride_User_Mapping ON Ride.id = Ride_User_Mapping.ride_id " +
                         "WHERE Ride_User_Mapping.user_id = ? AND " +
-                        "(" +
-                            (type.equals("upcoming")
+                            (type.equals("you_offering")
                                     ?
-                                "Ride.date_long IS NULL OR " +
-                                "Ride.date_long > ? OR " +
-                                "(Ride.date_long = ? AND Ride.time_long > ?)"
+                                "Ride.is_offered = 1 AND Ride_User_Mapping.is_owner = 1" //your offered ride
                                     :
-                                "Ride.date_long < ? OR " +
-                                "(Ride.date_long = ? AND Ride.time_long <= ?)"
+                                "(Ride.is_offered = 0 AND Ride_User_Mapping.is_owner = 1) OR" + //you seeking ride
+                                "(Ride.is_offered = 1 AND Ride_User_Mapping.is_owner = 0)" //you applied for someone else's ride
                             )
-                        + ")" +
-                        (type.equals("upcoming") ?
-                            " ORDER BY Ride.date_long IS NULL, Ride.time_long" : //most imminent ride will be on the top
-                            " ORDER BY Ride.date_long DESC, Ride.time_long DESC" // most recently happened ride will be on the top
-                        ),
-                String.valueOf(myUserId),
-                String.valueOf(today),
-                String.valueOf(today),String.valueOf(now)
+                       + " ORDER BY case when Ride.date_long is null then 1 else 0 end, Ride.date_long DESC, Ride.time_long DESC",
+                String.valueOf(myUserId)
         );
     }
 

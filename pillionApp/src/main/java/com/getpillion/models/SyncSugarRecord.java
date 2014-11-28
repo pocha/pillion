@@ -79,6 +79,7 @@ public class SyncSugarRecord<T> extends SugarRecord<T> implements Serializable {
         Bundle bundle = new Bundle();
         bundle.putBoolean(ContentResolver.SYNC_EXTRAS_MANUAL, true); // Performing a sync no matter if it's off
         bundle.putBoolean(ContentResolver.SYNC_EXTRAS_EXPEDITED, true); // Performing a sync no matter if it's off
+        bundle.putBoolean(ContentResolver.SYNC_EXTRAS_IGNORE_BACKOFF, true);
 
         bundle.putString("className",this.getClass().getName());
         bundle.putString("simpleClassName",this.getClass().getSimpleName());

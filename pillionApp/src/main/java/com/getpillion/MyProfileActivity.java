@@ -1,9 +1,12 @@
 package com.getpillion;
 
 import android.os.Bundle;
+import android.support.v4.app.FragmentTransaction;
 import android.util.Log;
 import android.view.View;
+import android.widget.LinearLayout;
 
+import com.actionbarsherlock.app.ActionBar;
 import com.getpillion.common.LinkedinDialog;
 import com.getpillion.common.ProfileFragment;
 import com.getpillion.models.User;
@@ -16,16 +19,20 @@ import com.google.code.linkedinapi.schema.Position;
 import java.util.ArrayList;
 
 import butterknife.ButterKnife;
+import butterknife.InjectView;
 import butterknife.OnClick;
 
-public class MyProfileActivity extends ExtendMeSherlockWithMenuActivity implements IPostExecuteCallback {
+public class MyProfileActivity extends ExtendMeSherlockWithMenuActivity implements IPostExecuteCallback,ActionBar.TabListener {
 
+    @InjectView(R.id.profileContainer)
+    LinearLayout profileContainer;
 
     @OnClick(R.id.loginButton) void SocialNwManagerTakeCharge(View v){
         LinkedinDialog.Login(this,this);
     }
 
     private User user = null;
+    private ActionBar.Tab profileTab, confirmPhoneTab;
 
     @OnClick(R.id.done) void takeUserBack(View v){
         if (getCallingActivity() != null)
@@ -41,9 +48,51 @@ public class MyProfileActivity extends ExtendMeSherlockWithMenuActivity implemen
         setContentView(R.layout.activity_my_profile);
         ButterKnife.inject(this);
 
-        //get user data
+        ActionBar actionBar = getSupportActionBar();
+        actionBar.setHomeButtonEnabled(true);
+        actionBar.setNavigationMode(ActionBar.NAVIGATION_MODE_TABS);
+
+        profileTab = actionBar.newTab().setText("Profile");
+        profileTab.setTag("profile");
+        profileTab.setTabListener(this);
+        actionBar.addTab(profileTab);
+
+        confirmPhoneTab = actionBar.newTab().setText("Confirm Phone");
+        confirmPhoneTab.setTag("confirmPhone");
+        confirmPhoneTab.setTabListener(this);
+        actionBar.addTab(confirmPhoneTab);
+
         user = User.findById(User.class, sharedPref.getLong("userId",0L));
-        ((ProfileFragment)getSupportFragmentManager().findFragmentById(R.id.profile)).fillUserData(user);
+        if (user.name == null){
+            profileTab.select();
+        }
+        else {
+            ((ProfileFragment) getSupportFragmentManager().findFragmentById(R.id.profile)).fillUserData(user);
+            if ( user.phone == null )
+                confirmPhoneTab.select();
+        }
+    }
+
+    @Override
+    public void onTabSelected(ActionBar.Tab tab, FragmentTransaction ft) {
+        if (tab.getTag().equals("profile")){
+            profileContainer.setVisibility(View.VISIBLE);
+            getSupportFragmentManager().findFragmentById(R.id.confirmPhone).getView().setVisibility(View.GONE);
+        }
+        else {
+            getSupportFragmentManager().findFragmentById(R.id.confirmPhone).getView().setVisibility(View.VISIBLE);
+            profileContainer.setVisibility(View.GONE);
+        }
+    }
+
+    @Override
+    public void onTabUnselected(ActionBar.Tab tab, FragmentTransaction ft) {
+
+    }
+
+    @Override
+    public void onTabReselected(ActionBar.Tab tab, FragmentTransaction ft) {
+        // TODO Auto-generated method stub
     }
 
     @Override

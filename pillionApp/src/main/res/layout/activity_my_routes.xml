@@ -21,7 +21,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 style="@style/TextViewLabel"
-                android:text="Offering Ride (select a route to offer ride on it)"/>
+                android:text="Offer Ride"/>
             <View
                 android:layout_width="fill_parent"
                 android:layout_height="1dp"
@@ -46,7 +46,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 style="@style/TextViewLabel"
-                android:text="Requesting Ride"/>
+                android:text="Seek Ride"/>
             <View
                 android:layout_width="fill_parent"
                 android:layout_height="1dp"

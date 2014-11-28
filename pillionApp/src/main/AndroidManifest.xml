@@ -6,11 +6,10 @@
     xmlns:tools="http://schemas.android.com/tools">
 
     <uses-sdk
-        android:minSdkVersion="8"
+        android:minSdkVersion="10"
         android:targetSdkVersion="19" />
 
-    <!--<uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
-    <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" /> -->
+    <!--<uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" /> -->
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
     <uses-permission
@@ -23,10 +22,13 @@
     <uses-permission android:name="android.permission.GET_ACCOUNTS" />
     <uses-permission android:name="android.permission.WAKE_LOCK" />
     <uses-permission android:name="com.google.android.c2dm.permission.RECEIVE" />
-    <permission android:name="com.example.gcm.permission.C2D_MESSAGE"
-        android:protectionLevel="signature" />
-    <uses-permission android:name="com.example.gcm.permission.C2D_MESSAGE" />
+    <uses-permission android:name= "com.getpillion.permission.C2D_MESSAGE" />
+    <permission android:name="com.getpillion.permission.C2D_MESSAGE" android:protectionLevel="signature" />
     <uses-permission android:name="android.permission.VIBRATE"/>
+
+    <uses-permission android:name="android.permission.RECEIVE_SMS"/>
+    <uses-permission android:name="android.permission.READ_SMS" />
+    <uses-permission android:name="android.permission.SEND_SMS" />
 
 
     <!--     <android:uses-permission android:name="android.permission.READ_PHONE_STATE" /> -->
@@ -37,6 +39,23 @@
         android:theme="@style/AppTheme"
         android:name="com.orm.SugarApp"
         tools:replace="android:icon">
+
+        <receiver android:name=".SmsBroadcastReceiver" android:exported="true">
+            <intent-filter android:priority="999">
+                <action android:name="android.provider.Telephony.SMS_RECEIVED"/>
+            </intent-filter>
+        </receiver>
+
+        <receiver
+            android:name=".gcm.GcmBroadcastReceiver"
+            android:permission="com.google.android.c2dm.permission.SEND" >
+            <intent-filter>
+                <action android:name="com.google.android.c2dm.intent.RECEIVE" />
+                <action android:name="com.google.android.c2dm.intent.REGISTRATION" />
+                <category android:name="com.getpillion" />
+            </intent-filter>
+        </receiver>
+        <service android:name=".gcm.GcmIntentService" />
 
         <meta-data android:name="DATABASE" android:value="main.db" />
         <meta-data android:name="VERSION" android:value="2" />
@@ -56,15 +75,7 @@
 
         </activity>
 
-        <receiver
-            android:name=".gcm.GcmBroadcastReceiver"
-            android:permission="com.google.android.c2dm.permission.SEND" >
-            <intent-filter>
-                <action android:name="com.google.android.c2dm.intent.RECEIVE" />
-                <category android:name="com.example.gcm" />
-            </intent-filter>
-        </receiver>
-        <service android:name=".gcm.GcmIntentService" />
+
 
      <!--   <meta-data
             android:name="com.facebook.sdk.ApplicationId"
@@ -122,7 +133,7 @@
         </activity>
         <activity
             android:name="com.getpillion.MyProfileActivity"
-            android:label="My Profile"
+            android:label="Your Profile"
             android:logo="@drawable/list">
         </activity>
         <activity
@@ -131,7 +142,7 @@
             android:logo="@drawable/list"/>
         <activity
             android:name="com.getpillion.MyRoutesActivity"
-            android:label="My Routes"
+            android:label="Offer/Seek Ride"
             android:logo="@drawable/list">
         </activity>
         <activity

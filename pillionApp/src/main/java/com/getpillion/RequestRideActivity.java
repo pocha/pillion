@@ -7,6 +7,7 @@ import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.actionbarsherlock.view.MenuItem;
 import com.getpillion.common.Constant;
@@ -72,10 +73,7 @@ public class RequestRideActivity extends ExtendMeSherlockWithMenuActivity {
         //TODO send request to the server
         RideUserMapping.createOrUpdate(ride, user, false, Constant.REQUESTED, route);
 
-        Intent intent = new Intent(RequestRideActivity.this, RideInfoActivity.class);
-        intent.putExtra("rideId", ride.getId());
-        intent.putExtra("isRideCreationSuccess",true);
-        intent.putExtra("rideCreationStatus", Constant.REQUESTED);
+        Intent intent = new Intent(RequestRideActivity.this, MyRidesActivity.class);
         intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP); //this should remove the previous RouteInfoActivity from stack
         startActivity(intent);
         finish();
@@ -154,6 +152,20 @@ public class RequestRideActivity extends ExtendMeSherlockWithMenuActivity {
         p.setArguments(bundle);
         p.show(getSupportFragmentManager(),"not sure what this tag suppose to do");
         return true; //indicating this function consumed the event & it will not be propagated further
+    }
+
+    @Override
+    public void onStart(){
+        super.onStart();
+        //if no user profile, take to MyProfileActivity
+        User user = User.findById(User.class, sharedPref.getLong("userId",0L));
+        //check if no user data - send user to MyProfileActivity
+        if (user.name == null || user.phone == null){
+            Intent intent = new Intent(RequestRideActivity.this, MyProfileActivity.class);
+            startActivity(intent);
+            Toast.makeText(this,"You need to complete your profile to request ride",Toast.LENGTH_LONG);
+            finish();
+        }
     }
 
     @Override

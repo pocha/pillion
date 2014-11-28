@@ -27,14 +27,12 @@ public class RideUserMapping extends SyncSugarRecord<RideUserMapping> {
     public String origin;
     public String dest;
     public String distance;
-    @SerializedName("is_offered")
-    public boolean isOffered;
+
 
     private void storeFromRoute(Route route){
         this.origin = route.origin;
         this.dest = route.dest;
         this.distance = route.distance;
-        this.isOffered = route.isOffered;
     }
 
     public RideUserMapping(){}
