@@ -93,18 +93,21 @@ public class PlaceSelectFragment extends DialogFragment {
 
     public static PlaceSelectFragment newInstance(String title){
         PlaceSelectFragment p = new PlaceSelectFragment();
+        p.setStyle(DialogFragment.STYLE_NORMAL,R.style.AppTheme);
         return p;
     }
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstance){
         setThisInParentView = (EditText)getActivity().findViewById(getArguments().getInt("populateMeInParent"));
         View view = inflater.inflate(R.layout.fragment_place_select,container);
+
         ButterKnife.inject(this,view);
         places = new ArrayList<String>();
         searchResult.setEmptyView(poweredByGoogle);
         placeAdapter = new PlacesAdapter(getActivity(),places);
         searchResult.setAdapter(placeAdapter);
         getDialog().setTitle("Search location");
+
         return view;
     }
 
