@@ -68,10 +68,11 @@ public class ScheduleRideActivity extends ExtendMeSherlockWithMenuActivity  {
         super.onStart();
         User user = User.findById(User.class, sharedPref.getLong("userId",0L));
         //check if no user data - send user to MyProfileActivity
+        //TODO comment this back in
         if (user.name == null || user.phone == null){
             Intent intent = new Intent(ScheduleRideActivity.this, MyProfileActivity.class);
             startActivity(intent);
-            Toast.makeText(this,"You need to complete your profile to create ride",Toast.LENGTH_LONG);
+            Toast.makeText(this,"Complete profile & verify phone number to create ride",Toast.LENGTH_LONG).show();
             finish();
         }
         else {

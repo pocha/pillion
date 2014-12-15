@@ -290,7 +290,6 @@ public class AllRidesActivity extends ExtendMeSherlockWithMenuActivity implement
 
     @Override
     public void onTabReselected(Tab tab, FragmentTransaction ft) {
-        // TODO Auto-generated method stub
     }
 
     @Override

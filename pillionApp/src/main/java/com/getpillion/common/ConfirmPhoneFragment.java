@@ -94,7 +94,7 @@ public class ConfirmPhoneFragment extends Fragment {
                     }
                     else if (result) {
                         displayMessage("Confirmed Phone Number - " + phoneNo,"success");
-                        Toast.makeText(getActivity(),"Congrats. Phone number confirmed",Toast.LENGTH_LONG);
+                        Toast.makeText(getActivity(),"Congrats. Phone number confirmed",Toast.LENGTH_LONG).show();
                     }
                     else {
                         displayMessage("The sms never came :(. Sorry but we do not take your claim that the number belongs to you. Mind trying again ?","error");

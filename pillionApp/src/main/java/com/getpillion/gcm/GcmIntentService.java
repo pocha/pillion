@@ -129,7 +129,6 @@ public class GcmIntentService extends IntentService {
                     RideUserMapping rideUserMapping = gson.fromJson(json, RideUserMapping.class);
                     //we need the ride
                     Ride ride = Ride.find(Ride.class,"global_id = ?", String.valueOf(rideUserMapping.rideId)).get(0);
-                    RideUserMapping updated = RideUserMapping.updateFromUpstream(ride, rideUserMapping);
                     targetIntent = new Intent(this, RideInfoActivity.class);
                     targetIntent.putExtra("rideId", ride.getId());
 
@@ -137,37 +136,47 @@ public class GcmIntentService extends IntentService {
                                                                     String.valueOf(ride.getId()),
                                                                     String.valueOf(sharedPref.getLong("userId",0L))
                                                            ).get(0);
+
+                    RideUserMapping updated = RideUserMapping.updateFromUpstream(ride, rideUserMapping);
+
+                    //broadcast only for ride requester. The flow will not go into the subsequent if because of the user's status
+                    if (updated.userId == sharedPref.getLong("userId", 0L)) {
+                        switch (updated.status) {
+                            case Constant.ACCEPTED: //show to requester
+                                msg = "Your ride request is approved";
+                                break;
+                            case Constant.REJECTED: //show to the requester - request rejected
+                                msg = "Sorry, your request has been rejected";
+                                break;
+                        }
+                    }
+
+                    //broadcast for everyone
                     if (myEntry.status != Constant.REQUESTED &&
                             myEntry.status != Constant.REJECTED &&
-                            myEntry.status != Constant.CANCELLED) //no need to show updates to these guys
-                        switch(updated.status) {
+                            myEntry.status != Constant.CANCELLED)
+                    {
+                        switch (updated.status) {
                             case Constant.REQUESTED: //show only to owner
                                 if (myEntry.isOwner)
                                     msg = "New ride request";
                                 break;
-                            case Constant.ACCEPTED: //show to all except owner - new traveller on your ride
-                                msg = "New traveller has joined your ride";
-                                break;
-                            case Constant.REJECTED: //show to the requester - request rejected
-                                if (updated.userId == sharedPref.getLong("userId",0L))
-                                    msg = "Sorry, your request has been rejected";
-                                break;
-                            case Constant.CANCELLED: //show to all - one traveller backed out / ride has been cancelled by owner
+                            case Constant.CANCELLED:
                                 if (updated.isOwner) {
-                                    msg = "Owner has cancelled the ride";
-                                }
-                                else {
-                                    msg = "One traveller backed out";
+                                    msg = "Owner has cancelled the ride"; //for other active users
+                                } else {
+                                    msg = "One traveller backed out"; //for owner
                                 }
                                 break;
                             case Constant.CHECKED_IN: //show to all - {traveller} has reached his start point
-                                msg = "One traveller has reached pickup point";
+                                msg = "One traveller has reached his pickup point";
                                 break;
                             case Constant.STARTED: //show to all - ride has been started
                                 msg = "Ride has started.";
                                 break;
                         }
 
+                    }
                 }
                 if (simpleClassName.equals("WorkHistory")) { //lets just leave this
                 }

@@ -14,7 +14,6 @@ import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.actionbarsherlock.view.MenuItem;
 import com.getpillion.common.Constant;
 import com.getpillion.common.Helper;
 import com.getpillion.models.Ride;
@@ -112,11 +111,12 @@ public class RideInfoActivity extends ExtendMeSherlockWithMenuActivity {
                         break;
                     case Constant.ACCEPTED: //CheckIn primary button
                         //checkin button
-                        //TODO send data to server through AsyncTask & wait for completion before refreshing
                         //update status in RouteUserMapping to Constant.CANCELLED. Do all below things in AsyncTask
                         rideUserMapping.status = Constant.CHECKED_IN;
                         rideUserMapping.save();
-                        startActivity(new Intent(RideInfoActivity.this, RideInfoActivity.class).addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION));
+                        intent = new Intent(RideInfoActivity.this, RideInfoActivity.class);
+                        intent.putExtra("rideId", ride.getId());
+                        startActivity(intent);
                         finish();
                         break;
                     case Constant.REJECTED:
@@ -260,14 +260,16 @@ public class RideInfoActivity extends ExtendMeSherlockWithMenuActivity {
 
 
         if (ride.isOffered) {
-            if (ride.dateLong != null) {
+            if (ownerRideStatus == Constant.CANCELLED) {
+                status.setText("The owner has cancelled the ride");
+            } else if ( ownerRideStatus == Constant.STARTED && Helper.compareDate(ride.dateLong, new Date()) >= 0) {
+                status.setText("The ride is in progress now");
+            } else if (ride.dateLong != null) {
                 if (Helper.compareDate(ride.dateLong, new Date()) >= 0) {
                     status.setText("SCHEDULED at " + ride.getAmPmTime() + " on " + Helper.niceDate(ride.dateLong));
                 } else { // not Constant.SCHEDULED so must have happened in past
                     status.setText("Last ride happened at " + ride.getAmPmTime() + " on " + Helper.niceDate(ride.dateLong));
                 }
-            } else if (ownerRideStatus == Constant.CANCELLED) {
-                status.setText("The owner has cancelled the ride");
             } else {// no information of ride present
                 status.setText("Ride scheduled at " + ride.getAmPmTime() + " daily but the owner probably never 'started' the ride on the app in the past.");
             }
@@ -449,12 +451,12 @@ public class RideInfoActivity extends ExtendMeSherlockWithMenuActivity {
 
 
 
-    @Override
+/*    @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         finish();
         return true;
     }
-
+*/
 
 
 	

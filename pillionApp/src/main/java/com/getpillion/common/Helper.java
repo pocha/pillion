@@ -341,6 +341,7 @@ public class Helper {
     }
 
     public static boolean fieldsHaveErrors(Activity activity){
+        //TODO comment this back in
         //return false; //for testing
         boolean isError = !FormValidator.validate(activity, new SimpleErrorPopupCallback(activity));
         if (isError)

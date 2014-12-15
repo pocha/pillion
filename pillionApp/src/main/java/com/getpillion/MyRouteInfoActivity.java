@@ -71,7 +71,6 @@ public class MyRouteInfoActivity extends ExtendMeSherlockWithMenuActivity {
 
     @OnClick(R.id.deleteRoute) void deleteRoute(View v){
         route.delete();
-        //TODO send data to server
         Helper.returnControlToCallingActivity(this);
     }
 

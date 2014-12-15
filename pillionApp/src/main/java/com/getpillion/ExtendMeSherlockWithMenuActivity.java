@@ -4,6 +4,7 @@ import android.app.ProgressDialog;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
 import android.os.Bundle;
+import android.view.KeyEvent;
 
 import com.actionbarsherlock.app.SherlockFragmentActivity;
 import com.actionbarsherlock.view.Menu;
@@ -55,7 +56,16 @@ public class ExtendMeSherlockWithMenuActivity extends SherlockFragmentActivity {
     protected void onResume()
     {
         super.onResume();
+    }
 
+    @Override
+    public boolean onKeyDown(int keycode, KeyEvent e) {
+        switch(keycode) {
+            case KeyEvent.KEYCODE_MENU:
+                menu.toggle();
+                return true;
+        }
+        return super.onKeyDown(keycode, e);
     }
 
 }

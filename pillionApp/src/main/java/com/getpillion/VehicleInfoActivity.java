@@ -27,7 +27,6 @@ public class VehicleInfoActivity extends ExtendMeSherlockWithMenuActivity {
 
     @OnClick(R.id.deleteVehicle) void deleteVehicle(View v){
         vehicle.delete();
-        //TODO send data to server
         Helper.returnControlToCallingActivity(this);
     }
     @OnClick(R.id.saveVehicle) void saveVehicle(View v){

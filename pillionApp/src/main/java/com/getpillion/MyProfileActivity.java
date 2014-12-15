@@ -92,7 +92,6 @@ public class MyProfileActivity extends ExtendMeSherlockWithMenuActivity implemen
 
     @Override
     public void onTabReselected(ActionBar.Tab tab, FragmentTransaction ft) {
-        // TODO Auto-generated method stub
     }
 
     @Override
@@ -143,7 +142,6 @@ public class MyProfileActivity extends ExtendMeSherlockWithMenuActivity implemen
         try{user.interests = p.getInterests();}catch(Exception e){ user.interests = null;}
         
         user.save();
-        //TODO send user data to the server
 
         ((ProfileFragment)getSupportFragmentManager().findFragmentById(R.id.profile)).fillUserData(user);
         

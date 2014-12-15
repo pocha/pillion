@@ -70,7 +70,6 @@ public class RequestRideActivity extends ExtendMeSherlockWithMenuActivity {
         //TODO move the code below to payment gateway
         ride = Ride.findById(Ride.class, getIntent().getExtras().getLong("rideId"));
         Log.d("RequestRideActivity","dumping route id - " + ride.getId());
-        //TODO send request to the server
         RideUserMapping.createOrUpdate(ride, user, false, Constant.REQUESTED, route);
 
         Intent intent = new Intent(RequestRideActivity.this, MyRidesActivity.class);
@@ -160,10 +159,11 @@ public class RequestRideActivity extends ExtendMeSherlockWithMenuActivity {
         //if no user profile, take to MyProfileActivity
         User user = User.findById(User.class, sharedPref.getLong("userId",0L));
         //check if no user data - send user to MyProfileActivity
+        //TODO comment this back in
         if (user.name == null || user.phone == null){
             Intent intent = new Intent(RequestRideActivity.this, MyProfileActivity.class);
             startActivity(intent);
-            Toast.makeText(this,"You need to complete your profile to request ride",Toast.LENGTH_LONG);
+            Toast.makeText(this,"Complete profile & verify phone number to request ride",Toast.LENGTH_LONG).show();
             finish();
         }
     }

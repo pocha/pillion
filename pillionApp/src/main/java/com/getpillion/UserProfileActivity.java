@@ -26,7 +26,7 @@ public class UserProfileActivity extends ExtendMeSherlockWithMenuActivity implem
     private ActionBar.Tab pickupDropTab, profileTab, selectedTab;
     private RideUserMapping rideUserMapping = null;
     private User user = null;
-    private Boolean amIOwner = null;
+    private Boolean amIOwner = false;
 
     @InjectView(R.id.pickupDrop)
     LinearLayout pickupDropView;
@@ -42,6 +42,7 @@ public class UserProfileActivity extends ExtendMeSherlockWithMenuActivity implem
     @InjectView(R.id.distance) TextView distance;
     @InjectView(R.id.cost) TextView cost;
     @InjectView(R.id.primaryButtonLayout) LinearLayout bottomBar;
+    @InjectView(R.id.status) TextView status;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -49,6 +50,7 @@ public class UserProfileActivity extends ExtendMeSherlockWithMenuActivity implem
 
         rideUserMapping = RideUserMapping.findById(RideUserMapping.class, getIntent().getExtras().getLong("rideUserMappingId"));
         user = User.findById(User.class, rideUserMapping.userId);
+
 
         //redirect to MyProfileActivity if viewer is owner & this is ride he/she is offering
         if (rideUserMapping.isOwner && rideUserMapping.userId == sharedPref.getLong("userId",0L)) {
@@ -66,14 +68,7 @@ public class UserProfileActivity extends ExtendMeSherlockWithMenuActivity implem
         ActionBar actionBar = getSupportActionBar();
         actionBar.setHomeButtonEnabled(true);
 
-        if (rideUserMapping.isOwner) {
-            ((ProfileFragment)getSupportFragmentManager().findFragmentById(R.id.profile)).getView().setVisibility(View.VISIBLE);
-            pickupDropView.setVisibility(View.GONE);
-            bottomBar.setVisibility(View.GONE);
-            return;
-        }
-
-        //show tabs only for regular users
+        //show tabs only for owner
         actionBar.setNavigationMode(ActionBar.NAVIGATION_MODE_TABS);
 
         profileTab = actionBar.newTab().setText("Profile");
@@ -112,28 +107,39 @@ public class UserProfileActivity extends ExtendMeSherlockWithMenuActivity implem
             //I am not part of the ride. amIOwner stays null
         }
 
+        if (rideUserMapping.isOwner) { //viewing owner's info. Hide bottom bar
+            bottomBar.setVisibility(View.GONE);
+        }
+
+        if (rideUserMapping.status == Constant.CANCELLED) {
+            rejectButton.setEnabled(false);
+            acceptButton.setEnabled(false);
+            status.setText("User has cancelled his request");
+        }
 
     }
 
     @OnClick(R.id.accept) void onAcceptButtonClick(View v){
-        if (amIOwner != null && amIOwner)
+        if (amIOwner != null && amIOwner) {
             if (rideUserMapping.status != Constant.ACCEPTED) {
                 rideUserMapping.status = Constant.ACCEPTED;
                 rideUserMapping.save();
-                Toast.makeText(UserProfileActivity.this,"You have accepted the request",Toast.LENGTH_LONG).show();
+                Toast.makeText(UserProfileActivity.this, "You have accepted the request", Toast.LENGTH_LONG).show();
             }
+        }
         else
            Toast.makeText(UserProfileActivity.this,"Nice try. Only ride creator can do that ;-)",Toast.LENGTH_LONG).show();
 
         finish();
     }
     @OnClick(R.id.reject) void onRejectButtonClick(View v){
-        if (amIOwner!= null && amIOwner)
+        if (amIOwner!= null && amIOwner) {
             if (rideUserMapping.status != Constant.REJECTED) {
                 rideUserMapping.status = Constant.REJECTED;
                 rideUserMapping.save();
-                Toast.makeText(UserProfileActivity.this,"You have rejected the ride request",Toast.LENGTH_LONG).show();
+                Toast.makeText(UserProfileActivity.this, "You have rejected the ride request", Toast.LENGTH_LONG).show();
             }
+        }
         else
             Toast.makeText(UserProfileActivity.this,"Nice try. Only ride creator can do that ;-)",Toast.LENGTH_LONG).show();
 
@@ -170,7 +176,6 @@ public class UserProfileActivity extends ExtendMeSherlockWithMenuActivity implem
 
     @Override
     public void onTabReselected(ActionBar.Tab tab, FragmentTransaction ft) {
-        // TODO Auto-generated method stub
     }
 
 
