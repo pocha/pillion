@@ -78,7 +78,14 @@ public class MainActivity extends SherlockFragmentActivity {
                     protected void onPostExecute(Boolean result) {
                         progress.dismiss();
                         if (result) {
-                            Intent intent = new Intent(MainActivity.this, NewRouteActivitySelectMode.class);
+                            //TODO changing flow for new rides
+                            //Intent intent = new Intent(MainActivity.this, NewRouteActivitySelectMode.class);
+                            SharedPreferences sharedPref = getApplicationContext().getSharedPreferences(
+                                    Constant.PREFS_NAME, 0);
+                            SharedPreferences.Editor sharedPrefEditor = sharedPref.edit();
+                            sharedPrefEditor.putBoolean("appInitialized", true);
+                            sharedPrefEditor.commit();
+                            Intent intent = new Intent(MainActivity.this, AllRidesActivity.class);
                             startActivity(intent);
                             finish();
                         }
